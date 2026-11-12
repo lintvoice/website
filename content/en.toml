@@ -1,0 +1,118 @@
+# Texts of the English pages. © 2026 AllGood Services SAS, all rights reserved (see LICENSE).
+
+lang = "en"
+locale = "en_GB"
+switch_label = "FR"
+switch_title = "Version française"
+theme_dark = "Dark"
+theme_light = "Light"
+nav_label = "Main"
+nav_examples = "Examples"
+nav_github = "GitHub"
+cta = "Quick start"
+footer_disclaimer = "lintvoice helps check your e-invoices. It does not certify their compliance."
+footer_rights = "Code under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE). Texts and the lintvoice logo © 2026 AllGood Services SAS."
+footer_legal = "Legal notice"
+
+[home]
+title = "lintvoice: check e-invoices against the official rules, offline"
+description = "Open-source validator for CII, UBL and Factur-X e-invoices. It runs the official EN 16931, Factur-X and French BR-FR rules, offline."
+h1 = "Check e-invoices against the official rules, offline"
+brief = "lintvoice is an open-source command-line validator for CII, UBL and Factur-X invoices. It runs the official EN 16931, Factur-X and French BR-FR rules offline: your invoices are never sent anywhere."
+glance_title = "At a glance"
+glance = [
+    ["Licence", "[MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE)"],
+    ["Python", "3.10 or later"],
+    ["Reads", "CII, UBL, Factur-X and ZUGFeRD PDF"],
+    ["Network", "only to install the rules, once"],
+]
+exit_title = "Exit codes"
+exit_codes = [
+    ["0", "No errors"],
+    ["1", "Errors found"],
+    ["2", "A file could not be read"],
+    ["3", "Rule packs not installed"],
+    ["4", "Incomplete check: a rule set could not run"],
+]
+links_title = "Links"
+quick_title = "Quick start"
+quick_hint = "Python 3.10+"
+quick_code = """uvx lintvoice rules install      # once: downloads the pinned rule packs
+uvx lintvoice check invoice.pdf
+uvx lintvoice check invoices/ --format json"""
+quick_note = "Or pip install lintvoice. The rule packs are downloaded once from their official sources, pinned to an exact version (a SHA-256 hash or a git commit); after that, every check runs offline."
+output_title = "What a report looks like"
+output_hint = "lintvoice check facture.pdf"
+output_note = "Findings are grouped by rule. BR-FR messages are the official French text, published by FNFE-MPE."
+rules_title = "Rules it runs"
+rules_head = ["Rule set", "Version", "Published by", "Applied to"]
+rules_rows = [
+    ["EN 16931", "1.3.17", "CEN, via ConnectingEurope", "every CII and UBL invoice"],
+    ["Factur-X profile rules", "1.09.2", "FNFE-MPE", "Factur-X PDFs (BASIC WL, EN 16931, EXTENDED)"],
+    ["BR-FR", "1.4.0.04", "FNFE-MPE (France_RFE)", "invoices whose seller is in France"],
+    ["XML schemas", "CII D22B, Factur-X 1.09.2, UBL 2.1", "UN/CEFACT, FNFE-MPE, OASIS", "every invoice"],
+]
+not_checked_title = "Not checked yet"
+not_checked = [
+    "PDF/A-3 validation of Factur-X PDFs.",
+    "XRechnung and Peppol BIS rules: those invoices get EN 16931 only, and the report says so.",
+    "Factur-X MINIMUM and BASIC profile rules: France_RFE 1.4.0.04 does not ship them.",
+]
+examples_title = "Example invoices"
+examples_text = "92 French Factur-X invoices: one valid, and 91 invalid variants that each fail a named rule. Each one is checked against the official rules. Public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/))."
+examples_link = "Browse the examples"
+
+[examples]
+title = "Example e-invoices, valid and invalid (Factur-X, CII)"
+description = "92 French Factur-X EN 16931 invoices to test your tools: one valid, and 91 invalid variants that each fail a named EN 16931 or BR-FR rule. XML and PDF, public domain."
+h1 = "Example e-invoices, valid and invalid"
+brief = "92 French Factur-X invoices, EN 16931 profile: one valid, and 91 invalid variants that each fail a named rule. Use them to test an invoicing tool or a validator."
+about_title = "About these files"
+about_target = "Target"
+about_target_value = "France (fr)"
+about_syntax = "Syntax"
+about_syntax_value = "CII, as XML and inside a PDF"
+about_generator = "Generator"
+about_licence = "Licence"
+about_licence_value = "[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/), public domain"
+download_all = "Download all (zip)"
+checked_title = "How they are checked"
+checked_text = "By the official rules alone, not by lintvoice: the Factur-X schema and three Schematron sets. A valid file passes all of them; an invalid one fails exactly the rules listed next to it."
+source_text = "Generator and source code:"
+valid_title = "The valid invoice"
+valid_chip = "valid"
+valid_text = "Passes EN 16931, the Factur-X EN 16931 profile rules and BR-FR."
+invalid_title = "Invalid invoices"
+invalid_chip = "invalid"
+cols = ["Example", "What is wrong", "Rules that fail", "Files"]
+pdf_note = "The PDFs carry the XML as factur-x.xml. They are not PDF/A-3: they are for testing XML extraction and the XML rules."
+
+[legal]
+title = "Legal notice"
+description = "Publisher, host, privacy and licences of lintvoice.com."
+h1 = "Legal notice"
+publisher_title = "Publisher"
+registry_label = "registration information"
+publisher_labels = ["Company", "Legal form", "Head office", "Registration", "VAT number", "Publication director", "E-mail", "Phone"]
+host_title = "Host"
+privacy_title = "Privacy"
+privacy = [
+    "This site sets no cookie and uses no analytics or third-party resource: fonts and images are served from lintvoice.com.",
+    "The light or dark theme you pick is stored in your browser only (localStorage).",
+    "The host processes technical connection data, such as IP addresses, to deliver the pages and protect the site ([Cloudflare's privacy policy](https://www.cloudflare.com/privacypolicy/)).",
+]
+ip_title = "Licences and trademark"
+ip = [
+    "The code of this site is under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE); its texts and the lintvoice logo are © AllGood Services SAS, all rights reserved. The lintvoice tool is under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) too.",
+    "The example invoices are in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). The rule texts quoted come from their publishers, under their own licences.",
+    "The source code of this site is public, so you can check what it does: [github.com/lintvoice/website](https://github.com/lintvoice/website).",
+    "The fonts are IBM Plex, under the [SIL Open Font License 1.1](https://openfontlicense.org/).",
+    "lintvoice is a trademark filed by AllGood Services SAS.",
+]
+
+[notfound]
+description = "This page of lintvoice.com does not exist."
+title = "Page not found"
+h1 = "Page not found"
+text = "This page does not exist, or not yet."
+back = "Back to the home page"

@@ -1,0 +1,13 @@
+lintvoice 0.1.0 · EN 16931 1.3.17 (CII), Factur-X 1.09.2 EN 16931, BR-FR 1.4.0.04 (CII)
+
+✗ facture.pdf
+  Factur-X EN 16931 · CII · PDF (factur-x.xml)
+  BR-FR rules applied: the seller's country is FR.
+  1 error in 1 rule.
+
+  error   BR-FR-10_BT-30  ×1
+    BT-30: Le SIREN du vendeur (ram:ID) est obligatoire et doit être composé exactement de 9
+    chiffres. Valeur actuelle : "". Veuillez renseigner un identifiant SIREN valide.
+    at /CrossIndustryInvoice
+
+1 file checked: 1 with errors, 0 without.

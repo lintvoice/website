@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="{{ t.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page_title }}</title>
+<meta name="description" content="{{ p.description }}">
+{% if canonical %}
+<link rel="canonical" href="{{ base_url }}{{ path }}">
+{% for lang, href in alternates.items() %}
+<link rel="alternate" hreflang="{{ lang }}" href="{{ base_url }}{{ href }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ base_url }}{{ alternates.en }}">
+{% endif %}
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/static/fonts.css">
+<link rel="stylesheet" href="/static/tokens.css">
+<link rel="stylesheet" href="/static/components.css">
+<link rel="stylesheet" href="/static/site.css">
+<script>try{var s=localStorage.getItem('lintvoice-theme');if(s)document.documentElement.dataset.theme=s}catch(e){}</script>
+</head>
+<body>
+<main>
+<header class="topbar">
+  <nav class="site-nav" aria-label="{{ t.nav_label }}">
+    <a class="brand" href="{{ links.home }}"><img class="wm-light" src="/static/logo/lintvoice-wordmark-light.svg" alt="lintvoice" width="96" height="22"><img class="wm-dark" src="/static/logo/lintvoice-wordmark-dark.svg" alt="lintvoice" width="96" height="22"></a>
+    <a href="{{ links.examples }}">{{ t.nav_examples }}</a>
+    <a href="https://github.com/lintvoice">{{ t.nav_github }}</a>
+  </nav>
+  <div class="actions">
+    <a class="lang" href="{{ other.href }}" hreflang="{{ other.lang }}" lang="{{ other.lang }}" title="{{ t.switch_title }}">{{ t.switch_label }}</a>
+    <button class="toggle" id="theme" type="button" data-dark="{{ t.theme_dark }}" data-light="{{ t.theme_light }}">{{ t.theme_dark }}</button>
+    <a class="cta" href="{{ links.home }}#quick-start">{{ t.cta }}</a>
+  </div>
+</header>
+{% block body %}{% endblock %}
+<footer class="foot">
+  <p>{{ t.footer_disclaimer }}</p>
+  <p>{{ t.footer_rights | links }} <a href="{{ links.legal }}">{{ t.footer_legal }}</a></p>
+</footer>
+</main>
+<script>
+(function(){var r=document.documentElement,b=document.getElementById('theme');if(!b)return;
+function dark(){return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+function label(){b.textContent=dark()?b.dataset.light:b.dataset.dark}
+b.onclick=function(){r.dataset.theme=dark()?'light':'dark';try{localStorage.setItem('lintvoice-theme',r.dataset.theme)}catch(e){}label()};label()})();
+</script>
+</body>
+</html>

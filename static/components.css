@@ -1,0 +1,119 @@
+/* lintvoice.com components. Uses tokens.css only (no raw colours or sizes).
+   Principles: one sans for prose and headings; monospace only for code, IDs, paths, numbers and verdicts;
+   status colours only for status; never colour alone (always ✗ ! ✓, − +, or a word). */
+
+/* ---------- base */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-text);font-size:var(--fs-base);
+  line-height:var(--lh-body);font-variant-numeric:tabular-nums lining-nums}
+p{margin:0 0 var(--sp-3)}
+h1,h2,h3{font-family:var(--font-text);color:var(--text);margin:0}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:var(--bw-hair)}
+code,pre,.mono,.idm{font-family:var(--font-mono)}
+code,.mono{font-size:var(--fs-sm)}
+.idm{letter-spacing:.02em}
+ol{padding-left:1.3em;margin:0}
+li{margin:var(--sp-1) 0}
+.err{color:var(--error)}.ok{color:var(--ok)}.warn{color:var(--warn)}
+
+/* ---------- page layout: top bar, header band, aside + article grid, footer */
+main{max-width:var(--layout-max);margin:0 auto;padding:var(--sp-5) var(--sp-8) 64px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:var(--sp-4);flex-wrap:wrap}
+.topbar nav{font-size:var(--fs-sm);color:var(--muted)}
+.actions{display:flex;gap:var(--sp-3);align-items:center;font-size:var(--fs-sm)}
+.lang{color:var(--muted)}
+.toggle{background:none;border:0;color:var(--muted);font:inherit;cursor:pointer;padding:6px 0}
+.cta{border:var(--bw-hair) solid var(--line);padding:6px var(--sp-3);text-decoration:none;white-space:nowrap;border-radius:var(--r-sm)}
+.cta:hover{border-color:var(--text)}
+.band{margin:28px 0 var(--sp-6);padding:22px var(--sp-6);background:var(--head);border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg)}
+.band .idm{display:inline-block;font-size:var(--fs-sm);color:var(--bg);background:var(--accent);padding:1px var(--sp-2);border-radius:var(--r-sm)}
+h1{font-size:var(--fs-2xl);line-height:var(--lh-tight);font-weight:600;margin:var(--sp-3) 0 var(--sp-2)}
+.brief{font-size:var(--fs-lg);margin:0}
+.grid{display:grid;grid-template-columns:var(--layout-aside) 1fr;gap:var(--layout-gap);align-items:start}
+.grid>*{min-width:0}
+footer{margin-top:40px;padding-top:14px;border-top:var(--bw-hair) solid var(--line)}
+.foot{color:var(--muted);font-size:var(--fs-xs)}
+
+/* ---------- panel: the core container (title bar + body) */
+.panel{border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:var(--layout-gap);background:var(--bg)}
+.panel>h2{display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-base);font-weight:600;
+  padding:10px var(--sp-4);background:var(--head);border-bottom:var(--bw-hair) solid var(--line)}
+.panel>h2 small{font-family:var(--font-mono);font-size:var(--fs-xs);font-weight:400;color:var(--muted)}
+.panel>.body{padding:var(--sp-4)}
+.panel>.flush{padding:0}
+.panel>.flush pre,.panel>.flush .term{margin:0;background:transparent}
+
+/* ---------- key/value list (aside panels) */
+.kv{display:grid;grid-template-columns:1fr}
+.kv div{display:flex;justify-content:space-between;gap:var(--sp-3);padding:9px var(--sp-4);border-top:var(--bw-hair) solid var(--line);font-size:var(--fs-sm)}
+.kv div:first-child{border-top:0}
+.kv span:first-child{color:var(--muted);white-space:nowrap}
+.kv span:last-child{text-align:right;min-width:0;overflow-wrap:anywhere}
+
+/* ---------- chips (status chips carry a mark: ✗ ! ✓) */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--sp-3)}
+.chip{display:inline-block;font-size:var(--fs-xs);line-height:1.5;padding:1px 9px;border:var(--bw-hair) solid var(--line);border-radius:var(--r-pill);color:var(--muted);white-space:nowrap}
+.chip.err{color:var(--error);border-color:color-mix(in srgb,var(--error) 50%,transparent);background:color-mix(in srgb,var(--error) 12%,var(--bg))}
+.chip.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 50%,transparent);background:color-mix(in srgb,var(--warn) 12%,var(--bg))}
+.chip.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,transparent);background:color-mix(in srgb,var(--ok) 12%,var(--bg))}
+
+/* ---------- verdict (exactly as the CLI prints it) and diff */
+pre{margin:0;padding:14px var(--sp-4);background:var(--surface);overflow-x:auto;line-height:var(--lh-code);font-size:var(--fs-sm)}
+.term{font-family:var(--font-mono);font-size:var(--fs-sm);background:var(--surface);padding:var(--sp-3) var(--sp-4);border-left:var(--bw-mark) solid var(--error)}
+.term div{display:grid;grid-template-columns:16ch 1fr;gap:var(--sp-3)}
+pre.diff{padding:10px 0}
+.diff span{display:block;padding:0 var(--sp-4)}
+.diff .del{color:var(--error);background:color-mix(in srgb,var(--error) 12%,transparent)}
+.diff .add{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+
+/* ---------- tables */
+table{border-collapse:collapse;width:100%;font-size:var(--fs-sm)}
+th,td{text-align:left;vertical-align:top;padding:var(--sp-2) 10px var(--sp-2) 0;border-bottom:var(--bw-hair) solid var(--line)}
+th{font-weight:600;color:var(--muted)}
+td.mono{overflow-wrap:anywhere;font-size:var(--fs-xs)}
+td:first-child,th:first-child{white-space:nowrap}
+table.issues td,table.issues th{padding-left:var(--sp-2);vertical-align:middle}
+table.issues tr.row-err td{background:color-mix(in srgb,var(--error) 6%,var(--bg))}
+table.issues tr.row-warn td{background:color-mix(in srgb,var(--warn) 6%,var(--bg))}
+
+/* ---------- callouts: info (accent) and warning */
+.callout{padding:var(--sp-3) var(--sp-4);border-left:var(--bw-mark) solid var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--bg));margin:0 0 var(--layout-gap);font-size:var(--fs-sm)}
+.callout.warn{border-left-color:var(--warn);color:var(--text);background:color-mix(in srgb,var(--warn) 12%,var(--bg))}
+.callout b{font-weight:600}
+
+/* ---------- summary: stat tiles and per-rule-set bars */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3)}
+.stat{padding:var(--sp-3) 14px;border:var(--bw-hair) solid var(--line);border-left-width:var(--bw-mark);border-radius:var(--r-md)}
+.stat b{display:block;font-family:var(--font-mono);font-size:var(--fs-xl);font-weight:600;line-height:var(--lh-tight)}
+.stat span{font-size:var(--fs-sm);color:var(--text)}
+.stat.err{border-left-color:var(--error);background:color-mix(in srgb,var(--error) 12%,var(--bg))}.stat.err b{color:var(--error)}
+.stat.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 12%,var(--bg))}.stat.warn b{color:var(--warn)}
+.stat.ok{border-left-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--bg))}.stat.ok b{color:var(--ok)}
+.sets{margin-top:var(--sp-4);display:grid;gap:var(--sp-2);font-size:var(--fs-sm)}
+.sets div{display:grid;grid-template-columns:150px 1fr 90px;gap:var(--sp-3);align-items:center}
+.sets small{color:var(--muted);text-align:right;font-family:var(--font-mono)}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--surface)}
+.bar i{display:block}.bar .e{background:var(--error)}.bar .w{background:var(--warn)}.bar .o{background:var(--ok)}
+
+/* ---------- lists of passed checks */
+.passed{list-style:none;padding:0;margin:0}
+.passed li{padding:6px 0;border-top:var(--bw-hair) solid var(--line)}
+.passed li:first-child{border-top:0}
+.passed li::before{content:"✓ ";color:var(--ok);font-weight:600}
+
+/* ---------- buttons */
+.actions-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:600 var(--fs-sm) var(--font-text);padding:var(--sp-2) 14px;border-radius:var(--r-md);border:var(--bw-hair) solid var(--accent);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--bg)}
+.btn.secondary{background:transparent;color:var(--text);border-color:var(--line)}
+
+/* ---------- colour legend, source quote */
+.legend div{display:flex;align-items:center;gap:10px}
+.legend i{width:16px;height:16px;border-radius:3px;border:var(--bw-hair) solid var(--line);flex:none}
+.legend code{color:var(--muted);font-size:var(--fs-xs);margin-left:auto}
+blockquote.source{margin:0}
+
+/* ---------- responsive */
+@media (max-width:820px){.grid{grid-template-columns:1fr}main{padding:var(--sp-4)}}
+@media (max-width:640px){.stats{grid-template-columns:1fr}.sets div{grid-template-columns:1fr}}

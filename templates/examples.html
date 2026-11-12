@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="band">
+  <h1>{{ p.h1 }}</h1>
+  <p class="brief">{{ p.brief }}</p>
+  <div class="chips"><span class="chip">CC0 1.0</span>{% for chip in rule_chips %}<span class="chip">{{ chip }}</span>{% endfor %}</div>
+</div>
+<div class="grid">
+<aside>
+  <div class="panel"><h2>{{ p.about_title }}</h2><div class="flush"><div class="kv">
+    <div><span>{{ p.about_target }}</span><span>{{ p.about_target_value }}</span></div>
+    <div><span>{{ p.about_syntax }}</span><span>{{ p.about_syntax_value }}</span></div>
+    <div><span>{{ p.about_generator }}</span><span class="mono">{{ manifest.generator }}</span></div>
+    <div><span>{{ p.about_licence }}</span><span>{{ p.about_licence_value | links }}</span></div>
+  </div></div></div>
+  <div class="panel"><h2>{{ p.checked_title }}</h2><div class="body">
+    <p>{{ p.checked_text }}</p>
+    <p>{{ p.source_text }} <a href="https://github.com/lintvoice/invoice-examples">lintvoice/invoice-examples</a></p>
+    <div class="actions-row"><a class="btn primary" href="{{ zip_href }}" download>{{ p.download_all }}</a></div>
+  </div></div>
+</aside>
+<article>
+  <div class="panel" id="valid"><h2>{{ p.valid_title }}<small>{{ valid.files.xml }}</small></h2><div class="body">
+    <p><span class="chip ok">{{ p.valid_chip }}</span> {{ valid.description[t.lang] }}</p>
+    <p class="files"><a href="{{ files_href }}{{ valid.files.xml }}" download>XML</a> · <a href="{{ files_href }}{{ valid.files.pdf }}" download>PDF</a></p>
+  </div></div>
+  <div class="panel" id="invalid"><h2>{{ p.invalid_title }}<small>{{ invalid | length }}</small></h2><div class="body">
+    <div class="table-wrap"><table>
+      <thead><tr>{% for col in p.cols %}<th>{{ col }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for e in invalid %}
+        <tr id="{{ e.id }}"><td class="mono">{{ e.id }}</td><td>{{ e.description[t.lang] }}</td><td class="mono rules">{% for rule in e.fires %}{{ rule }}{% if not loop.last %}<br>{% endif %}{% endfor %}</td><td class="files"><a href="{{ files_href }}{{ e.files.xml }}" download>XML</a> · <a href="{{ files_href }}{{ e.files.pdf }}" download>PDF</a></td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </div>
+  <p class="note">{{ p.pdf_note }}</p>
+  </div>
+</article>
+</div>
+{% endblock %}

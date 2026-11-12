@@ -1,0 +1,118 @@
+# Textes des pages en français. © 2026 AllGood Services SAS, tous droits réservés (voir LICENSE).
+
+lang = "fr"
+locale = "fr_FR"
+switch_label = "EN"
+switch_title = "English version"
+theme_dark = "Sombre"
+theme_light = "Clair"
+nav_label = "Principal"
+nav_examples = "Exemples"
+nav_github = "GitHub"
+cta = "Démarrer"
+footer_disclaimer = "lintvoice aide à vérifier vos factures électroniques. Il ne certifie pas leur conformité."
+footer_rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Textes et logo lintvoice © 2026 AllGood Services SAS."
+footer_legal = "Mentions légales"
+
+[home]
+title = "lintvoice : vérifier ses factures électroniques avec les règles officielles, hors ligne"
+description = "Validateur open source pour les factures électroniques CII, UBL et Factur-X. Il applique les règles officielles EN 16931, Factur-X et BR-FR, hors ligne."
+h1 = "Vérifiez vos factures électroniques avec les règles officielles, hors ligne"
+brief = "lintvoice est un validateur open source en ligne de commande pour les factures CII, UBL et Factur-X. Il applique les règles officielles EN 16931, Factur-X et françaises BR-FR hors ligne : vos factures ne sont envoyées nulle part."
+glance_title = "En bref"
+glance = [
+    ["Licence", "[MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE)"],
+    ["Python", "3.10 ou plus"],
+    ["Lit", "CII, UBL, PDF Factur-X et ZUGFeRD"],
+    ["Réseau", "seulement pour installer les règles, une fois"],
+]
+exit_title = "Codes de sortie"
+exit_codes = [
+    ["0", "Aucune erreur"],
+    ["1", "Erreurs trouvées"],
+    ["2", "Un fichier n'a pas pu être lu"],
+    ["3", "Jeux de règles non installés"],
+    ["4", "Vérification incomplète : un jeu de règles n'a pas pu s'exécuter"],
+]
+links_title = "Liens"
+quick_title = "Démarrer"
+quick_hint = "Python 3.10+"
+quick_code = """uvx lintvoice rules install      # une fois : télécharge les jeux de règles figés
+uvx lintvoice check facture.pdf
+uvx lintvoice check factures/ --format json"""
+quick_note = "Ou pip install lintvoice. Les jeux de règles sont téléchargés une seule fois depuis leurs sources officielles, figés à une version exacte (une empreinte SHA-256 ou un commit git) ; ensuite, chaque vérification se fait hors ligne."
+output_title = "À quoi ressemble un rapport"
+output_hint = "lintvoice check facture.pdf"
+output_note = "Les constats sont regroupés par règle. Les messages BR-FR sont le texte officiel publié par le FNFE-MPE ; lintvoice affiche le reste en anglais."
+rules_title = "Les règles appliquées"
+rules_head = ["Jeu de règles", "Version", "Publié par", "Appliqué à"]
+rules_rows = [
+    ["EN 16931", "1.3.17", "CEN, via ConnectingEurope", "toutes les factures CII et UBL"],
+    ["Règles des profils Factur-X", "1.09.2", "FNFE-MPE", "les PDF Factur-X (BASIC WL, EN 16931, EXTENDED)"],
+    ["BR-FR", "1.4.0.04", "FNFE-MPE (France_RFE)", "les factures dont le vendeur est en France"],
+    ["Schémas XML", "CII D22B, Factur-X 1.09.2, UBL 2.1", "UN/CEFACT, FNFE-MPE, OASIS", "toutes les factures"],
+]
+not_checked_title = "Pas encore vérifié"
+not_checked = [
+    "La validation PDF/A-3 des PDF Factur-X.",
+    "Les règles XRechnung et Peppol BIS : ces factures passent EN 16931 seulement, et le rapport le signale.",
+    "Les règles des profils Factur-X MINIMUM et BASIC : France_RFE 1.4.0.04 ne les fournit pas.",
+]
+examples_title = "Factures d'exemple"
+examples_text = "92 factures Factur-X françaises : une valide, et 91 variantes invalides qui échouent chacune à une règle nommée. Chacune est vérifiée avec les règles officielles. Domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/))."
+examples_link = "Voir les exemples"
+
+[examples]
+title = "Factures électroniques d'exemple, valides et invalides (Factur-X, CII)"
+description = "92 factures Factur-X EN 16931 françaises pour tester vos outils : une valide, et 91 variantes invalides qui échouent chacune à une règle EN 16931 ou BR-FR nommée. XML et PDF, domaine public."
+h1 = "Factures électroniques d'exemple, valides et invalides"
+brief = "92 factures Factur-X françaises, profil EN 16931 : une valide, et 91 variantes invalides qui échouent chacune à une règle nommée. Pour tester un logiciel de facturation ou un validateur."
+about_title = "À propos de ces fichiers"
+about_target = "Cible"
+about_target_value = "France (fr)"
+about_syntax = "Syntaxe"
+about_syntax_value = "CII, en XML et dans un PDF"
+about_generator = "Générateur"
+about_licence = "Licence"
+about_licence_value = "[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/), domaine public"
+download_all = "Tout télécharger (zip)"
+checked_title = "Comment ils sont vérifiés"
+checked_text = "Par les règles officielles seules, pas par lintvoice : le schéma Factur-X et trois jeux Schematron. Un fichier valide les passe tous ; un fichier invalide échoue exactement aux règles indiquées en regard."
+source_text = "Générateur et code source :"
+valid_title = "La facture valide"
+valid_chip = "valide"
+valid_text = "Passe EN 16931, les règles du profil Factur-X EN 16931 et BR-FR."
+invalid_title = "Factures invalides"
+invalid_chip = "invalide"
+cols = ["Exemple", "Ce qui ne va pas", "Règles en échec", "Fichiers"]
+pdf_note = "Les PDF contiennent le XML sous le nom factur-x.xml. Ils ne sont pas PDF/A-3 : ils servent à tester l'extraction du XML et les règles XML."
+
+[legal]
+title = "Mentions légales"
+description = "Éditeur, hébergeur, confidentialité et licences de lintvoice.com."
+h1 = "Mentions légales"
+publisher_title = "Éditeur"
+registry_label = "informations d'immatriculation"
+publisher_labels = ["Société", "Forme juridique", "Siège social", "Immatriculation", "N° de TVA intracommunautaire", "Directeur de la publication", "E-mail", "Téléphone"]
+host_title = "Hébergeur"
+privacy_title = "Confidentialité"
+privacy = [
+    "Ce site ne dépose aucun cookie et n'utilise ni outil de mesure d'audience ni ressource tierce : polices et images sont servies depuis lintvoice.com.",
+    "Le thème clair ou sombre que vous choisissez est enregistré dans votre navigateur seulement (localStorage).",
+    "L'hébergeur traite des données techniques de connexion, comme les adresses IP, pour servir les pages et protéger le site ([politique de confidentialité de Cloudflare](https://www.cloudflare.com/privacypolicy/)).",
+]
+ip_title = "Licences et marque"
+ip = [
+    "Le code de ce site est sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE) ; ses textes et le logo lintvoice sont © AllGood Services SAS, tous droits réservés. L'outil lintvoice est lui aussi sous [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE).",
+    "Les factures d'exemple sont dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). Les textes de règles cités viennent de leurs éditeurs, sous leurs propres licences.",
+    "Le code source de ce site est public, pour que chacun puisse vérifier ce qu'il fait : [github.com/lintvoice/website](https://github.com/lintvoice/website).",
+    "Les polices sont IBM Plex, sous [SIL Open Font License 1.1](https://openfontlicense.org/).",
+    "lintvoice est une marque déposée par AllGood Services SAS.",
+]
+
+[notfound]
+description = "Cette page de lintvoice.com n'existe pas."
+title = "Page introuvable"
+h1 = "Page introuvable"
+text = "Cette page n'existe pas, ou pas encore."
+back = "Retour à l'accueil"

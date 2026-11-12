@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="band"><h1>{{ p.h1 }}</h1></div>
+<div class="grid">
+<aside>
+  <div class="panel"><h2>{{ p.host_title }}</h2><div class="body"><p>{{ site.legal.host }}<br>{{ site.legal.host_details }}<br><a href="{{ site.legal.host_url }}">{{ site.legal.host_url | replace("https://www.", "") | trim("/") }}</a></p></div></div>
+</aside>
+<article>
+  <div class="panel"><h2>{{ p.publisher_title }}</h2><div class="flush"><div class="kv">
+    {% for label, key in publisher_rows %}<div><span>{{ label }}</span><span>{% if key == "publisher" %}{{ site.legal.publisher }} (<a href="{{ site.legal.publisher_url }}">{{ p.registry_label }}</a>){% elif key == "contact" %}<a href="mailto:{{ site.legal.contact }}">{{ site.legal.contact }}</a>{% elif key == "phone" %}<a href="tel:{{ site.legal.phone | replace(" ", "") }}">{{ site.legal.phone }}</a>{% else %}{{ site.legal[key] }}{% endif %}</span></div>{% endfor %}
+  </div></div></div>
+  <div class="panel"><h2>{{ p.privacy_title }}</h2><div class="body"><ul>{% for item in p.privacy %}<li>{{ item | links }}</li>{% endfor %}</ul></div></div>
+  <div class="panel"><h2>{{ p.ip_title }}</h2><div class="body"><ul>{% for item in p.ip %}<li>{{ item | links }}</li>{% endfor %}</ul></div></div>
+</article>
+</div>
+{% endblock %}

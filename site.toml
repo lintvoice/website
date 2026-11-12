@@ -1,0 +1,25 @@
+# Site settings. The legal block fills the legal notice that French law requires for a company's website:
+# LCEN art. 6 (https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000044067469); list of mentions for a
+# company: https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/mentions-sur-votre-site-internet-les-obligations-respecter
+# `python build.py --strict` refuses any value still set to "TODO", so the site cannot go live with a gap.
+
+base_url = "https://lintvoice.com"
+
+[rule_sets]
+en16931 = "1.3.17"
+facturx = "1.09.2"
+brfr = "1.4.0.04"
+
+[legal]
+publisher = "ALLGOOD SERVICES"
+publisher_url = "https://annuaire-entreprises.data.gouv.fr/entreprise/allgood-services-948937321"   # official company directory
+legal_form = "SAS au capital fixe de 4 000,00 €"
+address = "5 rue Felix Petit, 74000 Annecy"        # head office (SIRENE directory, 2026-11-06)
+registration = "RCS Annecy 948 937 321"            # SIREN 948 937 321, SIRET 948 937 321 00016
+vat = "FR06 948 937 321"
+director = "Nicolas Bontoux"                       # publication director
+contact = "hello@lintvoice.com"
+phone = "+33 4 58 10 61 69"                       # required for a company (LCEN art. 6; Bercy's list)
+host_url = "https://www.cloudflare.com/"
+host = "Cloudflare, Inc."
+host_details = "101 Townsend Street, San Francisco, CA 94107, United States. +1 888 993 5273"   # SEC 10-K FY2025
