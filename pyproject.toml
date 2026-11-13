@@ -5,7 +5,7 @@ description = "The lintvoice.com website: a static site built from templates, te
 requires-python = ">=3.13"
 dependencies = [
     "jinja2>=3.1.6",
-    "invoice-examples",
+    "invoice-examples==0.1.0",  # the gallery is generated at this exact version
 ]
 
 [dependency-groups]
@@ -13,10 +13,6 @@ dev = ["pytest>=8.4"]
 
 [tool.uv]
 package = false
-
-[tool.uv.sources]
-# Local sibling repo until invoice-examples is published on PyPI; then a pinned version.
-invoice-examples = { path = "../invoice-examples", editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
