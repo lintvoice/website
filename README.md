@@ -38,7 +38,7 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 | `templates/` | Jinja templates, code only (no prose) |
 | `content/en.toml`, `content/fr.toml` | Every text of the site, one file per language |
 | `site.toml` | Base URL, rule set versions, legal notice |
-| `wrangler.jsonc` | Cloudflare Workers: where the built site is, and the 404 page |
+| `wrangler.jsonc` | Cloudflare Workers: where the built site is, the 404 page, and lintvoice.com as its only address |
 | `static/` | Styles (`tokens.css`, `components.css`, `site.css`), the IBM Plex fonts and the logo |
 | `tests/` | Checks on the built site |
 

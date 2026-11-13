@@ -1,8 +1,12 @@
 // Cloudflare Workers serves the site as static assets: the dist/ folder that build.py writes.
 // Build and deploy settings live in the Cloudflare dashboard (README, "Deployment").
+// The site has one public address, lintvoice.com, attached in the dashboard:
+// no workers.dev address and no per-version preview addresses.
 {
   "name": "lintvoice",
   "compatibility_date": "2026-11-13",
+  "workers_dev": false,
+  "preview_urls": false,
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
