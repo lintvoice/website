@@ -1,0 +1,11 @@
+// Cloudflare Workers serves the site as static assets: the dist/ folder that build.py writes.
+// Build and deploy settings live in the Cloudflare dashboard (README, "Deployment").
+{
+  "name": "lintvoice",
+  "compatibility_date": "2026-11-13",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

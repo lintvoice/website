@@ -20,13 +20,13 @@ uv run pytest                          # links, languages, gallery, wording, rep
 
 ## Deployment
 
-Cloudflare Pages builds this repo on every push to `main`, through its Git integration (set up in the Cloudflare dashboard):
+Cloudflare Workers builds and deploys this repo on every push to `main`, through its Git integration (Workers Builds, set up in the Cloudflare dashboard). The site is served as static assets: `wrangler.jsonc` points to `dist/`, and `dist/404.html` answers unknown paths.
 
 | Setting | Value |
 | --- | --- |
 | Build command | `pip install uv==0.13.5 && uv run --frozen python build.py --strict` |
-| Build output directory | `dist` |
-| Environment variable | `PYTHON_VERSION=3.13` |
+| Deploy command | `npx wrangler deploy` (Cloudflare's default) |
+| Build variable | `PYTHON_VERSION=3.13` |
 
 `--strict` refuses a legal notice still marked `TODO` in `site.toml`, so a deployment cannot go out with a gap. The tests run in GitHub Actions (`.github/workflows/ci.yml`).
 
@@ -38,6 +38,7 @@ Cloudflare Pages builds this repo on every push to `main`, through its Git integ
 | `templates/` | Jinja templates, code only (no prose) |
 | `content/en.toml`, `content/fr.toml` | Every text of the site, one file per language |
 | `site.toml` | Base URL, rule set versions, legal notice |
+| `wrangler.jsonc` | Cloudflare Workers: where the built site is, and the 404 page |
 | `static/` | Styles (`tokens.css`, `components.css`, `site.css`), the IBM Plex fonts and the logo |
 | `tests/` | Checks on the built site |
 
