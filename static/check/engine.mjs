@@ -211,14 +211,30 @@ function clean(text) {
   return text.replace(/^BR-FR[A-Z]*-[0-9A-Z]+\/([A-Z0-9-]+)\s*:\s*/, "$1: ");
 }
 
+// Downloads are kept for the next checks; a failed one is forgotten, so that a passing network error does not fail
+// every later check in the same visit.
+function cached(cache, key, load) {
+  if (!cache.has(key)) {
+    const pending = load();
+    pending.catch(() => cache.delete(key));
+    cache.set(key, pending);
+  }
+  return cache.get(key);
+}
+
+async function download(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  return r;
+}
+
 const fileCache = new Map();
 async function fetchText(path) {
-  if (!fileCache.has(path)) fileCache.set(path, fetch(new URL(path, base)).then((r) => r.text()));
-  return fileCache.get(path);
+  return cached(fileCache, path, () => download(new URL(path, base)).then((r) => r.text()));
 }
 
 async function runXsd(set, d) {
-  manifest ??= await (await fetch(new URL("xsd/manifest.json", base))).json();
+  manifest ??= await (await download(new URL("xsd/manifest.json", base))).json();
   const files = manifest[set.main];
   const preload = await Promise.all(files.map(async (f) => ({ fileName: f, contents: await fetchText(`xsd/${f}`) })));
   const main = preload.find((f) => f.fileName === set.main);
@@ -242,11 +258,8 @@ async function runXsd(set, d) {
 const stylesheets = new Map();
 async function runSchematron(set, d) {
   // Each compiled rule set is fetched and parsed once, then reused for every file.
-  if (!stylesheets.has(set.sef)) {
-    const url = new URL(`sef/${set.sef}.sef.json`, base).href;
-    stylesheets.set(set.sef, fetch(url).then((r) => r.json()).then((json) => ({ json, url })));
-  }
-  const { json, url } = await stylesheets.get(set.sef);
+  const url = new URL(`sef/${set.sef}.sef.json`, base).href;
+  const json = await cached(stylesheets, set.sef, () => download(url).then((r) => r.json()));
   const result = await SaxonJS.transform(
     { stylesheetInternal: json, stylesheetBaseURI: url, sourceText: d.xml, destination: "serialized" },
     "async",
