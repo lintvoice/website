@@ -319,8 +319,11 @@ export async function check(name, bytes) {
   for (const set of sets) {
     const t0 = performance.now();
     let found;
+    const run = () => (set.kind === "xsd" ? runXsd(set, d) : runSchematron(set, d));
     try {
-      found = set.kind === "xsd" ? await runXsd(set, d) : await runSchematron(set, d);
+      // A rule set that fails is tried once more (a passing network or browser error) before the check is
+      // reported as incomplete.
+      found = await run().catch(() => run());
     } catch (e) {
       notRun.push({ rule_set: set.id, name: set.name, error: String(e.message || e).split(/\s+/).join(" ") });
       continue;
