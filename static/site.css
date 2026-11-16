@@ -169,13 +169,16 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .analysis{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,430px);gap:var(--sp-8);align-items:start}
 .findings-col>:first-child{margin-top:0}
 .result h2{font-size:var(--fs-xl);margin:var(--sp-8) 0 var(--sp-2);line-height:var(--lh-tight)}
-.findings-col>h2:first-child,.preview-col>h2:first-child{margin-top:0}
+.findings-col>h2:first-child{margin-top:0}
 .tally.v-err{color:var(--error)}.tally.v-ok{color:var(--ok)}.tally.v-warn{color:var(--warn)}
 .ok-text{margin:0 0 var(--sp-2)}
 .context{margin:0 0 var(--sp-5)}
 .context p{margin:0 0 var(--sp-1)}
 .context .rules{font-size:var(--fs-sm);color:var(--muted)}
-.col-sub{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-4)}
+/* the data detected: secondary, so in its own panel, with a smaller title (site principles: side column) */
+.preview-col{background:var(--surface);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5) var(--sp-5)}
+.result .preview-col>h2{font-size:var(--fs-lg);margin:0 0 var(--sp-1)}
+.col-sub{font-size:var(--fs-xs);color:var(--muted);margin:0 0 var(--sp-4)}
 
 /* the verdict: one line, the details carry the weight */
 .verdict-line{border-left:var(--bw-mark) solid var(--line);padding:var(--sp-2) var(--sp-4);background:var(--surface);border-radius:0 var(--r-md) var(--r-md) 0}
