@@ -186,7 +186,7 @@ drop_formats = "PDF Factur-X, XML CII ou UBL"
 try_label = "Pas de facture sous la main ? Essayez avec"
 try_valid = "une facture sans erreur"
 try_invalid = "une facture avec une erreur"
-engine_note = "Le [code de cette page](https://github.com/lintvoice/website) est ouvert, donc chacun peut vérifier que la facture ne quitte pas l'ordinateur. La vérification utilise les mêmes fichiers de règles officiels que l'outil en ligne de commande lintvoice. Elle tourne avec SaxonJS (licence Saxonica, gratuit mais pas open source), pdf.js et libxml2. Leurs licences et leurs sources sont dans les [mentions](/static/check/NOTICES.txt)."
+engine_note = "Le code de cette page est [public sur GitHub](https://github.com/lintvoice/website), donc chacun peut vérifier que la facture ne quitte pas l'ordinateur. La vérification utilise les mêmes fichiers de règles officiels que l'outil en ligne de commande lintvoice. Elle tourne avec SaxonJS (licence Saxonica, gratuit mais pas open source), pdf.js et libxml2. Leurs licences et leurs sources sont dans les [mentions](/static/check/NOTICES.txt)."
 
 [check.ui]
 checking = "Vérification en cours…"
