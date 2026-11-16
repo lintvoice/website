@@ -3,11 +3,13 @@
     uv run python build.py                 # into dist/
     uv run python build.py --strict        # the same, but refuses a legal notice still marked TODO
     uv run python build.py --rules ../invoice-rules  # the rule pages from a local checkout, instead of the pinned commit
+    uv run python build.py --no-check      # without the in-browser check page, which needs Node to build
     python -m http.server -d dist 8000     # preview at http://localhost:8000
 
 Pages come from templates/ and the texts in content/{en,fr}.toml. The examples gallery runs the
 invoice-examples generator at the version this project pins, so the files served are the ones its tests check.
 The rule pages come from the lintvoice/invoice-rules repository at the commit pinned in site.toml, fetched with git.
+The check page runs the rule files of the lintvoice version this project pins, compiled for the browser (checkassets.py).
 """
 
 import argparse
@@ -21,6 +23,7 @@ import tomllib
 import zipfile
 from pathlib import Path
 
+import checkassets
 import rulepages
 from invoice_examples import cli as examples_cli
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
@@ -108,10 +111,12 @@ CHECK_PATHS = {"en": "/check/", "fr": "/fr/verifier/"}
 
 
 def _check_assets(out, source, rules):
-    """The in-browser check: its compiled rule files, schemas and runtimes (vendor/, sef/, xsd/ under source), and
+    """The in-browser check: its compiled rule files, schemas and runtimes (vendor/, sef/, xsd/ under source), their
+    licences (licenses/, NOTICES.txt), and
     for each rule page its title, "in short" and address, so that an error leads to its page."""
-    for folder in ("vendor", "sef", "xsd"):
+    for folder in ("vendor", "sef", "xsd", "licenses"):
         shutil.copytree(Path(source) / folder, out / "static" / "check" / folder)
+    shutil.copy(Path(source) / "NOTICES.txt", out / "static" / "check")
     index = {
         r["id"]: {
             "title": {lang: r["pages"][lang]["title"] for lang in LANGS},
@@ -120,7 +125,9 @@ def _check_assets(out, source, rules):
             "terms": r["meta"].get("business_terms", []),
             # the page's own explanations, shown under the error on the check page itself
             "sections": {
-                lang: {key: str(r["pages"][lang]["sections"][key]["html"]) for key in ("checks", "causes", "fix", "why")}
+                lang: {
+                    key: str(r["pages"][lang]["sections"][key]["html"]) for key in ("checks", "causes", "fix", "why")
+                }
                 for lang in LANGS
             },
             "headings": {
@@ -130,7 +137,9 @@ def _check_assets(out, source, rules):
         }
         for r in rules
     }
-    (out / "static" / "check" / "rules.json").write_text(json.dumps(index, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+    (out / "static" / "check" / "rules.json").write_text(
+        json.dumps(index, ensure_ascii=False, sort_keys=True), encoding="utf-8"
+    )
 
 
 def build(out, strict=False, rules_dir=None, check_assets=None):
@@ -269,11 +278,16 @@ def main(argv=None):
     parser.add_argument("--out", default=str(ROOT / "dist"))
     parser.add_argument("--strict", action="store_true", help="refuse a legal notice still marked TODO")
     parser.add_argument("--rules", help="a local checkout of the rules repository, instead of the pinned commit")
-    parser.add_argument("--check-assets", help="the in-browser check's compiled rules, schemas and runtimes (vendor/, sef/, xsd/)")
+    parser.add_argument(
+        "--check-assets",
+        help="the in-browser check's compiled rules, schemas and runtimes (vendor/, sef/, xsd/), instead of building them",
+    )
+    parser.add_argument("--no-check", action="store_true", help="leave out the in-browser check page (no Node needed)")
     args = parser.parse_args(argv)
     try:
         rules_dir = args.rules or fetch_rules(load()[0]["rules_source"])
-        out = build(args.out, strict=args.strict, rules_dir=rules_dir, check_assets=args.check_assets)
+        check_assets = None if args.no_check else args.check_assets or checkassets.build()
+        out = build(args.out, strict=args.strict, rules_dir=rules_dir, check_assets=check_assets)
     except NotReady as e:
         print(f"build: {e}", file=sys.stderr)
         return 1

@@ -3,3 +3,5 @@ dist/
 __pycache__/
 *.pyc
 .rules-src/
+node_modules/
+.check-cache/

@@ -186,7 +186,7 @@ drop_formats = "Factur-X PDF, CII or UBL XML"
 try_label = "No invoice at hand? Try with"
 try_valid = "an invoice without errors"
 try_invalid = "an invoice with an error"
-engine_note = "The [code of this page](https://github.com/lintvoice/website) is open, so anyone can check that the invoice never leaves the computer. The check uses the same official rule files as the lintvoice command-line tool. It runs with SaxonJS (Saxonica licence, free but not open source), pdf.js and libxml2."
+engine_note = "The [code of this page](https://github.com/lintvoice/website) is open, so anyone can check that the invoice never leaves the computer. The check uses the same official rule files as the lintvoice command-line tool. It runs with SaxonJS (Saxonica licence, free but not open source), pdf.js and libxml2. Their licences and sources are in the [notices](/static/check/NOTICES.txt)."
 
 [check.ui]
 checking = "Checking…"

@@ -29,13 +29,14 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 | Deploy command | `npx wrangler deploy` (Cloudflare's default) |
 | Build variable | `PYTHON_VERSION=3.13` |
 
-`--strict` refuses a legal notice still marked `TODO` in `site.toml`, so a deployment cannot go out with a gap. The tests run in GitHub Actions (`.github/workflows/ci.yml`).
+`--strict` refuses a legal notice still marked `TODO` in `site.toml`, so a deployment cannot go out with a gap. The build also compiles the check page's rule files with Node (`npm ci` from `package-lock.json`); `--no-check` leaves that page out. The tests run in GitHub Actions (`.github/workflows/ci.yml`).
 
 ## Layout
 
 | Path | What |
 | --- | --- |
 | `build.py` | The whole build: pages, examples, zip, sitemap |
+| `checkassets.py`, `package.json` | The check page's files, built at each deployment: the rule files of the pinned lintvoice version compiled for the browser (xslt3, Node), the schemas, SaxonJS, pdf.js and xmllint-wasm, with their licences (`/static/check/NOTICES.txt`) |
 | `rulepages.py` | The rule pages, read from the [lintvoice/invoice-rules](https://github.com/lintvoice/invoice-rules) repository at the commit pinned in `site.toml` |
 | `templates/` | Jinja templates, code only (no prose) |
 | `content/en.toml`, `content/fr.toml` | Every text of the site, one file per language |

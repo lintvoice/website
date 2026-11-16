@@ -1,0 +1,10 @@
+{
+  "name": "lintvoice-website-check",
+  "private": true,
+  "description": "Build-time tools for the in-browser check: xslt3 compiles the rule files, pdf.js and xmllint-wasm run in the page",
+  "devDependencies": {
+    "pdfjs-dist": "6.4.299",
+    "xmllint-wasm": "5.3.0",
+    "xslt3": "2.7.0"
+  }
+}

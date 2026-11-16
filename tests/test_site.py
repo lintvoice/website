@@ -14,6 +14,7 @@ import pytest
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 import build  # noqa: E402 (after the sys.path insert)
+import checkassets  # noqa: E402
 
 EXTERNAL = (
     "https://github.com/",
@@ -224,3 +225,11 @@ def test_external_links_carry_the_external_mark(dist):
         for kind, href in _page(dist, path).refs:
             if kind == "link" and not href.startswith(("/", "mailto:", "tel:")):
                 assert href.startswith("https://"), f"{path}: {href}"
+
+
+def test_the_check_page_asks_only_for_rule_files_the_build_compiles():
+    """engine.mjs names the compiled rule files it loads; checkassets.py compiles exactly those."""
+    engine = (ROOT / "static/check/engine.mjs").read_text(encoding="utf-8")
+    asked = set(re.findall(r'sef: "([a-z0-9-]+)"', engine))
+    asked |= {f"facturx-{p}" for p in ("basicwl", "en16931", "extended")}  # sef: `facturx-${d.profile}`
+    assert asked == set(checkassets.STYLESHEETS)

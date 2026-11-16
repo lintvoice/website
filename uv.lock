@@ -162,12 +162,27 @@ wheels = [
 ]
 
 [[package]]
+name = "lintvoice"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "lxml" },
+    { name = "pypdf" },
+    { name = "saxonche" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/12/81/3ea8771e777586f09d91522bc2a0062d1a7d95c825f941d56f396d9b054c/lintvoice-0.1.1.tar.gz", hash = "sha256:71a4935f22c1747ad0acf6d5ffb94550ef51cb1658dcffd063dc92925beb2993", size = 44887, upload-time = "2026-11-16T14:36:52.506Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/39/df/bd0efb8ade8c57c3b58f7f2870a57c1cd8cda7b11b3acdb5192cd14537f9/lintvoice-0.1.1-py3-none-any.whl", hash = "sha256:44e6dc44124fd8a50543f46b64b3d87113f42c66b25835a82f1c25350a85a730", size = 20380, upload-time = "2026-11-16T14:36:51.347Z" },
+]
+
+[[package]]
 name = "lintvoice-website"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [
     { name = "invoice-examples" },
     { name = "jinja2" },
+    { name = "lintvoice" },
     { name = "markdown-it-py" },
     { name = "pyyaml" },
 ]
@@ -181,6 +196,7 @@ dev = [
 requires-dist = [
     { name = "invoice-examples", specifier = "==0.2.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "lintvoice", specifier = "==0.1.1" },
     { name = "markdown-it-py", specifier = ">=4.2,<4.3" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]
@@ -560,4 +576,26 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/89/22/c18474be40b9bbb52fdb7051177d4d25f1ea59fada17eb181026411e93b1/reportlab-5.1.0.tar.gz", hash = "sha256:6878200464527e87672d19e9f7cfc6bb890e3a6931e74ac6a1a8d1754aa55671", size = 4109612, upload-time = "2026-10-22T07:26:43.307Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4a/3c/bf68d44f160b44685fc714f746a954c71d0091b3dc4fd3c8670154b44841/reportlab-5.1.0-py3-none-any.whl", hash = "sha256:59fdbaec5efe437095ad1d7292ec9a271c8ca2d3ec75e889c6e61400929b90df", size = 2018647, upload-time = "2026-10-22T07:26:40.754Z" },
+]
+
+[[package]]
+name = "saxonche"
+version = "13.1.0"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cf/3c/4407757e5c492e76656c53eb514acf654393b7041db8bde3fc9fc5626f22/saxonche-13.1.0-cp313-cp313-macosx_10_11_x86_64.whl", hash = "sha256:840d17a02d0bf78140a52d6eed0728edba37f44ffe612897a3dbaa0942d4dd18", size = 39281189, upload-time = "2026-10-15T15:02:16.788Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/1b/9fc90ee4fc203457e334a7fbadacee6cdd6f99e0f52b35adcf566b24db05/saxonche-13.1.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:9c75ffdc6143c4738fc5d24f6a5ae83efd5555443a5b53441d9b377c704ffb72", size = 37551940, upload-time = "2026-10-15T15:02:28.445Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/e4/d2d5e49b21e4859b5ca4cfe02728e2d89ea1edbd778f79e1abe17766d5e9/saxonche-13.1.0-cp313-cp313-manylinux_2_24_aarch64.whl", hash = "sha256:7689b772fc62b8db37dbbbac1c84233d5025b40d02bf1e2e764f6ff53927539e", size = 38273095, upload-time = "2026-10-15T15:02:36.804Z" },
+    { url = "https://files.pythonhosted.org/packages/63/48/95f0cc55cd296cb537a418dfae9b53a0db1cc51109664eeefa45ee9b481c/saxonche-13.1.0-cp313-cp313-manylinux_2_24_x86_64.whl", hash = "sha256:7a1858a0b31760f22e162f1292cf4a76e5e60f9852c4d13feabf4f91a9ddeee3", size = 38948912, upload-time = "2026-10-15T15:02:45.378Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/5f/77c9f3c8fbf8bebbb3a2b802e76b82960ef999be6d5f96c962430aaef964/saxonche-13.1.0-cp313-cp313-win_amd64.whl", hash = "sha256:92bb9d74e482a4fe3958d40fb05277df1d273a97c622f4ef893574621c6f7d8d", size = 38295702, upload-time = "2026-10-15T15:02:53.757Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/95/65aecfd4e1c69192fdcee09fcfd14851e24d4cc4bb0d05fb46e019800ac6/saxonche-13.1.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:c717cb75d2420fb79f8589e7e7ef6a74e238cb75f42742b88d2b007d0500e9f6", size = 37554386, upload-time = "2026-10-15T15:03:03.316Z" },
+    { url = "https://files.pythonhosted.org/packages/37/e3/43dbdcdc5652d357f7e31701094b6b22d06becf33d8ecd01c0bb65920478/saxonche-13.1.0-cp314-cp314-macosx_11_0_x86_64.whl", hash = "sha256:4cfafea52c868d61ff2f46e39b50e2e17195e33c07500fc01136fb9014834c81", size = 39277726, upload-time = "2026-10-15T15:03:12.272Z" },
+    { url = "https://files.pythonhosted.org/packages/53/c0/1ce0eb698a1f999447ab3bbc28a940513a1820d823e33a4ff542c77338c5/saxonche-13.1.0-cp314-cp314-manylinux_2_24_aarch64.whl", hash = "sha256:a50d9d88e98325b8fcdde4f91f601289e59fce63abb3afaacc86b190c8b38a58", size = 38263242, upload-time = "2026-10-15T15:03:20.54Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/b2/3573bc9ed292afefbb2608884e9f3125dbfa4dbcf71d7c8f95380c6ae473/saxonche-13.1.0-cp314-cp314-manylinux_2_24_x86_64.whl", hash = "sha256:f88027f2d4b315d16b8220e32163d4930f7103e6d06bda73f91864ab8d3c2441", size = 38927892, upload-time = "2026-10-15T15:03:29.453Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/2c/6f07ea6202b9323fd0f103b754c7e8a4d3a5a5ad8767561681dc9c04f00c/saxonche-13.1.0-cp314-cp314-win_amd64.whl", hash = "sha256:3c287924951c8128c2e7f8bddb94ea9038cb6829f0b5c50ca9606d7f03109143", size = 39130277, upload-time = "2026-10-15T15:03:37.525Z" },
+    { url = "https://files.pythonhosted.org/packages/22/b0/a89fbe6c3bbbe7aaf42fe56ca5a105c29c919bb57d539e3a841ea77af8cf/saxonche-13.1.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:5e31ec9f5402f32467f15f8661e7ff1046651e491b4f4617d031f9b0ac170457", size = 37572737, upload-time = "2026-10-15T15:03:45.914Z" },
+    { url = "https://files.pythonhosted.org/packages/93/2c/c93ffabdee47acb55e6b248b16d734d78f0a26ce5344f222be9c94beb374/saxonche-13.1.0-cp314-cp314t-macosx_11_0_x86_64.whl", hash = "sha256:70dfd770a243c89e0a726be64920534b0b30f433d7655fc0bac3acd4e5f253fc", size = 39312187, upload-time = "2026-10-15T15:03:54.318Z" },
+    { url = "https://files.pythonhosted.org/packages/43/0c/39c66a7ea71d2a8dfac38c7d87c8ce78d6e6ed6106c4ea950c905aa5b812/saxonche-13.1.0-cp314-cp314t-manylinux_2_24_aarch64.whl", hash = "sha256:701519d0456870015992f98361c5c22181378b8d325e82ec07de990ba5002e10", size = 38532604, upload-time = "2026-10-15T15:04:02.656Z" },
+    { url = "https://files.pythonhosted.org/packages/38/8a/ac8c9103a1fe5e0d72aacaaad59e8685b25ca871d0a4d66d1727fafca08b/saxonche-13.1.0-cp314-cp314t-manylinux_2_24_x86_64.whl", hash = "sha256:d18d32a69f0567509f09f979063b699819bacb2639fc8a96195e647e6d94ce8c", size = 39124819, upload-time = "2026-10-15T15:04:11.086Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/bb/a5367061e2acffb9eacd8e84d1bb5b5b581d8fb59cd18570cd5991776525/saxonche-13.1.0-cp314-cp314t-win_amd64.whl", hash = "sha256:72bccb70f05ba79d00bbbf3430455d2d667e706296c70d1e675ca1b740bac41c", size = 39189955, upload-time = "2026-10-15T15:04:20.07Z" },
 ]
