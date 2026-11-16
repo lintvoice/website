@@ -28,6 +28,7 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 | Build command | `pip install uv==0.13.5 && uv run --frozen python build.py --strict` |
 | Deploy command | `npx wrangler deploy` (Cloudflare's default) |
 | Build variable | `PYTHON_VERSION=3.13` |
+| Non-production branch builds | Off: only `main` is built and deployed; GitHub Actions tests the other branches |
 
 `--strict` refuses a legal notice still marked `TODO` in `site.toml`, so a deployment cannot go out with a gap. The build also compiles the check page's rule files with Node (`npm ci` from `package-lock.json`); `--no-check` leaves that page out. The tests run in GitHub Actions (`.github/workflows/ci.yml`).
 
