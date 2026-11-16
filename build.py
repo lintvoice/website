@@ -198,6 +198,7 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     for rule in rules:
         rule["diff"] = rulepages.example_diff(out / "examples" / "fr", rule["meta"])
         rule["example"] = rulepages.example_file(rule["meta"])
+        rule["valid"] = rulepages.example_valid(rule["meta"])
         paths = {lang: rulepages.href(rule["id"], lang) for lang in LANGS}
         for lang in LANGS:
             t, other = texts[lang], next(code for code in LANGS if code != lang)

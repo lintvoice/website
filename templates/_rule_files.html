@@ -1,7 +1,7 @@
 {% if rule.diff %}
 <div class="files-box">
   <div class="file-row"><span class="chip err">{{ t.rule.before }}</span><div class="btns"><a class="btn" href="{{ files_href }}{{ rule.example }}" download="{{ t.file_prefix }}-{{ rule.example.split("/")[-1][:-4] }}.xml">XML</a><a class="btn" href="{{ files_href }}{{ rule.example[:-4] }}.pdf" download="{{ t.file_prefix }}-{{ rule.example.split("/")[-1][:-4] }}.pdf">PDF Factur-X</a></div></div>
-  <div class="file-row"><span class="chip ok">{{ t.rule.after }}</span><div class="btns"><a class="btn" href="{{ files_href }}valid.xml" download="{{ t.file_prefix }}-{{ t.file_valid }}.xml">XML</a><a class="btn" href="{{ files_href }}valid.pdf" download="{{ t.file_prefix }}-{{ t.file_valid }}.pdf">PDF Factur-X</a></div></div>
+  <div class="file-row"><span class="chip ok">{{ t.rule.after }}</span><div class="btns">{% set ok_name = t.file_valid if rule.valid == "valid.xml" else rule.valid.split("/")[-1][:-4] ~ "-" ~ t.file_fixed %}<a class="btn" href="{{ files_href }}{{ rule.valid }}" download="{{ t.file_prefix }}-{{ ok_name }}.xml">XML</a><a class="btn" href="{{ files_href }}{{ rule.valid[:-4] }}.pdf" download="{{ t.file_prefix }}-{{ ok_name }}.pdf">PDF Factur-X</a></div></div>
   <p class="more"><a href="{{ links.examples }}#{{ rule.example.split("/")[-1][:-4] }}">{{ t.rule.gallery }}</a></p>
 </div>
 {% endif %}

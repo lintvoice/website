@@ -92,6 +92,13 @@ def example_file(meta):
     return invalid.split("/", 2)[2] if invalid else None
 
 
+def example_valid(meta):
+    """The passing counterpart's path inside the target's folder: valid.xml, or the same invoice without the
+    mistake (fixed/<name>.xml) when the failing example first adds something to the invoice."""
+    valid = (meta.get("examples") or {}).get("valid") or "examples/fr/valid.xml"
+    return valid.split("/", 2)[2]
+
+
 def example_diff(examples_dir, meta, context=2):
     """The change that makes the example invoice fail the rule, read from the two generated files: lines removed
     from the failing file (del) and added by the fix (add), with a little context. None when there is no example."""
@@ -100,7 +107,7 @@ def example_diff(examples_dir, meta, context=2):
     if not failing or not failing.is_file():
         return None
     before = failing.read_text(encoding="utf-8").splitlines()
-    after = (Path(examples_dir) / "valid.xml").read_text(encoding="utf-8").splitlines()
+    after = (Path(examples_dir) / example_valid(meta)).read_text(encoding="utf-8").splitlines()
     lines = []
     for line in difflib.unified_diff(before, after, n=context, lineterm=""):
         if line.startswith(("---", "+++")):

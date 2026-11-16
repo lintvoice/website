@@ -13,6 +13,7 @@ menu_label = "Menu"
 file_prefix = "facture-exemple"  # downloaded file names: facture-exemple-valide.pdf, facture-exemple-BR-CO-15.pdf
 file_valid = "valide"
 file_annotated = "annotee"
+file_fixed = "corrigee"
 nav_rules = "Règles de facturation"
 nav_github = "GitHub"
 cta = "Démarrer"
