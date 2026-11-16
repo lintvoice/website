@@ -140,8 +140,13 @@ def test_gallery_lists_every_example_with_its_files(dist):
             for f in e["files"].values():
                 assert build.FILES_HREF + f in links
                 assert (dist / "examples/fr" / f).exists()
+        if manifest.get("annotated"):  # the annotated invoice, featured on its own
+            assert build.FILES_HREF + manifest["annotated"]["pdf"] in links
+    annotated = 1 if manifest.get("annotated") else 0
     with zipfile.ZipFile(dist / build.ZIP_HREF.lstrip("/")) as z:
-        assert len(z.namelist()) == 2 * len(manifest["examples"]) + 1  # XML, PDF and the manifest
+        assert (
+            len(z.namelist()) == 2 * len(manifest["examples"]) + 1 + annotated
+        )  # XML, PDF, the manifest, annotated.pdf
 
 
 def test_wording_never_claims_certification(dist, texts):
