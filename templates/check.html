@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="band compact">
+  <h1>{{ p.h1 }}</h1>
+  <p class="brief"><strong>{{ t.rule.brief_label }}</strong> {{ p.brief }}</p>
+  <ul class="trust">{% for item in p.trust %}<li>✓ {{ item }}</li>{% endfor %}</ul>
+</div>
+<section class="check" id="check">
+  <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-formats">
+    <p class="drop-title">{{ p.drop_title }}</p>
+    <p class="drop-or">{{ p.drop_or }} <label class="btn primary" for="file">{{ p.drop_button }}</label></p>
+    <p class="drop-formats" id="drop-formats">{{ p.drop_formats }}</p>
+    <input type="file" id="file" accept=".pdf,.xml,application/pdf,application/xml,text/xml" hidden>
+  </div>
+  <p class="try">{{ p.try_label }}
+    <button type="button" class="link" data-example="valid.pdf">{{ p.try_valid }}</button> ·
+    <button type="button" class="link" data-example="invalid/BR-CO-15.pdf">{{ p.try_invalid }}</button>
+  </p>
+  <div id="result" class="result" aria-live="polite"></div>
+</section>
+<p class="foot standard">{{ p.engine_note | links }}</p>
+<script type="application/json" id="check-texts">{{ p.ui | tojson }}</script>
+<script src="/static/check/vendor/SaxonJS2.rt.js"></script>
+<script type="module" src="/static/check/ui.mjs"></script>
+{% endblock %}

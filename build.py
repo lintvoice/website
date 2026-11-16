@@ -104,15 +104,38 @@ def _write(out, path, html):
     target.write_text(html, encoding="utf-8")
 
 
-def build(out, strict=False, rules_dir=None):
+CHECK_PATHS = {"en": "/check/", "fr": "/fr/verifier/"}
+
+
+def _check_assets(out, source, rules):
+    """The in-browser check: its compiled rule files, schemas and runtimes (vendor/, sef/, xsd/ under source), and
+    for each rule page its title, "in short" and address, so that an error leads to its page."""
+    for folder in ("vendor", "sef", "xsd"):
+        shutil.copytree(Path(source) / folder, out / "static" / "check" / folder)
+    index = {
+        r["id"]: {
+            "title": {lang: r["pages"][lang]["title"] for lang in LANGS},
+            "brief": {lang: r["meta"]["brief"][lang] for lang in LANGS},
+            "href": {lang: rulepages.href(r["id"], lang) for lang in LANGS},
+        }
+        for r in rules
+    }
+    (out / "static" / "check" / "rules.json").write_text(json.dumps(index, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+
+
+def build(out, strict=False, rules_dir=None, check_assets=None):
     site, texts = load()
     rules = rulepages.load(rules_dir) if rules_dir else []
-    pages = dict(PAGES, rules=rulepages.PATHS) if rules else PAGES
+    pages = dict(PAGES, rules=rulepages.PATHS) if rules else dict(PAGES)
+    if check_assets:
+        pages["check"] = CHECK_PATHS
     if strict and missing_legal(site):
         raise NotReady("legal notice still marked TODO in site.toml: " + ", ".join(missing_legal(site)))
     out = Path(out)
     _prepare(out)
     _static(out)
+    if check_assets:
+        _check_assets(out, check_assets, rules)
     manifest = _examples(out)
     env = Environment(
         loader=FileSystemLoader(ROOT / "templates"),
@@ -236,10 +259,11 @@ def main(argv=None):
     parser.add_argument("--out", default=str(ROOT / "dist"))
     parser.add_argument("--strict", action="store_true", help="refuse a legal notice still marked TODO")
     parser.add_argument("--rules", help="a local checkout of the rules repository, instead of the pinned commit")
+    parser.add_argument("--check-assets", help="the in-browser check's compiled rules, schemas and runtimes (vendor/, sef/, xsd/)")
     args = parser.parse_args(argv)
     try:
         rules_dir = args.rules or fetch_rules(load()[0]["rules_source"])
-        out = build(args.out, strict=args.strict, rules_dir=rules_dir)
+        out = build(args.out, strict=args.strict, rules_dir=rules_dir, check_assets=args.check_assets)
     except NotReady as e:
         print(f"build: {e}", file=sys.stderr)
         return 1
