@@ -14,7 +14,7 @@ dependencies = [
 [dependency-groups]
 dev = ["pytest>=8.4"]
 parity = [
-    "playwright==1.64.0",
+    "playwright==1.65.0",
 ]
 
 [tool.uv]

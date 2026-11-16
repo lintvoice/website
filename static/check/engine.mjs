@@ -56,9 +56,18 @@ async function guardAttachments(bytes) {
   for (let m; (m = objects.exec(text)); ) {
     const dict = m[1];
     if (!/\/Type\s*\/EmbeddedFile\b/.test(dict)) continue;
+    // The stream's bytes: its /Length when the PDF gives it as a number, else up to "endstream" without the line end
+    // before it. Those extra bytes matter: Firefox stops inflating at once on input after the end of the data.
     const start = m.index + m[0].length;
-    const end = text.indexOf("endstream", start);
-    const data = bytes.subarray(start, end === -1 ? bytes.length : end);
+    const length = [...dict.matchAll(/\/Length\s+(\d+)(\s+\d+\s+R)?/g)].at(-1);
+    let end;
+    if (length && !length[2]) end = Math.min(start + Number(length[1]), bytes.length);
+    else {
+      end = text.indexOf("endstream", start);
+      if (end === -1) end = bytes.length;
+      while (end > start && (bytes[end - 1] === 0x0a || bytes[end - 1] === 0x0d)) end--;
+    }
+    const data = bytes.subarray(start, end);
     let size = 0;
     if (/\/FlateDecode\b/.test(dict)) {
       const reader = new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate")).getReader();
