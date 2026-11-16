@@ -160,13 +160,22 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .busy .drop{opacity:.5;pointer-events:none}
 
 /* after a check: the file bar replaces the intro and the drop zone */
-.filebar{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3) var(--sp-4);flex-wrap:wrap;padding:var(--sp-2) 0 var(--sp-4);border-bottom:var(--bw-hair) solid var(--line);margin-bottom:var(--sp-6)}
+.filebar{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3) var(--sp-4);padding:var(--sp-3) 0;margin-bottom:var(--sp-6);position:sticky;top:var(--bar-top,0);z-index:9;
+  border-image:linear-gradient(to top,var(--line) 1px,var(--bg) 1px) fill 0/0/0 100vmax}
+.filebar .btn{white-space:nowrap}
 .filebar p{margin:0;display:flex;gap:var(--sp-1) var(--sp-3);align-items:baseline;flex-wrap:wrap;min-width:0}
 .filebar .file{font-family:var(--font-mono);font-weight:600;overflow-wrap:anywhere}
 .filebar .what{font-size:var(--fs-sm);color:var(--muted)}
 .analysis{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,430px);gap:var(--sp-8);align-items:start}
 .findings-col>:first-child{margin-top:0}
-.result h2{font-size:var(--fs-lg);margin:var(--sp-6) 0 var(--sp-3)}
+.result h2{font-size:var(--fs-xl);margin:var(--sp-8) 0 var(--sp-2);line-height:var(--lh-tight)}
+.findings-col>h2:first-child,.preview-col>h2:first-child{margin-top:0}
+.tally.v-err{color:var(--error)}.tally.v-ok{color:var(--ok)}.tally.v-warn{color:var(--warn)}
+.ok-text{margin:0 0 var(--sp-2)}
+.context{margin:0 0 var(--sp-5)}
+.context p{margin:0 0 var(--sp-1)}
+.context .rules{font-size:var(--fs-sm);color:var(--muted)}
+.col-sub{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-4)}
 
 /* the verdict: one line, the details carry the weight */
 .verdict-line{border-left:var(--bw-mark) solid var(--line);padding:var(--sp-2) var(--sp-4);background:var(--surface);border-radius:0 var(--r-md) var(--r-md) 0}
@@ -177,20 +186,11 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .verdict-line.v-warn{border-left-color:var(--warn)}.verdict-line.v-warn strong{color:var(--warn)}
 .verdict-line p{color:var(--muted)}
 
-/* the data detected */
-.detected dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-3) var(--sp-6);margin:0;padding:var(--sp-4);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md)}
-.detected dl>div{min-width:0}
-.detected dl .full{grid-column:1/-1}
-.detected dt{font-size:var(--fs-xs);color:var(--muted)}
-.detected dd{margin:0;font-weight:600;overflow-wrap:anywhere}
-.detected dd.amount{font-size:var(--fs-lg)}
-.detected .sub,.detected .full dd{display:block;font-weight:400;font-size:var(--fs-sm);color:var(--muted)}
-.mono{font-family:var(--font-mono)}
 .absent{color:var(--error);font-style:normal;font-weight:400}
 
 /* one card per error: the values in the invoice, then how to fix it */
 .errors{list-style:none;padding:0;margin:0;display:grid;gap:var(--sp-4)}
-.card{border:var(--bw-hair) solid var(--line);border-left:var(--bw-mark) solid var(--error);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);scroll-margin-top:96px}
+.card{border:var(--bw-hair) solid var(--line);border-left:var(--bw-mark) solid var(--error);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);scroll-margin-top:calc(var(--bars,80px) + var(--sp-4))}
 .card.sev-warn{border-left-color:var(--warn)}
 .card .head{display:flex;gap:var(--sp-3);align-items:center;margin:0 0 var(--sp-1)}
 .card .idm{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--muted)}
@@ -220,11 +220,9 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .rule-text h4{font-size:var(--fs-sm);margin:0 0 var(--sp-1)}
 .result .official{margin:var(--sp-2) 0;font-size:var(--fs-sm)}
 .result .where code{margin-right:var(--sp-2)}
-.notes{font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-6)}
 
 /* the invoice preview: laid out like our example invoices, the fields in error circled and numbered */
-.preview-col{position:sticky;top:76px;max-height:calc(100vh - 92px);overflow:auto}
-.col-title{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-2)}
+.preview-col{position:sticky;top:calc(var(--bars,80px) + var(--sp-4));max-height:calc(100vh - var(--bars,80px) - var(--sp-8));overflow:auto}
 .invoice{background:var(--bg);border:var(--bw-hair) solid var(--line);border-top:var(--bw-mark) solid var(--accent);border-radius:var(--r-sm);padding:var(--sp-5);font-size:var(--fs-xs);line-height:1.45}
 .invoice p{margin:0}
 .inv-top{display:flex;justify-content:space-between;gap:var(--sp-4);margin-bottom:var(--sp-4)}
@@ -249,13 +247,16 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .inv-others div{display:flex;justify-content:space-between;gap:var(--sp-3)}
 .inv-others dt{color:var(--muted)}
 .inv-others dd{margin:0}
-.inv-note{color:var(--muted);margin-top:var(--sp-4)!important;font-style:italic}
 .invoice .bad{outline:2px solid var(--error);outline-offset:1px;padding:0 2px;border-radius:2px;background:color-mix(in srgb,var(--error) 10%,transparent);cursor:pointer}
 .invoice .bad::before{content:attr(data-mark);display:inline-block;vertical-align:1px;min-width:1.5em;height:1.5em;padding:0 .25em;margin-right:4px;border-radius:var(--r-pill);background:var(--error);color:var(--bg);font-size:10px;font-weight:600;font-style:normal;font-family:var(--font-text);line-height:1.5em;text-align:center}
 
 @media (max-width:820px){
   .analysis{grid-template-columns:1fr}
   .preview-col{position:static;max-height:none;overflow:visible}
-  .detected dl{grid-template-columns:1fr}
   .observed dt{min-width:0}
+}
+@media (max-width:640px){
+  .filebar p{flex-wrap:nowrap;overflow:hidden}
+  .filebar .file{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .filebar .what{display:none}
 }

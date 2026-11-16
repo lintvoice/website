@@ -83,7 +83,6 @@ function preview(inv, marks) {
   for (const bt of ["BT-129", "BT-146", "BT-152", "BT-131", "BT-153"]) if (inv.lines.length) laid.add(bt);
   const others = [...marks.keys()].filter((bt) => !laid.has(bt) && bt in t);
   return `${body}${others.length ? `<dl class="inv-others"><p class="who">${esc(T.other_terms)}</p>${others.map((bt) => `<div><dt>${esc(label(bt))}</dt><dd>${field(bt, t[bt])}</dd></div>`).join("")}</dl>` : ""}
-    <p class="inv-note">${esc(T.preview_note)}</p>
   </div>`;
 }
 
@@ -169,28 +168,32 @@ function render(name, r, pages) {
     const terms = calc ? [calc.result, ...calc.parts.map(([, , bt]) => bt)] : termsOf(g, pages);
     for (const bt of terms) marks.set(bt, [...(marks.get(bt) || []), i + 1]);
   });
+  // the count of errors as the title, then what the check applied, then one card per error
   const n = r.summary.rules_failed;
-  const verdict = n === 0
-    ? `<div class="verdict-line v-ok"><p><strong>✓ ${esc(T.verdict_ok)}</strong> ${esc(T.verdict_ok_text)}</p></div>`
-    : `<div class="verdict-line v-err"><p><strong>× ${esc(fill(n === 1 ? T.verdict_one : T.verdict_many, { n }))}</strong>${warnings.length ? ` ${esc(fill(warnings.length === 1 ? T.verdict_warn_one : T.verdict_warn_many, { n: warnings.length }))}` : ""}</p></div>`;
-  const t = inv.terms;
-  const party = (nm, siren) => `${show(nm, t[nm])}${t[siren] || marks.has(siren) ? `<span class="sub">${esc(idLabel(inv, siren))} <span class="mono">${show(siren, t[siren])}</span></span>` : ""}`;
-  const detected = `<section class="detected"><h2>${esc(T.detected_title)}</h2><dl>
-    <div><dt>${esc(T.doc_types[t["BT-3"]] || T.doc_types["380"])}</dt><dd><span class="mono">${show("BT-1", t["BT-1"])}</span><span class="sub">${esc(label("BT-2"))} ${show("BT-2", t["BT-2"])}</span></dd></div>
-    <div><dt>${esc(label("BT-112"))}</dt><dd class="amount">${show("BT-112", t["BT-112"])}</dd></div>
-    <div><dt>${esc(T.seller)}</dt><dd>${party("BT-27", "BT-30")}</dd></div>
-    <div><dt>${esc(T.buyer)}</dt><dd>${party("BT-44", "BT-47")}</dd></div>
-    <div class="full"><dt>${esc(T.fact_rules)}</dt><dd>${r.rule_sets.map((s) => esc(s.name)).join(" · ")}</dd></div></dl></section>`;
-  const cards = (list, offset, title) => (list.length ? `<h2>${esc(title)}</h2><ol class="errors">${list.map((g, i) => errorCard(g, offset + i + 1, inv, pages)).join("")}</ol>` : "");
+  const title = n === 0
+    ? `<h2 class="tally v-ok">✓ ${esc(T.verdict_ok)}</h2><p class="ok-text">${esc(T.verdict_ok_text)}</p>`
+    : `<h2 class="tally v-err">${esc(fill(n === 1 ? T.verdict_one : T.verdict_many, { n }))}</h2>`;
   const said = r.notes.map(note).filter(Boolean);
-  const notes = said.length || r.not_run.length
-    ? `<p class="notes">${said.map(esc).join(" ")}${r.not_run.length ? ` ${esc(T.not_run)} ${r.not_run.map((x) => esc(x.name)).join(", ")}` : ""}</p>`
+  const context = `<div class="context">${said.length ? `<p>${said.map(esc).join(" ")}</p>` : ""}
+    <p class="rules">${esc(fill(T.rules_line, { names: r.rule_sets.map((x) => x.name).join(" · ") }))}${r.not_run.length ? ` ${esc(T.not_run)} ${r.not_run.map((x) => esc(x.name)).join(", ")}` : ""}</p></div>`;
+  const cards = (list, offset) => `<ol class="errors">${list.map((g, i) => errorCard(g, offset + i + 1, inv, pages)).join("")}</ol>`;
+  const warned = warnings.length
+    ? `<h2 class="tally v-warn">${esc(fill(warnings.length === 1 ? T.warn_one : T.warn_many, { n: warnings.length }))}</h2>${cards(warnings, errors.length)}`
     : "";
   return `${filebar(name, r)}<div class="analysis">
-    <div class="findings-col">${verdict}${detected}${cards(errors, 0, T.errors_title)}${cards(warnings, errors.length, T.warnings_title)}${notes}</div>
-    <div class="preview-col"><p class="col-title">${esc(T.preview_title)}</p>${preview(inv, marks)}</div>
+    <div class="findings-col">${title}${context}${errors.length ? cards(errors, 0) : ""}${warned}</div>
+    <div class="preview-col"><h2>${esc(T.detected_title)}</h2><p class="col-sub">${esc(T.detected_sub)}</p>${preview(inv, marks)}</div>
   </div>`;
 }
+
+// The file bar and the preview stay in view under the site's top bar: they need its height, and the bar's.
+const topbar = document.querySelector(".topbar");
+function bars() {
+  const fb = result.querySelector(".filebar");
+  document.documentElement.style.setProperty("--bar-top", `${topbar.offsetHeight}px`);
+  document.documentElement.style.setProperty("--bars", `${topbar.offsetHeight + (fb ? fb.offsetHeight : 0)}px`);
+}
+new ResizeObserver(bars).observe(topbar);
 
 async function run(name, bytes) {
   page.classList.add("checked", "busy");
@@ -198,6 +201,7 @@ async function run(name, bytes) {
   await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 30))); // let "checking" paint first
   const [r, pages] = await Promise.all([check(name, bytes), rulePages()]);
   result.innerHTML = render(name, r, pages);
+  bars();
   page.classList.remove("busy");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
