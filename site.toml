@@ -11,9 +11,9 @@ facturx = "1.09.2"
 brfr = "1.4.0.04"
 
 [rules_source]
-# The rule pages come from the lintvoice/rules repository, at this exact commit: a commit id pins the content.
-repo = "https://github.com/lintvoice/rules.git"
-commit = "412b913bbb2d944674011da75eefd0b9a33b6a1f"
+# The rule pages come from the lintvoice/invoice-rules repository, at this exact commit: a commit id pins the content.
+repo = "https://github.com/lintvoice/invoice-rules.git"
+commit = "71fe207a52d5557d9e4834c4c8bd2e55eb1de690"
 
 [legal]
 publisher = "ALLGOOD SERVICES"

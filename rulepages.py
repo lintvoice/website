@@ -1,4 +1,4 @@
-"""Rule pages: one page per rule, in English and French, from a checkout of the lintvoice rules repository.
+"""Rule pages: one page per rule, in English and French, from a checkout of the lintvoice/invoice-rules repository.
 
 Each rule folder holds meta.yaml (the facts) and en.md / fr.md (the page): a title, one sentence, then the sections
 of the rules repository's FORMAT.md, always in the same order. The site keeps the business rules of EN 16931 and of

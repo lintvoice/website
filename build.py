@@ -2,12 +2,12 @@
 
     uv run python build.py                 # into dist/
     uv run python build.py --strict        # the same, but refuses a legal notice still marked TODO
-    uv run python build.py --rules ../rules  # the rule pages from a local checkout, instead of the pinned commit
+    uv run python build.py --rules ../invoice-rules  # the rule pages from a local checkout, instead of the pinned commit
     python -m http.server -d dist 8000     # preview at http://localhost:8000
 
 Pages come from templates/ and the texts in content/{en,fr}.toml. The examples gallery runs the
 invoice-examples generator at the version this project pins, so the files served are the ones its tests check.
-The rule pages come from the lintvoice/rules repository at the commit pinned in site.toml, fetched with git.
+The rule pages come from the lintvoice/invoice-rules repository at the commit pinned in site.toml, fetched with git.
 """
 
 import argparse

@@ -36,7 +36,7 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 | Path | What |
 | --- | --- |
 | `build.py` | The whole build: pages, examples, zip, sitemap |
-| `rulepages.py` | The rule pages, read from the [lintvoice/rules](https://github.com/lintvoice/rules) repository at the commit pinned in `site.toml` |
+| `rulepages.py` | The rule pages, read from the [lintvoice/invoice-rules](https://github.com/lintvoice/invoice-rules) repository at the commit pinned in `site.toml` |
 | `templates/` | Jinja templates, code only (no prose) |
 | `content/en.toml`, `content/fr.toml` | Every text of the site, one file per language |
 | `site.toml` | Base URL, rule set versions, the pinned rules commit, legal notice |
@@ -51,4 +51,4 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 
 ## Licence
 
-The code is under the MIT licence. The rule pages' text comes from lintvoice/rules, under CC BY-SA 4.0. The site's own texts (`content/`) and the logo (`static/logo/`) are © AllGood Services SAS, all rights reserved; "lintvoice" is a trademark filed by AllGood Services SAS. The fonts are under the SIL Open Font License 1.1. Details in [LICENSE](LICENSE).
+The code is under the MIT licence. The rule pages' text comes from lintvoice/invoice-rules, under CC BY-SA 4.0. The site's own texts (`content/`) and the logo (`static/logo/`) are © AllGood Services SAS, all rights reserved; "lintvoice" is a trademark filed by AllGood Services SAS. The fonts are under the SIL Open Font License 1.1. Details in [LICENSE](LICENSE).
