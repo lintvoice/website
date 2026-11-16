@@ -229,7 +229,6 @@ col_price = "Prix unit. HT"
 col_vat = "TVA"
 col_net = "Montant HT"
 more_lines = "… et {n} autres lignes"
-example_prefix = "facture-exemple"
 
 note_brfr_applied = "Les règles françaises BR-FR sont appliquées car le vendeur est en France."
 note_brfr_not_applied = "Les règles françaises BR-FR ne sont pas appliquées car la facture n'indique pas un vendeur en France (pays : {country})."

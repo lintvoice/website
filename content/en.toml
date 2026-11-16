@@ -229,7 +229,6 @@ col_price = "Unit price"
 col_vat = "VAT"
 col_net = "Net amount"
 more_lines = "… and {n} more lines"
-example_prefix = "example-invoice"
 
 note_brfr_applied = "The French BR-FR rules are applied because the seller is in France."
 note_brfr_not_applied = "The French BR-FR rules are not applied because the invoice does not give a seller in France (country: {country})."

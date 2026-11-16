@@ -14,12 +14,13 @@
     <input type="file" id="file" accept=".pdf,.xml,application/pdf,application/xml,text/xml" hidden>
   </div>
   <p class="try">{{ p.try_label }}
-    <button type="button" class="link" data-example="valid.pdf">{{ p.try_valid }}</button> ·
-    <button type="button" class="link" data-example="invalid/BR-CO-15.pdf">{{ p.try_invalid }}</button>
+    <button type="button" class="link" data-example="valid.pdf" data-name="{{ t.file_prefix }}-{{ t.file_valid }}.pdf">{{ p.try_valid }}</button> ·
+    <button type="button" class="link" data-example="invalid/BR-CO-15.pdf" data-name="{{ t.file_prefix }}-BR-CO-15.pdf">{{ p.try_invalid }}</button>
   </p>
 </section>
 <div id="result" class="result" aria-live="polite"></div>
 </div>
+<p class="foot standard" id="rules-used" hidden></p>
 <p class="foot standard">{{ p.engine_note | links }}</p>
 <script type="application/json" id="check-texts">{{ p.ui | tojson }}</script>
 <script src="/static/check/vendor/SaxonJS2.rt.js"></script>

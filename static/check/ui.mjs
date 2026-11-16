@@ -10,6 +10,7 @@ const page = document.getElementById("check-page");
 const result = document.getElementById("result");
 const drop = document.getElementById("drop");
 const input = document.getElementById("file");
+const rulesUsed = document.getElementById("rules-used");
 let rules = null;
 let currency = "EUR"; // the checked invoice's (BT-5)
 
@@ -129,6 +130,14 @@ function errorCard(g, n, inv, pages) {
   </li>`;
 }
 
+// The rule sets as families with their version, in a fixed order: "EN 16931 1.3.17, Factur-X 1.09.2, BR-FR 1.4.0.04".
+const FAMILIES = ["EN 16931", "Factur-X", "BR-FR", "EXTENDED-CTC-FR", "UBL", "CII"];
+function families(sets) {
+  const names = sets.map((s) => (s.name.match(/^(EN 16931|Factur-X|BR-FR|EXTENDED-CTC-FR|UBL|CII) [\w.]+/) || [s.name])[0]);
+  const rank = (n) => { const i = FAMILIES.findIndex((f) => n.startsWith(f)); return i < 0 ? FAMILIES.length : i; };
+  return [...new Set(names)].sort((a, b) => rank(a) - rank(b));
+}
+
 // The CLI's notes, in the visitor's language; a note this page does not know is not shown.
 function note(n) {
   let m;
@@ -174,8 +183,11 @@ function render(name, r, pages) {
     ? `<h2 class="tally v-ok">✓ ${esc(T.verdict_ok)}</h2><p class="ok-text">${esc(T.verdict_ok_text)}</p>`
     : `<h2 class="tally v-err">${esc(fill(n === 1 ? T.verdict_one : T.verdict_many, { n }))}</h2>`;
   const said = r.notes.map(note).filter(Boolean);
-  const context = `<div class="context">${said.length ? `<p>${said.map(esc).join(" ")}</p>` : ""}
-    <p class="rules">${esc(fill(T.rules_line, { names: r.rule_sets.map((x) => x.name).join(" · ") }))}${r.not_run.length ? ` ${esc(T.not_run)} ${r.not_run.map((x) => esc(x.name)).join(", ")}` : ""}</p></div>`;
+  const notRun = r.not_run.length ? `<p class="rules">${esc(T.not_run)} ${r.not_run.map((x) => esc(x.name)).join(", ")}</p>` : "";
+  const context = said.length || notRun ? `<div class="context">${said.length ? `<p>${said.map(esc).join(" ")}</p>` : ""}${notRun}</div>` : "";
+  // the rule sets and their versions go to the note at the bottom, next to the engine's
+  rulesUsed.textContent = fill(T.rules_line, { names: families(r.rule_sets).join(", ") });
+  rulesUsed.hidden = false;
   const cards = (list, offset) => `<ol class="errors">${list.map((g, i) => errorCard(g, offset + i + 1, inv, pages)).join("")}</ol>`;
   const warned = warnings.length
     ? `<h2 class="tally v-warn">${esc(fill(warnings.length === 1 ? T.warn_one : T.warn_many, { n: warnings.length }))}</h2>${cards(warnings, errors.length)}`
@@ -212,6 +224,7 @@ async function fromFile(file) {
 
 function reset() {
   page.classList.remove("checked");
+  rulesUsed.hidden = true;
   result.innerHTML = "";
   input.value = "";
 }
@@ -225,7 +238,7 @@ drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " "
 document.querySelectorAll("[data-example]").forEach((b) => b.addEventListener("click", async () => {
   const path = b.dataset.example;
   const bytes = new Uint8Array(await (await fetch(`/examples/fr/${path}`)).arrayBuffer());
-  await run(`${T.example_prefix}-${path.split("/").pop()}`, bytes);
+  await run(b.dataset.name, bytes);
 }));
 result.addEventListener("click", (e) => {
   if (e.target.closest("[data-again]")) { reset(); return; }
