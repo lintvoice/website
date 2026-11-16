@@ -255,7 +255,10 @@ def main(kinds):
                         expected.append(f.name)
                     else:
                         a, b = comparable(ref[f.name]), comparable(got[f.name])
-                        diffs.append((f.name, [k for k in a if a.get(k) != b.get(k)] or ["status"], b.get("error", "")))
+                        why = b.get("error", "") or "; ".join(
+                            f"{n['rule_set']}: {n['error']}" for n in got[f.name].get("not_run", [])
+                        )
+                        diffs.append((f.name, [k for k in a if a.get(k) != b.get(k)] or ["status"], why))
                 walls = sorted(r["wall_ms"] for r in got.values())
                 print(
                     f"{kind}: {same}/{len(files)} identical, {len(expected)} refused as too large by design "
