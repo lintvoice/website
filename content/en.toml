@@ -80,6 +80,9 @@ about_syntax_value = "CII, as XML and inside a PDF"
 about_generator = "Generator"
 about_licence = "Licence"
 about_licence_value = "[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/), public domain"
+annotated_title = "Learn to read an e-invoice"
+annotated_text = "The valid invoice, annotated: each value carries its number in the European standard EN 16931 (BT-1 for the invoice number, BT-112 for the total with VAT…), the same numbers as in our rule pages and in validation reports."
+annotated_link = "The annotated invoice (PDF)"
 download_all = "Download all (zip)"
 checked_title = "How they are checked"
 checked_text = "By the official rules alone, not by lintvoice: the Factur-X schema and three Schematron sets. A valid file passes all of them; an invalid one fails exactly the rules listed next to it."
@@ -90,7 +93,7 @@ valid_text = "Passes EN 16931, the Factur-X EN 16931 profile rules and BR-FR."
 invalid_title = "Invalid invoices"
 invalid_chip = "invalid"
 cols = ["Example", "What is wrong", "Rules that fail", "Files"]
-pdf_note = "The PDFs carry the XML as factur-x.xml. They are not PDF/A-3: they are for testing XML extraction and the XML rules."
+pdf_note = "Each PDF shows a readable page, drawn from its XML and marked SPECIMEN, and carries that XML as factur-x.xml. On an invalid example, the page names the rule it fails and shows in red the values that differ from the valid invoice. These PDFs are not PDF/A-3: they are for testing XML extraction and the XML rules."
 
 [legal]
 title = "Legal notice"

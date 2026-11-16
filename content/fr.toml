@@ -80,6 +80,9 @@ about_syntax_value = "CII, en XML et dans un PDF"
 about_generator = "Générateur"
 about_licence = "Licence"
 about_licence_value = "[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/), domaine public"
+annotated_title = "Apprendre à lire une facture électronique"
+annotated_text = "La facture valide, annotée : chaque donnée porte son numéro dans la norme européenne EN 16931 (BT-1 pour le numéro de facture, BT-112 pour le total TTC…), les mêmes numéros que dans nos pages de règles et les rapports de validation."
+annotated_link = "La facture annotée (PDF)"
 download_all = "Tout télécharger (zip)"
 checked_title = "Comment ils sont vérifiés"
 checked_text = "Par les règles officielles seules, pas par lintvoice : le schéma Factur-X et trois jeux Schematron. Un fichier valide les passe tous ; un fichier invalide échoue exactement aux règles indiquées en regard."
@@ -90,7 +93,7 @@ valid_text = "Passe EN 16931, les règles du profil Factur-X EN 16931 et BR-FR."
 invalid_title = "Factures invalides"
 invalid_chip = "invalide"
 cols = ["Exemple", "Ce qui ne va pas", "Règles en échec", "Fichiers"]
-pdf_note = "Les PDF contiennent le XML sous le nom factur-x.xml. Ils ne sont pas PDF/A-3 : ils servent à tester l'extraction du XML et les règles XML."
+pdf_note = "Chaque PDF montre une page lisible, tirée de son XML et marquée SPÉCIMEN, et contient ce XML sous le nom factur-x.xml. Sur un exemple invalide, la page nomme la règle en échec et montre en rouge les valeurs qui diffèrent de la facture valide. Ces PDF ne sont pas PDF/A-3 : ils servent à tester l'extraction du XML et les règles XML."
 
 [legal]
 title = "Mentions légales"

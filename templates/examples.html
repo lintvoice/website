@@ -7,6 +7,10 @@
 </div>
 <div class="grid">
 <aside>
+  {% if manifest.get('annotated') %}<div class="panel callout-files" id="annotated"><h2>{{ p.annotated_title }}</h2><div class="body">
+    <p>{{ p.annotated_text }}</p>
+    <div class="actions-row"><a class="btn primary" href="{{ files_href }}{{ manifest.annotated.pdf }}" download>{{ p.annotated_link }}</a></div>
+  </div></div>{% endif %}
   <div class="panel"><h2>{{ p.about_title }}</h2><div class="flush"><div class="kv">
     <div><span>{{ p.about_target }}</span><span>{{ p.about_target_value }}</span></div>
     <div><span>{{ p.about_syntax }}</span><span>{{ p.about_syntax_value }}</span></div>
