@@ -117,6 +117,16 @@ def _check_assets(out, source, rules):
             "title": {lang: r["pages"][lang]["title"] for lang in LANGS},
             "brief": {lang: r["meta"]["brief"][lang] for lang in LANGS},
             "href": {lang: rulepages.href(r["id"], lang) for lang in LANGS},
+            "terms": r["meta"].get("business_terms", []),
+            # the page's own explanations, shown under the error on the check page itself
+            "sections": {
+                lang: {key: str(r["pages"][lang]["sections"][key]["html"]) for key in ("checks", "causes", "fix", "why")}
+                for lang in LANGS
+            },
+            "headings": {
+                lang: {key: r["pages"][lang]["sections"][key]["heading"] for key in ("checks", "causes", "fix", "why")}
+                for lang in LANGS
+            },
         }
         for r in rules
     }

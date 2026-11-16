@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="band compact">
+<div id="check-page">
+<div class="band compact intro">
   <h1>{{ p.h1 }}</h1>
   <p class="brief"><strong>{{ t.rule.brief_label }}</strong> {{ p.brief }}</p>
   <ul class="trust">{% for item in p.trust %}<li>✓ {{ item }}</li>{% endfor %}</ul>
@@ -16,8 +17,9 @@
     <button type="button" class="link" data-example="valid.pdf">{{ p.try_valid }}</button> ·
     <button type="button" class="link" data-example="invalid/BR-CO-15.pdf">{{ p.try_invalid }}</button>
   </p>
-  <div id="result" class="result" aria-live="polite"></div>
 </section>
+<div id="result" class="result" aria-live="polite"></div>
+</div>
 <p class="foot standard">{{ p.engine_note | links }}</p>
 <script type="application/json" id="check-texts">{{ p.ui | tojson }}</script>
 <script src="/static/check/vendor/SaxonJS2.rt.js"></script>

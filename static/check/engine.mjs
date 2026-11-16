@@ -325,5 +325,6 @@ export async function check(name, bytes) {
       messages: [...g.messages.entries()].map(([message, locations]) => ({ message, locations })),
     })),
     timings_ms: timings,
+    xml: d.xml, // for the page: the values it shows next to the findings
   };
 }
