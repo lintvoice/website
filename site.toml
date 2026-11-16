@@ -10,6 +10,11 @@ en16931 = "1.3.17"
 facturx = "1.09.2"
 brfr = "1.4.0.04"
 
+[rules_source]
+# The rule pages come from the lintvoice/rules repository, at this exact commit: a commit id pins the content.
+repo = "https://github.com/lintvoice/rules.git"
+commit = "412b913bbb2d944674011da75eefd0b9a33b6a1f"
+
 [legal]
 publisher = "ALLGOOD SERVICES"
 publisher_url = "https://annuaire-entreprises.data.gouv.fr/entreprise/allgood-services-948937321"   # official company directory

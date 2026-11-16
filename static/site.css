@@ -31,7 +31,7 @@ pre.cli{font-size:var(--fs-xs)}
 /* wide tables scroll inside their panel on small screens */
 .table-wrap{overflow-x:auto}
 
-/* on a phone, the main column comes before the aside on the home page */
+/* on a phone, the main column comes before the aside (home and rule pages) */
 @media (max-width:820px){.grid.content-first>aside{order:2}}
 
 /* every link to another site ends with the "external link" mark (an arrow leaving a box), in the text colour */
@@ -47,3 +47,99 @@ tr:target td{background:color-mix(in srgb,var(--accent) 8%,var(--bg))}
 .chip.err::before{content:"✗ "}
 .actions-row{margin-top:var(--sp-3)}
 a.btn{display:inline-block;text-decoration:none}
+
+/* rule pages: breadcrumb with the id, severity with a tooltip, numbered steps, the technical block, example files */
+.band.compact{padding:var(--sp-5) var(--sp-6);margin:var(--sp-6) 0 var(--sp-5)}
+.crumbs{margin:0 0 var(--sp-3);font-size:var(--fs-sm);color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-1) var(--sp-2)}
+.crumbs a{color:inherit}
+.crumbs .idm{font-size:var(--fs-sm);color:var(--bg);background:var(--accent);padding:1px var(--sp-2);border-radius:var(--r-sm)}
+.band h1{margin-bottom:var(--sp-2)}
+.status-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-5);margin:var(--sp-3) 0 0;font-size:var(--fs-sm)}
+.foot.standard{margin-top:var(--sp-4)}
+.sev{display:inline-flex;align-items:center;gap:var(--sp-2)}
+.tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:1.1rem;height:1.1rem;border-radius:50%;
+  border:var(--bw-hair) solid var(--muted);color:var(--muted);font:italic 600 var(--fs-xs)/1 var(--font-text);cursor:help}
+.tip:hover,.tip:focus{color:var(--text);border-color:var(--text);outline:none}
+.tip-text{display:none;position:absolute;right:-.5rem;top:calc(100% + 8px);z-index:2;width:min(16rem,70vw);
+  padding:var(--sp-2) var(--sp-3);background:var(--bg);color:var(--text);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);
+  font:normal 400 var(--fs-sm)/1.45 var(--font-text);text-align:left;white-space:normal}
+.status-line .tip-text{right:auto;left:-.5rem}
+.tip:hover .tip-text,.tip:focus .tip-text{display:block}
+.grid>aside .panel>.body{font-size:var(--fs-sm)}
+.grid>aside .panel>.body p{margin:0 0 var(--sp-3)}
+.grid>aside .panel>.body li{margin-bottom:var(--sp-1)}
+.status .kv div{align-items:center}
+@media (min-width:821px){aside.sticky{position:sticky;top:var(--sp-4);align-self:start}}
+.prose{max-width:46rem;min-width:0}
+.prose p{margin:0 0 var(--sp-3)}
+.prose ul,.prose ol{margin:0 0 var(--sp-3);padding-left:1.3em}
+.prose li{margin-bottom:var(--sp-1)}
+.prose code,.tech code{overflow-wrap:anywhere}
+.prose h2,.tech h2{font-size:var(--fs-xl);line-height:var(--lh-tight);margin:0 0 var(--sp-4)}
+.tech h3{font-size:var(--fs-base);font-weight:600;margin:0 0 var(--sp-2)}
+.steps{list-style:none;padding:0;margin:0;counter-reset:step}
+.steps>li{counter-increment:step;position:relative;padding:var(--sp-6) 0 var(--sp-3) 3rem;margin:0;border-top:var(--bw-hair) solid var(--line)}
+.steps>li:first-child{border-top:0;padding-top:0}
+.steps>li::before{content:counter(step);position:absolute;left:0;top:calc(var(--sp-6) + .1rem);width:2rem;height:2rem;border-radius:50%;
+  border:var(--bw-hair) solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-size:var(--fs-sm);
+  display:flex;align-items:center;justify-content:center}
+.steps>li:first-child::before{top:.1rem}
+.tech{background:var(--head);border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-6);margin:var(--sp-6) 0 var(--sp-5);min-width:0}
+.tech p{margin:0 0 var(--sp-3)}
+.tech-intro{color:var(--muted);font-size:var(--fs-sm)}
+.tech-cols>div{min-width:0}
+.tech-cols>div+div{margin-top:var(--sp-5)}
+.tech.wide .tech-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--sp-8)}
+.tech.wide .tech-cols>div+div{margin-top:0}
+@media (max-width:820px){.tech.wide .tech-cols{grid-template-columns:1fr;gap:var(--sp-5)}}
+.tech .kv{margin:var(--sp-4) 0 0;border-bottom:var(--bw-hair) solid var(--line)}
+.tech .kv div{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:var(--sp-3);padding:var(--sp-2) 0;font-size:var(--fs-sm)}
+.tech .kv div>*:last-child{text-align:left}
+.tech pre{background:var(--bg);border:var(--bw-hair) solid var(--line);border-radius:var(--r-sm);overflow-x:auto;margin:0 0 var(--sp-4)}
+.tech pre.diff{padding:10px 0;font-size:var(--fs-xs)}
+pre.diff .gap{display:block;color:var(--muted)}
+.diff-legend{font-size:var(--fs-sm);color:var(--muted)}
+.tech blockquote.source{margin:0 0 var(--sp-3);padding-left:var(--sp-4);border-left:var(--bw-mark) solid var(--line)}
+.callout-files{border-color:var(--accent)}
+.callout-files>h2{background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
+.files-box .file-row{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-3)}
+.files-box .btns{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
+.files-box .btn{text-decoration:none;color:var(--text);background:transparent;font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-3)}
+.files-box .more{margin:0}
+@media (max-width:640px){.steps>li{padding-left:2.6rem}.tech{padding:var(--sp-4)}.tech .kv div{grid-template-columns:1fr;gap:2px}}
+
+/* the top bar stays at the top of every page; its background and bottom line run the full window width */
+.topbar{position:sticky;top:0;z-index:10;padding-top:var(--sp-3);padding-bottom:var(--sp-3);
+  border-image:linear-gradient(to top,var(--line) 1px,var(--bg) 1px) fill 0/0/0 100vmax}
+/* rule pages: once the header band scrolls away, a short version (id, title, "in short") hangs under the top bar */
+.mini{display:none;position:absolute;left:0;right:0;top:100%;padding:var(--sp-2) 0 var(--sp-3);
+  border-image:linear-gradient(to top,var(--line) 1px,var(--bg) 1px) fill 0/0/0 100vmax}
+.past-band .mini{display:block}
+.mini p{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-title{font-weight:600}
+.mini-title .idm{font-size:var(--fs-sm);font-weight:400;color:var(--bg);background:var(--accent);padding:1px var(--sp-2);border-radius:var(--r-sm);margin-right:var(--sp-2)}
+.mini-brief{font-size:var(--fs-sm);color:var(--muted)}
+.mini-brief strong{color:var(--text);font-weight:600}
+html{scroll-padding-top:9rem}
+.updated{color:var(--muted);font-size:var(--fs-sm);margin:var(--sp-4) 0 0}
+@media (max-width:640px){.mini p{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}}
+
+/* the menu: on a phone, one row (wordmark, quick start, Menu); the links, language and theme go into the Menu panel */
+.narrow{display:none}
+.menu{position:relative}
+.menu summary{list-style:none;cursor:pointer;color:var(--muted);padding:6px 0}
+.menu summary::-webkit-details-marker{display:none}
+.menu summary::after{content:" ▾"}
+.menu[open] summary{color:var(--text)}
+.menu-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:20;display:flex;flex-direction:column;gap:var(--sp-1);min-width:13rem;
+  padding:var(--sp-2) 0;background:var(--bg);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md)}
+.menu-panel a,.menu-panel .toggle{display:block;padding:var(--sp-2) var(--sp-4);text-align:left;text-decoration:none;color:var(--text)}
+@media (max-width:640px){.wide{display:none}.narrow{display:block}.topbar{flex-wrap:nowrap}.site-nav{gap:var(--sp-3)}}
+/* the technical block is secondary, like the side panels: smaller text */
+.tech{font-size:var(--fs-sm)}
+.tech h2{font-size:var(--fs-lg)}
+.tech h3{font-size:var(--fs-sm)}
+.tech-intro{font-size:var(--fs-xs)}
+.tech code,.tech .mono{font-size:var(--fs-xs)}
+.tech .diff-legend{font-size:var(--fs-xs)}
+.tech h2{font-size:var(--fs-xl)}

@@ -9,8 +9,10 @@ Not under the MIT licence:
 - static/fonts/: IBM Plex, under the SIL Open Font License 1.1 (static/fonts/OFL-IBM-Plex-Sans.txt and
   static/fonts/OFL-IBM-Plex-Mono.txt).
 - The example invoices built into the site come from invoice-examples, in the public domain (CC0 1.0).
+- The text of the rule pages comes from the lintvoice/rules repository, under Creative Commons
+  Attribution-ShareAlike 4.0 (CC BY-SA 4.0).
 
-Everything else (build.py, templates/, static/*.css, tests/ and the configuration files) is under the
+Everything else (build.py, rulepages.py, templates/, static/*.css, tests/ and the configuration files) is under the
 MIT licence:
 
 MIT License

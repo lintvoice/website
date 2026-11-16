@@ -2,10 +2,12 @@
 
     uv run python build.py                 # into dist/
     uv run python build.py --strict        # the same, but refuses a legal notice still marked TODO
+    uv run python build.py --rules ../rules  # the rule pages from a local checkout, instead of the pinned commit
     python -m http.server -d dist 8000     # preview at http://localhost:8000
 
 Pages come from templates/ and the texts in content/{en,fr}.toml. The examples gallery runs the
 invoice-examples generator at the version this project pins, so the files served are the ones its tests check.
+The rule pages come from the lintvoice/rules repository at the commit pinned in site.toml, fetched with git.
 """
 
 import argparse
@@ -13,11 +15,13 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tomllib
 import zipfile
 from pathlib import Path
 
+import rulepages
 from invoice_examples import cli as examples_cli
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from markupsafe import Markup, escape
@@ -100,8 +104,10 @@ def _write(out, path, html):
     target.write_text(html, encoding="utf-8")
 
 
-def build(out, strict=False):
+def build(out, strict=False, rules_dir=None):
     site, texts = load()
+    rules = rulepages.load(rules_dir) if rules_dir else []
+    pages = dict(PAGES, rules=rulepages.PATHS) if rules else PAGES
     if strict and missing_legal(site):
         raise NotReady("legal notice still marked TODO in site.toml: " + ", ".join(missing_legal(site)))
     out = Path(out)
@@ -116,6 +122,7 @@ def build(out, strict=False):
         lstrip_blocks=True,
     )
     env.filters["links"] = links
+    env.globals["rule_href"] = rulepages.href
     rs = site["rule_sets"]
     common = {
         "site": site,
@@ -127,8 +134,9 @@ def build(out, strict=False):
         "invalid": [e for e in manifest["examples"] if e["status"] == "invalid"],
         "files_href": FILES_HREF,
         "zip_href": ZIP_HREF,
+        "rules": rules,
     }
-    for page, paths in PAGES.items():
+    for page, paths in pages.items():
         for lang in LANGS:
             t, other = texts[lang], next(code for code in LANGS if code != lang)
             p = t[page]
@@ -140,9 +148,29 @@ def build(out, strict=False):
                 alternates=paths,
                 canonical=True,
                 page_title=p["title"] if page == "home" else f"{p['title']} · lintvoice",
-                links={name: PAGES[name][lang] for name in PAGES},
+                links={name: pages[name][lang] for name in pages},
                 other={"lang": other, "href": paths[other]},
                 publisher_rows=list(zip(p["publisher_labels"], PUBLISHER_KEYS, strict=True)) if page == "legal" else [],
+            )
+            _write(out, paths[lang], html)
+    for rule in rules:
+        rule["diff"] = rulepages.example_diff(out / "examples" / "fr", rule["meta"])
+        rule["example"] = rulepages.example_file(rule["meta"])
+        paths = {lang: rulepages.href(rule["id"], lang) for lang in LANGS}
+        for lang in LANGS:
+            t, other = texts[lang], next(code for code in LANGS if code != lang)
+            r = rule["pages"][lang]
+            html = env.get_template("rule.html").render(
+                **common,
+                t=t,
+                p={"description": rule["meta"]["brief"][lang]},
+                rule=rule,
+                path=paths[lang],
+                alternates=paths,
+                canonical=True,
+                page_title=f"{r['title']} ({rule['id']}) · {t['rule']['title_suffix']} | lintvoice",
+                links={name: pages[name][lang] for name in pages},
+                other={"lang": other, "href": paths[other]},
             )
             _write(out, paths[lang], html)
     en, fr = texts["en"], texts["fr"]
@@ -157,19 +185,20 @@ def build(out, strict=False):
             alternates={},
             canonical=False,
             page_title=f"{en['notfound']['title']} · lintvoice",
-            links={name: PAGES[name]["en"] for name in PAGES},
+            links={name: pages[name]["en"] for name in pages},
             other={"lang": "fr", "href": "/fr/"},
             other_texts=fr,
         ),
     )
-    _write(out, "/sitemap.xml", _sitemap(site["base_url"]))
+    all_paths = list(pages.values()) + [{lang: rulepages.href(r["id"], lang) for lang in LANGS} for r in rules]
+    _write(out, "/sitemap.xml", _sitemap(site["base_url"], all_paths))
     _write(out, "/robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {site['base_url']}/sitemap.xml\n")
     return out
 
 
-def _sitemap(base):
+def _sitemap(base, all_paths):
     rows = []
-    for paths in PAGES.values():
+    for paths in all_paths:
         for lang in LANGS:
             alternates = "".join(
                 f'<xhtml:link rel="alternate" hreflang="{code}" href="{base}{href}"/>' for code, href in paths.items()
@@ -183,13 +212,34 @@ def _sitemap(base):
     )
 
 
+def fetch_rules(source, cache=ROOT / ".rules-src"):
+    """Check out the pinned commit of the rules repository (once; later builds reuse it) and return its folder."""
+    commit = source["commit"]
+    folder = cache / commit
+    if not (folder / "rules").is_dir():
+        shutil.rmtree(folder, ignore_errors=True)
+        folder.mkdir(parents=True)
+        for args in (
+            ["init", "-q"],
+            ["fetch", "-q", "--depth", "1", source["repo"], commit],
+            ["checkout", "-q", "FETCH_HEAD"],
+        ):
+            subprocess.run(["git", *args], cwd=folder, check=True)  # noqa: S603, S607 (git, with our pinned values)
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=folder, check=True, capture_output=True, text=True)  # noqa: S607
+    if head.stdout.strip() != commit:
+        raise SystemExit(f"build: {folder} is not at the pinned rules commit {commit}")
+    return folder
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", default=str(ROOT / "dist"))
     parser.add_argument("--strict", action="store_true", help="refuse a legal notice still marked TODO")
+    parser.add_argument("--rules", help="a local checkout of the rules repository, instead of the pinned commit")
     args = parser.parse_args(argv)
     try:
-        out = build(args.out, strict=args.strict)
+        rules_dir = args.rules or fetch_rules(load()[0]["rules_source"])
+        out = build(args.out, strict=args.strict, rules_dir=rules_dir)
     except NotReady as e:
         print(f"build: {e}", file=sys.stderr)
         return 1

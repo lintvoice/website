@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block rights %}{{ t.rule.rights | links }}{% endblock %}
+{% block body %}
+<div class="band">
+  <h1>{{ p.h1 }}</h1>
+  <p class="brief">{{ p.brief }}</p>
+  <div class="chips">{% for chip in rule_chips %}<span class="chip">{{ chip }}</span>{% endfor %}</div>
+</div>
+{% for set_key in ("brfr", "en16931") %}
+{% set rows = rules | selectattr("set", "equalto", set_key) | list %}
+{% if rows %}
+<div class="panel" id="{{ set_key }}"><h2>{{ t.rule_sets[set_key].label }}<small>{{ rows | length }}</small></h2><div class="body"><div class="table-wrap"><table>
+  <thead><tr>{% for col in p.cols %}<th>{{ col }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for rule in rows %}
+    <tr><td class="mono"><a href="{{ rule_href(rule.id, t.lang) }}">{{ rule.id }}</a></td><td>{{ rule.pages[t.lang].title }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div></div></div>
+{% endif %}
+{% endfor %}
+<p class="foot standard">{{ t.rule.cen_statement }}</p>
+{% endblock %}

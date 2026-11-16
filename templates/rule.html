@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set m = rule.meta %}{% set r = rule.pages[t.lang] %}{% set s = t.rule_sets[rule.set] %}{% set fatal = m.severity == "fatal" %}
+{% block topbar_extra %}
+<div class="mini" id="mini" aria-hidden="true">
+  <p class="mini-title"><span class="idm">{{ rule.id }}</span> {{ r.title }}</p>
+  <p class="mini-brief"><strong>{{ t.rule.brief_label }}</strong> {{ m.brief[t.lang] }}</p>
+</div>
+{% endblock %}
+{% block rights %}{{ t.rule.rights | links }}{% endblock %}
+{% block body %}
+<div class="band compact" id="band">{% include "_rule_head.html" %}
+  <p class="status-line">{% include "_rule_severity.html" %}{% if s.status %}<span>{{ t.rule.in_force }} {{ s.status }}</span>{% endif %}</p>
+</div>
+<div class="grid content-first">
+<aside>{% include "_rule_aside.html" %}</aside>
+<article class="prose">{% include "_rule_steps.html" %}</article>
+</div>
+{% set wide = true %}{% include "_rule_tech.html" %}
+<p class="updated">{{ t.rule.updated_line }} {{ m.updated }}</p>
+<p class="foot standard">{{ t.rule.cen_statement }}</p>
+{% endblock %}
+{% block scripts %}
+<script>
+(function(){var band=document.getElementById('band'),top=document.querySelector('.topbar');if(!band||!top||!('IntersectionObserver' in window))return;
+new IntersectionObserver(function(e){document.documentElement.classList.toggle('past-band',!e[0].isIntersecting)},
+{rootMargin:'-'+top.offsetHeight+'px 0px 0px 0px'}).observe(band)})();
+</script>
+{% endblock %}

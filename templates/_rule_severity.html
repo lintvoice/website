@@ -1,0 +1,1 @@
+<span class="sev"><span class="{{ 'err' if fatal else 'warn' }}">{{ '✗' if fatal else '!' }} {{ t.rule.fatal if fatal else t.rule.warning }}</span><span class="tip" tabindex="0" aria-describedby="severity-help">i<span class="tip-text" role="tooltip" id="severity-help">{{ t.rule.fatal_help if fatal else t.rule.warning_help }}</span></span></span>

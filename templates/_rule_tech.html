@@ -1,0 +1,21 @@
+<section class="tech{{ ' wide' if wide }}" id="technical">
+  <h2>{{ r.sections.technical.heading }}</h2>
+  <p class="tech-intro">{{ t.rule.tech_intro }}</p>
+  <div class="tech-cols">
+    <div>
+      {{ r.sections.technical.html }}
+      <div class="kv">
+        <div><span>{{ t.rule.fields }}</span><span class="mono">{{ m.business_terms | join(", ") }}</span></div>
+        {% if m.paths.cii %}<div><span>CII</span><code>{{ m.paths.cii }}</code></div>{% endif %}
+        {% if m.paths.ubl %}<div><span>UBL</span><code>{{ m.paths.ubl }}</code></div>{% endif %}
+        <div><span>{{ t.rule.reported }}</span><span class="mono">{{ m.reported_ids | join(", ") }}</span></div>
+        <div><span>{{ t.rule.rule_set }}</span><span><a href="{{ m.rule_set.source }}">{{ s.short }} {{ m.rule_set.version }}</a></span></div>
+      </div>
+    </div>
+    <div>
+      {% if rule.diff %}<h3>{{ t.rule.diff_title }}</h3>{% include "_rule_diff.html" %}{% endif %}
+      <h3>{{ r.sections.official.heading }}</h3>
+      {{ r.sections.official.html }}
+    </div>
+  </div>
+</section>

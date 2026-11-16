@@ -1,0 +1,4 @@
+{% if rule.diff %}
+<p class="diff-legend">{{ t.rule.diff_legend }}</p>
+<pre class="diff">{% for kind, text in rule.diff %}<span class="{{ kind }}">{{ '− ' if kind == 'del' else '+ ' if kind == 'add' else '  ' }}{{ text }}</span>{% endfor %}</pre>
+{% endif %}

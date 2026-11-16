@@ -1,0 +1,5 @@
+<ol class="steps">
+{% for key in ("checks", "causes", "fix", "why") %}
+  <li id="{{ key }}"><h2>{{ r.sections[key].heading }}</h2>{{ r.sections[key].html }}</li>
+{% endfor %}
+</ol>
