@@ -216,6 +216,8 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .observed dd{margin:0;font-family:var(--font-mono);overflow-wrap:anywhere;flex:1;min-width:12em}
 .observed .code{font-weight:600}
 .card .fix{font-size:var(--fs-sm)}
+.share{margin:var(--sp-3) 0 0;display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:center}
+.share .copied{font-size:var(--fs-sm);color:var(--muted);overflow-wrap:anywhere}
 .card .fix>:last-child,.rule-text>:last-child{margin-bottom:0}
 .result details{margin-top:var(--sp-3);font-size:var(--fs-sm)}
 .result details summary{cursor:pointer;color:var(--muted)}

@@ -88,6 +88,9 @@ function preview(inv, marks) {
 }
 
 // --- one error, with what the invoice holds and how to fix it
+// When the fix sends the visitor to their software's publisher, they get the rule page's address to forward: an
+// action that copies it, not a link that leaves this page.
+const SENDS_TO_PUBLISHER = /éditeur|publisher|vendor/;
 function errorCard(g, n, inv, pages) {
   const id = pageOf(g.rule);
   const p = pages[id];
@@ -123,6 +126,7 @@ function errorCard(g, n, inv, pages) {
     <p class="title">${esc(title)}</p>
     ${observed ? `<div class="in-invoice"><p class="label">${esc(T.in_your_invoice)}</p>${observed}</div>` : ""}
     ${p?.sections[lang].fix ? `<div class="fix"><p class="label">${esc(T.how_to_fix)}</p>${p.sections[lang].fix}</div>` : `<p class="official">${esc(official)}</p>`}
+    ${p && SENDS_TO_PUBLISHER.test(p.sections[lang].fix) ? `<p class="share"><button type="button" class="btn secondary" data-copy="${esc(page.dataset.base + p.href[lang])}">${esc(T.copy_link)}</button> <span class="copied" role="status"></span></p>` : ""}
     <details><summary>${esc(T.learn_more)}</summary>${section("causes")}${section("checks")}${section("why")}
       <div class="rule-text"><h4>${esc(T.technical)}</h4><p><code>${esc(g.rule)}</code> · ${esc(g.rule_set)}</p>${p ? `<p class="official">${esc(official)}</p>` : ""}
       ${locations.length ? `<p class="where">${locations.slice(0, 5).map((l) => `<code>${esc(l)}</code>`).join(" ")}${locations.length > 5 ? " …" : ""}</p>` : ""}</div>
@@ -242,6 +246,15 @@ document.querySelectorAll("[data-example]").forEach((b) => b.addEventListener("c
 }));
 result.addEventListener("click", (e) => {
   if (e.target.closest("[data-again]")) { reset(); return; }
+  const copy = e.target.closest("[data-copy]");
+  if (copy) {
+    const said = copy.parentElement.querySelector(".copied");
+    navigator.clipboard.writeText(copy.dataset.copy).then(
+      () => { said.textContent = T.copied; },
+      () => { said.textContent = `${T.copy_failed} ${copy.dataset.copy}`; }, // no clipboard: the address to copy by hand
+    );
+    return;
+  }
   const mark = e.target.closest("[data-mark]");
   if (mark) document.getElementById(`error-${mark.dataset.mark.split(",")[0]}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
 });
