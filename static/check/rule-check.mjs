@@ -4,7 +4,10 @@
 // Nothing of the check loads until a file is picked, and nothing is sent: the invoice is read and checked here.
 //
 // "Does not apply" comes from the official files themselves: they report each rule context that fired, and the build
-// gives this page the contexts of its rule (contexts.json, from the compiled rule files).
+// gives this page the contexts of its rule (contexts.json, from the compiled rule files). The answer itself is
+// rule-answer.mjs, the same as the command-line tool's.
+
+import { answer as ruleAnswer, syntaxOf } from "./rule-answer.mjs";
 
 const box = document.getElementById("rule-check");
 const D = JSON.parse(document.getElementById("rule-check-data").textContent);
@@ -44,48 +47,41 @@ function load() {
 }
 
 const mine = (g) => D.ids.includes(g.rule);
-const SYNTAX = (sef) => (sef.endsWith("-ubl") ? "UBL" : "CII");
 
 // Why the rule does not apply, in the visitor's words.
-function reason(r, report) {
-  const own = Object.keys(D.contexts);
-  const ran = own.filter((s) => s in r.fired);
-  if (!ran.length) {
-    if (r.notes.some((n) => /^BR-FR rules not applied/.test(n)) && own.every((s) => /^(br-fr|extended-ctc-fr)/.test(s))) return W.reason_brfr;
-    const syntaxes = [...new Set(own.map(SYNTAX))];
-    if (!syntaxes.includes(r.document.syntax)) return fill(W.reason_syntax, { theirs: syntaxes.join(", "), yours: r.document.syntax });
-    return fill(W.reason_profile, { profile: report.profile(r.document) });
-  }
+function why(a, r, report) {
+  if (a.reason === "seller-not-in-france") return W.reason_brfr;
+  if (a.reason === "other-syntax") return fill(W.reason_syntax, { theirs: [...new Set(Object.keys(D.contexts).map(syntaxOf))].join(", "), yours: r.document.syntax });
+  if (a.reason === "other-profile") return fill(W.reason_profile, { profile: report.profile(r.document) });
   return /^BR-(S|Z|E|AE|IC|G|O|B)-/.test(D.id) ? W.reason_vat : W.reason_other;
 }
 
-function answer(name, r, pages, { report, T }) {
+function render(name, r, pages, { report, T }) {
   const head = (cls, text) => `<h3 class="tally ${cls}">${esc(text)}</h3>`;
   const file = `<p class="what">${esc(name)}${r.document ? ` · ${esc(`${r.document.source.startsWith("PDF") ? "PDF" : "XML"} · ${report.profile(r.document)}`)}` : ""}</p>`;
   const picker = (label) => `<p class="actions-row"><label class="btn secondary" for="rule-file">${esc(label)}</label></p>`;
   if (r.status === "unreadable" || r.status === "too-large") {
     const lines = (r.error.match(/^(\d+) lines/) || [])[1];
-    const why = fill(T.reasons[r.code] || r.error, { lines, max: 300 });
-    return `${file}${head("v-warn", W.could_not)}<p>${esc(why)}</p><p>${esc(W.could_not_more)} <a href="${esc(D.check)}">${esc(D.check)}</a></p>${picker(W.another)}`;
+    const reason = fill(T.reasons[r.code] || r.error, { lines, max: 300 });
+    return `${file}${head("v-warn", W.could_not)}<p>${esc(reason)}</p><p>${esc(W.could_not_more)} <a href="${esc(D.check)}">${esc(D.check)}</a></p>${picker(W.another)}`;
   }
   const inv = r.values || { terms: {}, schemes: {}, lines: [], notes: [] };
   report.setCurrency(inv.terms["BT-5"]);
+  const a = ruleAnswer(r, D); // the same answer as `lintvoice check --rule`
   const own = r.findings.filter(mine);
   const others = r.findings.filter((g) => g.severity === "error" && !mine(g));
   const n = new Set(others.map((g) => report.pageOf(g.rule))).size;
-  const ownSets = Object.keys(D.contexts);
+  const failed = a.answer === "fails";
   let verdict;
-  let failed = false;
-  if (own.length) {
-    failed = own.some((g) => g.severity === "error");
+  if (a.answer === "fails" || a.answer === "warns") {
     verdict = `${head(failed ? "v-err" : "v-warn", fill(failed ? W.fails : W.warns, { id: D.id }))}
       <ol class="errors">${own.map((g, i) => report.errorCard(g, i + 1, inv, pages, { own: true })).join("")}</ol><p>${esc(W.again)}</p>${picker(W.choose)}`;
-  } else if (r.not_run.some((x) => ownSets.includes(x.sef)) && !ownSets.some((s) => s in r.fired)) {
+  } else if (a.answer === "not-checked") {
     verdict = `${head("v-warn", W.could_not)}<p>${esc(W.could_not_rule)}</p>${picker(W.another)}`;
-  } else if (ownSets.some((s) => s in r.fired && D.contexts[s].some((c) => r.fired[s].includes(c)))) {
+  } else if (a.answer === "no-error") {
     verdict = `${head("v-ok", `✓ ${fill(W.passes, { id: D.id })}`)}<p>${esc(W.passes_line)}</p>${picker(W.another)}`;
   } else {
-    verdict = `${head("v-muted", fill(W.not_applies, { id: D.id }))}<p>${esc(reason(r, report))}</p>${picker(W.another)}`;
+    verdict = `${head("v-muted", fill(W.not_applies, { id: D.id }))}<p>${esc(why(a, r, report))}</p>${picker(W.another)}`;
   }
   // the rest of what the run found: one line, which opens the other errors here, with the same file
   const rest = n
@@ -103,7 +99,7 @@ async function run(name, bytes) {
     const t = await load();
     copyTexts = t.T;
     const [r, pages] = await Promise.all([t.engine.check(name, bytes), t.report.rulePages()]);
-    out.innerHTML = answer(name, r, pages, t);
+    out.innerHTML = render(name, r, pages, t);
   } catch {
     out.innerHTML = `<h3 class="tally v-warn">${esc(W.could_not)}</h3><p>${esc(W.could_not_rule)}</p>`;
   }

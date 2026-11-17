@@ -7,7 +7,9 @@
 Builds a corpus: the EN 16931 examples from the rule packs, the gallery's example invoices, files crafted for each
 Factur-X profile and for each way a file can be refused, and hostile files (deep nesting, entity expansion, broken
 or encrypted PDFs, a decompression bomb, 2,000 invoice lines). Checks it with `lintvoice check --format json`, then
-with the page's own engine in each browser, served from dist/, and compares file by file.
+with the page's own engine in each browser, served from dist/, and compares file by file. For every rule page, each
+file's answer for that rule (fails, no error found, does not apply and why, not checked) is compared too: the rule
+pages' own check (rule-answer.mjs) against `lintvoice check --rule`.
 
 Exits 1 on any difference but one, which the page makes on purpose: an invoice over its line limit is refused as
 too large for a check in the browser, where the command-line tool checks it.
@@ -123,9 +125,23 @@ def corpus(folder):
     return sorted(folder.iterdir())
 
 
-def cli(files):
+def rule_pages():
+    """Each rule page's own check data (its id, the official ids reported under it, its rule contexts), as built."""
+    found = re.compile(r'<script type="application/json" id="rule-check-data">(.*?)</script>', re.S)
+    pages = []
+    for page in sorted((DIST / "rules").glob("*/index.html")):
+        m = found.search(page.read_text(encoding="utf-8"))
+        if m:
+            data = json.loads(m.group(1))
+            pages.append({"id": data["id"], "ids": data["ids"], "contexts": data["contexts"]})
+    return pages
+
+
+def cli(files, pages):
     rules = str(checkassets.CACHE / "rules")
-    command = [sys.executable, "-m", "lintvoice", "check", "--format", "json", "--rules-dir", rules, *map(str, files)]
+    asked = [arg for page in pages for arg in ("--rule", page["id"])]
+    command = [sys.executable, "-m", "lintvoice", "check", "--format", "json", "--rules-dir", rules, *asked]
+    command += map(str, files)
     r = subprocess.run(command, capture_output=True, text=True, check=False)  # noqa: S603 (our own tool)
     return {Path(f["path"]).name: f for f in json.loads(r.stdout)["files"]}
 
@@ -151,15 +167,19 @@ def server():
 
 # The page's engine, as the page itself loads it; evaluate() has no timeout of its own, so the check is started
 # without waiting and its result awaited with one.
-START = """([n, b]) => {
+START = """([n, b, pages]) => {
   window.__r = undefined;
   const bytes = Uint8Array.from(atob(b), (c) => c.charCodeAt(0));
-  import("/static/check/engine.mjs").then((m) => m.check(n, bytes)).then(
-    (r) => (window.__r = r), (e) => (window.__r = { path: n, status: "page-error", error: String(e) }));
+  Promise.all([import("/static/check/engine.mjs"), import("/static/check/rule-answer.mjs")])
+    .then(([m, a]) => m.check(n, bytes).then((r) => {
+      if (r.findings && pages.length) r.rules = pages.map((page) => a.answer(r, page));  // each rule page's answer
+      return r;
+    }))
+    .then((r) => (window.__r = r), (e) => (window.__r = { path: n, status: "page-error", error: String(e) }));
 }"""
 
 
-def browser_run(p, kind, url, files):
+def browser_run(p, kind, url, files, pages):
     """A shared browser for ordinary files; a hostile file gets a browser of its own, so that a crash or a hang
     says something about that file only."""
     state = {}
@@ -180,7 +200,7 @@ def browser_run(p, kind, url, files):
             page = fresh()
         start = time.perf_counter()
         try:
-            page.evaluate(START, [f.name, base64.b64encode(f.read_bytes()).decode()])
+            page.evaluate(START, [f.name, base64.b64encode(f.read_bytes()).decode(), pages])
             page.wait_for_function("window.__r !== undefined", timeout=TIMEOUT_MS, polling=200)
             r = page.evaluate("window.__r")
         except Exception as e:  # a crash or a hang of the page itself: a difference to report
@@ -230,6 +250,7 @@ def comparable(f):
         "summary": f["summary"],
         "findings": findings,
         "values": f.get("values"),  # what the invoice says, read the same way on both sides
+        "rules": f.get("rules"),  # each rule page's answer for this file
     }
 
 
@@ -242,13 +263,18 @@ def by_design(path, ref, got):
 def main(kinds):
     with tempfile.TemporaryDirectory() as tmp:
         files = corpus(Path(tmp))
-        ref = cli(files)
-        print(f"corpus: {len(files)} files, checked by lintvoice {version('lintvoice')}", flush=True)
+        pages = rule_pages()
+        ref = cli(files, pages)
+        print(
+            f"corpus: {len(files)} files, checked by lintvoice {version('lintvoice')}; "
+            f"each file's answer for the {len(pages)} rules with a page",
+            flush=True,
+        )
         failed = False
         with server() as url, sync_playwright() as p:
             for kind in kinds:
                 t0 = time.perf_counter()
-                got = browser_run(p, kind, url, files)
+                got = browser_run(p, kind, url, files, pages)
                 same, expected, diffs = 0, [], []
                 for f in files:
                     if comparable(ref[f.name]) == comparable(got[f.name]):
