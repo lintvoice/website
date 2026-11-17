@@ -3,6 +3,7 @@
 {% block body %}
 {% set ix = rules_index %}
 <div class="band compact rules-band">
+ <div class="rules-band-main">
   <h1>{{ p.h1 }}</h1>
   <p class="brief">{{ p.lead }}</p>
   <form class="rules-search" role="search" id="rules-search">
@@ -11,13 +12,23 @@
   </form>
   {% if ix.complete %}<p class="coverage">{{ p.coverage | replace("{n}", ix.explained | string) | replace("{total}", ix.total | string) }}</p>{% endif %}
   <p class="try">{{ p.examples_label }}{% for code in p.example_codes if code in ix.ids %} <a class="code" href="{{ rule_href(code, t.lang) }}">{{ code }}</a>{% endfor %}</p>
+ </div>
+ <div class="rules-values">
+  <h2>{{ p.values_title }}</h2>
+  <ul>
+  {% for v in p["values"] %}
+    <li><strong>{{ v.head }}</strong> · {{ v.text }}{% if loop.last and "BR-CO-15" in ix.ids %}
+      <a class="example-thumb" href="{{ rule_href("BR-CO-15", t.lang) }}"><img src="/static/rules/example-invoice.png" alt="{{ p.thumb_alt }}" width="720" height="328" loading="lazy"></a>{% endif %}</li>
+  {% endfor %}
+  </ul>
+ </div>
 </div>
 
 <section class="rules-subjects" aria-labelledby="subjects-title">
   <h2 id="subjects-title">{{ p.browse_title }}</h2>
   <ul class="subject-grid">
   {% for key, rows in ix.topics if rows %}
-    <li><a href="#topic-{{ key }}" data-topic="{{ key }}"><span class="name">{{ p.topics[key] }}</span><span class="n">{{ (p.ui.count_one if rows | length == 1 else p.ui.count_many) | replace("{n}", rows | length | string) }}</span></a></li>
+    <li><a href="#topic-{{ key }}" data-topic="{{ key }}"><span class="name">{{ p.topics[key] }}</span><span class="line">{{ p.topic_lines[key] }}</span><span class="n">{{ (p.ui.count_one if rows | length == 1 else p.ui.count_many) | replace("{n}", rows | length | string) }}</span></a></li>
   {% endfor %}
   </ul>
 </section>
