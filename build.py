@@ -178,6 +178,18 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
         "zip_href": ZIP_HREF,
         "rules": rules,
     }
+    if rules:
+        rs = site["rule_sets"]
+        found = rulepages.inventory(rules_dir, checkassets.CACHE / "rules", out / "examples" / "fr" / "manifest.json")
+        data = rulepages.index(rules, found, {"en16931": f"EN 16931 {rs['en16931']}", "brfr": f"BR-FR {rs['brfr']}"})
+        (out / "static" / "rules").mkdir(parents=True, exist_ok=True)
+        (out / "static" / "rules" / "index.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        common["rules_index"] = {
+            "explained": len(data["explained"]),
+            "total": len(data["explained"]) + len(data["others"]),
+            "topics": [(key, [r for r in rules if r["meta"]["topic"] == key]) for key in rulepages.TOPICS],
+            "ids": {r["id"] for r in rules},
+        }
     for page, paths in pages.items():
         for lang in LANGS:
             t, other = texts[lang], next(code for code in LANGS if code != lang)
@@ -189,7 +201,11 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
                 path=paths[lang],
                 alternates=paths,
                 canonical=True,
-                page_title=p["title"] if page == "home" else f"{p['title']} · lintvoice",
+                page_title=p["title"]
+                if page == "home"
+                else f"{p['title']} | lintvoice"
+                if page == "rules"
+                else f"{p['title']} · lintvoice",
                 links={name: pages[name][lang] for name in pages},
                 other={"lang": other, "href": paths[other]},
                 publisher_rows=list(zip(p["publisher_labels"], PUBLISHER_KEYS, strict=True)) if page == "legal" else [],

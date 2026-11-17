@@ -128,11 +128,49 @@ text = "This page does not exist, or not yet."
 back = "Back to the home page"
 
 [rules]
-title = "E-invoice validation rules explained: EN 16931 and BR-FR"
-description = "What each EN 16931 and French BR-FR e-invoicing rule checks, why an invoice fails it and how to fix it, with an example file that fails it."
-h1 = "E-invoice rules, explained"
-brief = "What each official rule checks, why an invoice fails it and how to fix it, with an example file that fails it. EN 16931, the European standard, and the French reform rules (BR-FR)."
-cols = ["Rule", "What fails"]
+title = "E-invoice error codes (BR-FR, BR-CO) explained · validator"
+description = "Type an error code (BR-FR-10, BR-CO-15…) or browse by subject. What each rule checks, why an invoice fails it and how to fix it, with an example invoice."
+h1 = "Find and understand the e-invoicing rules"
+lead = "Type an error code or a word, or browse the rules by subject. Each rule is explained in plain words, with what to fix and an example invoice that shows the error."
+search_label = "Error code or keyword"
+placeholder = "For example BR-FR-10, SIREN, total with VAT"
+coverage = "{n} rules explained out of {total}. The others come family by family."
+examples_label = "For example:"
+example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
+filters = "Filter"
+topics_title = "Subjects"
+origin_title = "Origin"
+check_lead = "Got the invoice? Check it: each error is explained there."
+check_button = "Check an invoice"
+versions = "Rules applied: EN 16931 {en16931}, Factur-X {facturx}, BR-FR {brfr}."
+
+[rules.topics]
+addresses = "Electronic addresses"
+identifiers = "Company identifiers: SIREN, SIRET, VAT numbers"
+payment = "Payment and mandatory notes"
+totals = "Amounts and totals"
+vat = "VAT"
+invoice = "Number, dates and invoice type"
+lines = "Lines, allowances and charges"
+corrections = "Credit notes, corrections and advance payments"
+attachments = "Attachments"
+
+[rules.origins]
+fr = "French rules (reform)"
+eu = "European rules (EN 16931)"
+
+[rules.ui]
+params = { q = "q", topic = "topic", origin = "origin" }
+count_one = "{n} rule"
+count_many = "{n} rules"
+none = "No rule matches. Try a code, such as BR-FR-10, or another word."
+not_yet = "Not explained yet: it comes with its family."
+official = "Official message, {source}"
+in_english = ""
+check_link = "Check an invoice"
+mark_example = "example"
+origin_short = { fr = "France", eu = "Europe" }
+show_all = "Show all"
 
 [rule]
 rights = "Code under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE). Rule page text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); example files in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). The lintvoice logo © 2026 AllGood Services SAS."

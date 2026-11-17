@@ -1,23 +1,59 @@
 {% extends "base.html" %}
 {% block rights %}{{ t.rule.rights | links }}{% endblock %}
 {% block body %}
-<div class="band">
+{% set ix = rules_index %}
+<div class="band compact rules-band">
   <h1>{{ p.h1 }}</h1>
-  <p class="brief">{{ p.brief }}</p>
-  <div class="chips">{% for chip in rule_chips %}<span class="chip">{{ chip }}</span>{% endfor %}</div>
+  <p class="brief">{{ p.lead }}</p>
+  <form class="rules-search" role="search" id="rules-search">
+    <label for="q">{{ p.search_label }}</label>
+    <input id="q" name="{{ p.ui.params.q }}" type="search" placeholder="{{ p.placeholder }}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+  </form>
+  <p class="coverage">{{ p.coverage | replace("{n}", ix.explained | string) | replace("{total}", ix.total | string) }}</p>
+  <p class="try">{{ p.examples_label }}{% for code in p.example_codes if code in ix.ids %} <a class="code" href="{{ rule_href(code, t.lang) }}">{{ code }}</a>{% endfor %}</p>
 </div>
-{% for set_key in ("brfr", "en16931") %}
-{% set rows = rules | selectattr("set", "equalto", set_key) | list %}
-{% if rows %}
-<div class="panel" id="{{ set_key }}"><h2>{{ t.rule_sets[set_key].label }}<small>{{ rows | length }}</small></h2><div class="body"><div class="table-wrap"><table>
-  <thead><tr>{% for col in p.cols %}<th>{{ col }}</th>{% endfor %}</tr></thead>
-  <tbody>
-  {% for rule in rows %}
-    <tr><td class="mono"><a href="{{ rule_href(rule.id, t.lang) }}">{{ rule.id }}</a></td><td>{{ rule.pages[t.lang].title }}</td></tr>
-  {% endfor %}
-  </tbody>
-</table></div></div></div>
+<div class="rules-layout">
+  <aside class="rules-filters">
+    <details open id="rules-filters">
+      <summary>{{ p.filters }}</summary>
+      <h2>{{ p.topics_title }}</h2>
+      <ul class="facet" id="facet-topic">
+      {% for key, rows in ix.topics if rows %}
+        <li><a href="#topic-{{ key }}" data-topic="{{ key }}">{{ p.topics[key] }} <span class="n">{{ rows | length }}</span></a></li>
+      {% endfor %}
+      </ul>
+      <h2>{{ p.origin_title }}</h2>
+      <ul class="facet" id="facet-origin">
+      {% for key in ("fr", "eu") %}
+        <li><a href="?{{ p.ui.params.origin }}={{ key }}" data-origin="{{ key }}">{{ p.origins[key] }} <span class="n"></span></a></li>
+      {% endfor %}
+      </ul>
+      <p class="clear" hidden><button type="button" class="link" data-clear>{{ p.ui.show_all }}</button></p>
+    </details>
+  </aside>
+  <div class="rules-main">
+    <p class="rules-count" id="rules-count" aria-live="polite"></p>
+    <ol class="rule-list" id="rules-results" hidden></ol>
+    <div id="rules-browse">
+    {% for key, rows in ix.topics if rows %}
+      <section class="topic" id="topic-{{ key }}">
+        <h2>{{ p.topics[key] }} <small>{{ rows | length }}</small></h2>
+        <ul class="rule-list">
+        {% for rule in rows %}
+          <li class="rule-item"><a class="rule-link" href="{{ rule_href(rule.id, t.lang) }}"><span class="idm">{{ rule.id }}</span> <span class="title">{{ rule.pages[t.lang].title }}</span></a>
+            {% if rule.meta.brief %}<p class="brief">{{ rule.meta.brief[t.lang] }}</p>{% endif %}
+            <p class="marks">{% if rule.meta.examples.invalid %}<span class="mark">{{ p.ui.mark_example }}</span>{% endif %}<span class="mark">{{ p.ui.origin_short["fr" if rule.id.startswith("BR-FR") else "eu"] }}</span></p></li>
+        {% endfor %}
+        </ul>
+      </section>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+{% if links.check is defined %}
+<div class="rules-check"><p>{{ p.check_lead }}</p><a class="btn primary" href="{{ links.check }}">{{ p.check_button }}</a></div>
 {% endif %}
-{% endfor %}
-<p class="foot standard">{{ t.rule.cen_statement }}</p>
+<p class="foot standard">{{ p.versions | replace("{en16931}", site.rule_sets.en16931) | replace("{facturx}", site.rule_sets.facturx) | replace("{brfr}", site.rule_sets.brfr) }} {{ t.rule.cen_statement }}</p>
+<script type="application/json" id="rules-texts">{{ dict(p.ui, topics=p.topics, origins=p.origins, lang=t.lang, check=links.check if links.check is defined else "") | tojson }}</script>
+<script type="module" src="/static/rules.mjs"></script>
 {% endblock %}

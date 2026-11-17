@@ -128,11 +128,49 @@ text = "Cette page n'existe pas, ou pas encore."
 back = "Retour à l'accueil"
 
 [rules]
-title = "Règles de validation des factures électroniques expliquées : EN 16931 et BR-FR"
-description = "Ce que vérifie chaque règle EN 16931 et BR-FR de la facturation électronique, pourquoi une facture y échoue et comment corriger, avec un fichier d'exemple qui y échoue."
-h1 = "Les règles des factures électroniques, expliquées"
-brief = "Ce que vérifie chaque règle officielle, pourquoi une facture y échoue et comment corriger, avec un fichier d'exemple qui y échoue. EN 16931, la norme européenne, et les règles de la réforme française (BR-FR)."
-cols = ["Règle", "Ce qui échoue"]
+title = "Codes d'erreur de la facture électronique (BR-FR, BR-CO) expliqués · validateur"
+description = "Tapez un code d'erreur (BR-FR-10, BR-CO-15…) ou parcourez par sujet. Ce que vérifie chaque règle, pourquoi une facture y échoue et comment corriger, avec une facture d'exemple."
+h1 = "Trouvez et comprenez les règles de la facture électronique"
+lead = "Tapez un code d'erreur ou un mot, ou parcourez les règles par sujet. Chaque règle est expliquée en mots simples, avec ce qu'il faut corriger et une facture d'exemple qui montre l'erreur."
+search_label = "Code d'erreur ou mot-clé"
+placeholder = "Par exemple BR-FR-10, SIREN, total TTC"
+coverage = "{n} règles expliquées sur {total}. Les autres arrivent famille par famille."
+examples_label = "Par exemple :"
+example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
+filters = "Filtrer"
+topics_title = "Sujets"
+origin_title = "Origine"
+check_lead = "Vous avez la facture ? Vérifiez-la, chaque erreur y est expliquée."
+check_button = "Vérifier une facture"
+versions = "Règles appliquées : EN 16931 {en16931}, Factur-X {facturx}, BR-FR {brfr}."
+
+[rules.topics]
+addresses = "Les adresses électroniques"
+identifiers = "SIREN, SIRET et numéros de TVA"
+payment = "Paiement et mentions obligatoires"
+totals = "Montants et totaux"
+vat = "La TVA"
+invoice = "Numéro, dates et type de facture"
+lines = "Lignes, remises et frais"
+corrections = "Avoirs, factures rectificatives et acomptes"
+attachments = "Pièces jointes"
+
+[rules.origins]
+fr = "Règles françaises (réforme)"
+eu = "Règles européennes (EN 16931)"
+
+[rules.ui]
+params = { q = "q", topic = "sujet", origin = "origine" }
+count_one = "{n} règle"
+count_many = "{n} règles"
+none = "Aucune règle ne correspond. Essayez un code, comme BR-FR-10, ou un autre mot."
+not_yet = "Pas encore expliquée : elle arrive avec sa famille."
+official = "Message officiel, {source}"
+in_english = "(en anglais)"
+check_link = "Vérifier une facture"
+mark_example = "exemple"
+origin_short = { fr = "France", eu = "Europe" }
+show_all = "Tout afficher"
 
 [rule]
 rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Texte des pages de règles sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) ; fichiers d'exemple dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)). Logo lintvoice © 2026 AllGood Services SAS."
