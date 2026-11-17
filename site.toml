@@ -13,7 +13,7 @@ brfr = "1.4.0.04"
 [rules_source]
 # The rule pages come from the lintvoice/invoice-rules repository, at this exact commit: a commit id pins the content.
 repo = "https://github.com/lintvoice/invoice-rules.git"
-commit = "d892b50a551aad452cc2e1878bd35c555de12ab3"
+commit = "5eb094345e06c473db80be1b51b9c8edb9823643"
 
 [legal]
 publisher = "ALLGOOD SERVICES"

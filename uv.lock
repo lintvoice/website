@@ -194,16 +194,16 @@ wheels = [
 
 [[package]]
 name = "invoice-examples"
-version = "0.2.0"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "lxml" },
     { name = "pypdf" },
     { name = "reportlab" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d2/92/57b5fa836963f3cd47974f3d5e4835256cc4d0bf7f7bb2ba57ca75df74ae/invoice_examples-0.2.0.tar.gz", hash = "sha256:38964a89f23ae9d7230e540cdced4405d4f37f6e6b8f8c0da89ab811304ba13d", size = 4123017, upload-time = "2026-11-16T14:36:52.512Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6e/fa/a00953b06e0b354aa6257f7fd37fa72ccbcf602344582fdb27fd92bad711/invoice_examples-0.3.0.tar.gz", hash = "sha256:a79bf0c987a03f3db35e4e6fe529f0233cfde6aa2393dc169ae4fe1c4ff50425", size = 5507800, upload-time = "2026-11-17T11:31:04.471Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d7/1d/af006238ee6df86d56c9cd92f94de3790a511c851999c671cafcf7996c33/invoice_examples-0.2.0-py3-none-any.whl", hash = "sha256:3b2a7c81f97eece2a17892f024f3fbf92db8aca08c75f4327c7b0bc839de78cf", size = 276622, upload-time = "2026-11-16T14:36:50.956Z" },
+    { url = "https://files.pythonhosted.org/packages/92/aa/41a114e70b7c07eba74f8fac12c1955f7191df80eb9d4210a25402d23a34/invoice_examples-0.3.0-py3-none-any.whl", hash = "sha256:3b193952c6817affa250fb3c75ecaa9d7d017129c0d5e04fbe00cd5d8be460a5", size = 280540, upload-time = "2026-11-17T11:31:02.977Z" },
 ]
 
 [[package]]
@@ -220,16 +220,16 @@ wheels = [
 
 [[package]]
 name = "lintvoice"
-version = "0.1.1"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "lxml" },
     { name = "pypdf" },
     { name = "saxonche" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/81/3ea8771e777586f09d91522bc2a0062d1a7d95c825f941d56f396d9b054c/lintvoice-0.1.1.tar.gz", hash = "sha256:71a4935f22c1747ad0acf6d5ffb94550ef51cb1658dcffd063dc92925beb2993", size = 44887, upload-time = "2026-11-16T14:36:52.506Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/7b/ae91e56547cc0a1a09572e17cf96cdf61e86d3264fc25c9096f05c7b3346/lintvoice-0.2.0.tar.gz", hash = "sha256:9054d44dc529505c8961c3e4d63ec5918fce6e2ada0f62fa179011fe76bd0fdc", size = 49580, upload-time = "2026-11-17T11:31:20.314Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/df/bd0efb8ade8c57c3b58f7f2870a57c1cd8cda7b11b3acdb5192cd14537f9/lintvoice-0.1.1-py3-none-any.whl", hash = "sha256:44e6dc44124fd8a50543f46b64b3d87113f42c66b25835a82f1c25350a85a730", size = 20380, upload-time = "2026-11-16T14:36:51.347Z" },
+    { url = "https://files.pythonhosted.org/packages/f1/e5/2f3135c4af7b521d595219d768c68403e21fd821dcf035c70240973d6edd/lintvoice-0.2.0-py3-none-any.whl", hash = "sha256:fcdaf075d611206ab6165ee701e35bb63df2254eebf20af0a86c0aa891621eb0", size = 24707, upload-time = "2026-11-17T11:31:18.698Z" },
 ]
 
 [[package]]
@@ -254,9 +254,9 @@ parity = [
 
 [package.metadata]
 requires-dist = [
-    { name = "invoice-examples", specifier = "==0.2.0" },
+    { name = "invoice-examples", specifier = "==0.3.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
-    { name = "lintvoice", specifier = "==0.1.1" },
+    { name = "lintvoice", specifier = "==0.2.0" },
     { name = "markdown-it-py", specifier = ">=4.2,<4.3" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]
