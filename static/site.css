@@ -275,18 +275,28 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .rules-band .coverage{font-size:var(--fs-sm);color:var(--muted);margin:var(--sp-2) 0 var(--sp-1)}
 .rules-band .try{font-size:var(--fs-sm);color:var(--muted);margin:0;text-align:left}
 .rules-band .try .code{font-family:var(--font-mono);margin-left:var(--sp-2);white-space:nowrap}
-.rules-layout{display:grid;grid-template-columns:var(--layout-aside) minmax(0,1fr);gap:var(--sp-8);align-items:start;margin-top:var(--sp-6)}
-.rules-filters details{position:sticky;top:var(--sp-8)}
-.rules-filters summary{font-weight:600;cursor:pointer;margin-bottom:var(--sp-2)}
-.rules-filters h2{font-size:var(--fs-sm);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:var(--sp-4) 0 var(--sp-2)}
-.facet{list-style:none;padding:0;margin:0;display:grid;gap:2px}
-.facet a{display:flex;justify-content:space-between;gap:var(--sp-2);padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);text-decoration:none;color:var(--text);font-size:var(--fs-sm)}
-.facet a:hover{background:var(--surface)}
-.facet a.on{background:var(--accent);color:var(--bg)}
+/* one main column: the search and the results lead; the filters are compact chips under the search, never a column
+   as heavy as the results (layout b); layout a keeps a side column, as a visibly secondary panel (review only) */
+.rules-layout{margin-top:var(--sp-5)}
+.rules-filters{margin-bottom:var(--sp-6)}
+.rules-filters summary{display:none}
+.facet-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px var(--sp-3);margin:0 0 var(--sp-2)}
+.rules-filters h2{font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin:0;min-width:3.5rem}
+.facet{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.facet a{display:inline-flex;gap:6px;align-items:baseline;padding:2px 10px;border:var(--bw-hair) solid var(--line);border-radius:var(--r-pill);text-decoration:none;color:var(--text);font-size:var(--fs-xs);background:var(--bg)}
+.facet a:hover{border-color:var(--accent)}
+.facet a.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .facet .n{color:var(--muted);font-variant-numeric:tabular-nums}
 .facet a.on .n{color:inherit}
-.facet a.zero{color:var(--muted);opacity:.6}
-.rules-filters .clear{margin:var(--sp-3) 0 0;font-size:var(--fs-sm)}
+.facet a.zero{color:var(--muted);opacity:.55}
+.rules-filters .clear{margin:var(--sp-1) 0 0;font-size:var(--fs-xs)}
+[data-layout=a] .rules-layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-8);align-items:start}
+[data-layout=a] .rules-filters{background:var(--surface);border-radius:var(--r-lg);padding:var(--sp-3) var(--sp-4);position:sticky;top:var(--sp-8)}
+[data-layout=a] .facet-row{display:block;margin-bottom:var(--sp-3)}
+[data-layout=a] .rules-filters h2{margin-bottom:var(--sp-1)}
+[data-layout=a] .facet{display:grid;gap:0}
+[data-layout=a] .facet a{display:flex;justify-content:space-between;border:0;border-radius:var(--r-sm);padding:2px var(--sp-2);background:none}
+[data-layout=a] .facet a.on{background:var(--accent)}
 .rules-count{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-3)}
 .rules-main .topic h2{font-size:var(--fs-lg);margin:0 0 var(--sp-3)}
 .rules-main .topic h2 small{color:var(--muted);font-weight:400;margin-left:var(--sp-1)}
@@ -307,9 +317,11 @@ a.rule-link:hover .title{text-decoration:underline}
 .rules-check{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--sp-3);background:var(--surface);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5);margin:var(--sp-6) 0}
 .rules-check p{margin:0;font-weight:600}
 @media (max-width:820px){
-  .rules-layout{grid-template-columns:1fr;gap:var(--sp-4)}
-  .rules-filters details{position:static;border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-2) var(--sp-3)}
-  .rules-filters summary{margin:0}
+  [data-layout=a] .rules-layout{grid-template-columns:1fr;gap:var(--sp-4)}
+  [data-layout=a] .rules-filters{position:static}
+  .rules-filters details{border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);padding:var(--sp-2) var(--sp-3)}
+  .rules-filters summary{display:list-item;font-weight:600;font-size:var(--fs-sm);cursor:pointer}
+  .rules-filters details[open] summary{margin-bottom:var(--sp-2)}
   .rule-item .brief,.rule-item .marks,.rule-item .official{margin-left:0}
   .rule-link{flex-direction:column;gap:0}
   .rule-link .idm{min-width:0}

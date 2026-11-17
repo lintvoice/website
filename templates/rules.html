@@ -16,18 +16,18 @@
   <aside class="rules-filters">
     <details open id="rules-filters">
       <summary>{{ p.filters }}</summary>
-      <h2>{{ p.topics_title }}</h2>
+      <div class="facet-row"><h2>{{ p.topics_title }}</h2>
       <ul class="facet" id="facet-topic">
       {% for key, rows in ix.topics if rows %}
         <li><a href="#topic-{{ key }}" data-topic="{{ key }}">{{ p.topics[key] }} <span class="n">{{ rows | length }}</span></a></li>
       {% endfor %}
-      </ul>
-      <h2>{{ p.country_title }}</h2>
+      </ul></div>
+      <div class="facet-row"><h2>{{ p.country_title }}</h2>
       <ul class="facet" id="facet-country">
       {% for key in ("eu", "fr") %}
         <li><a href="?{{ p.ui.params.country }}={{ key }}" data-country="{{ key }}">{{ p.countries[key] }} <span class="n"></span></a></li>
       {% endfor %}
-      </ul>
+      </ul></div>
       <p class="clear" hidden><button type="button" class="link" data-clear>{{ p.ui.show_all }}</button></p>
     </details>
   </aside>

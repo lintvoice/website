@@ -4,6 +4,7 @@
 // and the back button works. Nothing is sent anywhere.
 
 const T = JSON.parse(document.getElementById("rules-texts").textContent);
+document.body.dataset.layout = new URLSearchParams(location.search).get("v") || "b"; // review only: compare layouts a and b
 const P = T.params;
 const lang = T.lang;
 const input = document.getElementById("q");
