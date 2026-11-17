@@ -25,7 +25,7 @@ footer_legal = "Legal notice"
 title = "Check, understand and fix your e-invoices · Factur-X / ZUGFeRD validator | lintvoice"
 description = "Check an e-invoice against the official rules, understand the errors in plain words and fix them, with an example invoice. Free, no account, nothing is sent."
 h1 = "Check, understand and fix your e-invoices"
-lead = "lintvoice runs the official rules on your invoices, the European standard's and each country's own, starting with France, explains the errors in plain words and shows how to fix them."
+lead = "lintvoice runs the official rules on your invoices: the European standard's, then each country's, starting with France. It explains the errors in plain words and shows how to fix them."
 trust = ["Free, no account", "Your invoice never leaves your computer", "[Public code on GitHub](https://github.com/lintvoice)"]
 code_label = "Already have an error code?"
 code_placeholder = "For example BR-FR-10"
@@ -37,7 +37,7 @@ values = [
     { head = "Understand", question = "“BR-FR-10, what does it mean?”", text = "Errors are explained in plain words, with your invoice's values and the reason the rule exists.", link = "See the invoicing rules", page = "rules", proof = "{explained} of {total} rules explained, in English and French. The others follow, family by family." },
     { head = "Fix", question = "“What do I change, and who has to do it?”", text = "The steps to fix it in your software, an example invoice that shows the error, and the rule's link to send to your software publisher.", link = "See the example invoices", page = "examples", proof = "{examples} example invoices, each failing a named rule, in the public domain." },
 ]
-proof_title = "Each explained rule has its page, and an example invoice that shows the error"
+proof_title = "A page in plain words, and an example invoice that shows the error"
 proof_sub = "The page says, in plain words, what the rule checks and how to fix it. The example invoice fails that rule, and the error is in red."
 rule_alt = "The top of the BR-CO-15 rule page: its title in plain words, the In short line, what the rule checks and its common causes."
 rule_caption = "The BR-CO-15 rule page."

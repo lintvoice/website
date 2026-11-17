@@ -37,7 +37,7 @@ values = [
     { head = "Comprenez", question = "« BR-FR-10, qu'est-ce que ça veut dire ? »", text = "Les erreurs sont expliquées en mots simples, avec les valeurs de votre facture et la raison d'être de la règle.", link = "Voir les règles de facturation", page = "rules", proof = "{explained} règles expliquées sur {total}, en français et en anglais. Les autres arrivent famille par famille." },
     { head = "Corrigez", question = "« Que dois-je changer, et qui doit le faire ? »", text = "Les étapes pour corriger dans votre logiciel, une facture d'exemple qui montre l'erreur, et le lien de la règle à envoyer à votre éditeur.", link = "Voir les exemples de factures", page = "examples", proof = "{examples} factures d'exemple, chacune en échec sur une règle nommée, dans le domaine public." },
 ]
-proof_title = "Chaque règle expliquée a sa page, et une facture d'exemple qui montre l'erreur"
+proof_title = "Une page en mots simples, et une facture d'exemple qui montre l'erreur"
 proof_sub = "La page dit, en mots simples, ce que vérifie la règle et comment corriger. La facture d'exemple échoue à cette règle, et l'erreur y est en rouge."
 rule_alt = "Haut de la page de la règle BR-CO-15 : son titre en mots simples, la phrase En bref, ce que vérifie la règle et ses causes fréquentes."
 rule_caption = "La page de la règle BR-CO-15."
