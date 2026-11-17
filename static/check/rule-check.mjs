@@ -15,9 +15,6 @@ const input = document.getElementById("rule-file");
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const fill = (s, vars) => s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 
-box.hidden = false;
-document.querySelectorAll("[data-rule-check-link]").forEach((a) => { a.hidden = false; });
-
 // SaxonJS (a classic script), the engine, the display and the check's texts: once, on the first file.
 let tools;
 let copyTexts = {}; // the check's "copied" texts, once loaded

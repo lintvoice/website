@@ -33,7 +33,7 @@
   <div class="actions">
     <a class="lang wide" href="{{ other.href }}" hreflang="{{ other.lang }}" lang="{{ other.lang }}" title="{{ t.switch_title }}">{{ t.switch_label }}</a>
     <button class="toggle wide" type="button" data-dark="{{ t.theme_dark }}" data-light="{{ t.theme_light }}">{{ t.theme_dark }}</button>
-    {% if links.check is defined %}<a class="cta" href="{{ links.check }}">{{ t.cta_check }}</a>{% else %}<a class="cta" href="{{ links.home }}#quick-start">{{ t.cta }}</a>{% endif %}
+    {% block cta %}{% if links.check is defined %}<a class="cta" href="{{ links.check }}">{{ t.cta_check }}</a>{% else %}<a class="cta" href="{{ links.home }}#quick-start">{{ t.cta }}</a>{% endif %}{% endblock %}
     <details class="menu narrow"><summary>{{ t.menu_label }}</summary>
       <div class="menu-panel">
         {% if links.rules is defined %}<a href="{{ links.rules }}">{{ t.nav_rules }}</a>{% endif %}

@@ -8,14 +8,15 @@
   <p class="mini-brief"><strong>{{ t.rule.brief_label }}</strong> {{ m.brief[t.lang] }}</p>
 </div>
 {% endblock %}
+{% block cta %}{% if checkable %}<a class="cta" href="#rule-check">{{ t.rule.check.cta }}</a>{% else %}{{ super() }}{% endif %}{% endblock %}
 {% block rights %}{{ t.rule.rights | links }}{% endblock %}
 {% block body %}
 <div class="band compact" id="band">{% include "_rule_head.html" %}
-  <p class="status-line">{% include "_rule_severity.html" %}{% if s.status %}<span>{{ t.rule.in_force }} {{ s.status }}</span>{% endif %}{% if checkable %}<a class="rule-check-link" href="#rule-check" data-rule-check-link hidden>{{ t.rule.check.band_link }}</a>{% endif %}</p>
+  <p class="status-line">{% include "_rule_severity.html" %}{% if s.status %}<span>{{ t.rule.in_force }} {{ s.status }}</span>{% endif %}</p>
 </div>
 <div class="grid content-first">
 <aside>{% include "_rule_aside.html" %}</aside>
-<article class="prose">{% include "_rule_steps.html" %}</article>
+<article class="prose">{% include "_rule_steps.html" %}{% if checkable %}{% include "_rule_check.html" %}{% endif %}</article>
 </div>
 {% set wide = true %}{% include "_rule_tech.html" %}
 <p class="updated">{{ t.rule.updated_line }} {{ m.updated }}</p>

@@ -1,6 +1,6 @@
-{# The rule's own check: shown by rule-check.mjs (it needs JavaScript), which loads the check only once a file is picked. #}
-<section class="panel rule-check" id="rule-check" aria-labelledby="rule-check-title" hidden>
-  <h3 id="rule-check-title">{{ t.rule.check.title }}</h3>
+{# The rule's own check, after the explanation: rule-check.mjs loads the check only once a file is picked. #}
+<section class="panel rule-check" id="rule-check" aria-labelledby="rule-check-title">
+  <h2 id="rule-check-title">{{ t.rule.check.title | replace("{id}", rule.id) }}</h2>
   <div class="body">
     <p class="start">{{ t.rule.check.lead }}</p>
     <p class="actions-row start"><label class="btn primary" for="rule-file">{{ t.rule.check.choose }}</label>{% if rule.example %} <button type="button" class="link" data-example>{{ t.rule.check.try }}</button>{% endif %}</p>
