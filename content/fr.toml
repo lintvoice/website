@@ -139,7 +139,7 @@ examples_label = "Par exemple :"
 example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
 filters = "Filtrer"
 topics_title = "Sujets"
-origin_title = "Origine"
+country_title = "Pays"
 check_lead = "Vous avez la facture ? Vérifiez-la, chaque erreur y est expliquée."
 check_button = "Vérifier une facture"
 versions = "Règles appliquées : EN 16931 {en16931}, Factur-X {facturx}, BR-FR {brfr}."
@@ -155,12 +155,12 @@ lines = "Lignes, remises et frais"
 corrections = "Avoirs, factures rectificatives et acomptes"
 attachments = "Pièces jointes"
 
-[rules.origins]
-fr = "Règles françaises (réforme)"
-eu = "Règles européennes (EN 16931)"
+[rules.countries]
+eu = "Toute l'Europe (EN 16931)"
+fr = "France"
 
 [rules.ui]
-params = { q = "q", topic = "sujet", origin = "origine" }
+params = { q = "q", topic = "sujet", country = "pays" }
 count_one = "{n} règle"
 count_many = "{n} règles"
 none = "Aucune règle ne correspond. Essayez un code, comme BR-FR-10, ou un autre mot."
@@ -169,7 +169,7 @@ official = "Message officiel, {source}"
 in_english = "(en anglais)"
 check_link = "Vérifier une facture"
 mark_example = "exemple"
-origin_short = { fr = "France", eu = "Europe" }
+country_short = { fr = "France", eu = "Europe" }
 show_all = "Tout afficher"
 
 [rule]

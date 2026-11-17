@@ -22,10 +22,10 @@
         <li><a href="#topic-{{ key }}" data-topic="{{ key }}">{{ p.topics[key] }} <span class="n">{{ rows | length }}</span></a></li>
       {% endfor %}
       </ul>
-      <h2>{{ p.origin_title }}</h2>
-      <ul class="facet" id="facet-origin">
-      {% for key in ("fr", "eu") %}
-        <li><a href="?{{ p.ui.params.origin }}={{ key }}" data-origin="{{ key }}">{{ p.origins[key] }} <span class="n"></span></a></li>
+      <h2>{{ p.country_title }}</h2>
+      <ul class="facet" id="facet-country">
+      {% for key in ("eu", "fr") %}
+        <li><a href="?{{ p.ui.params.country }}={{ key }}" data-country="{{ key }}">{{ p.countries[key] }} <span class="n"></span></a></li>
       {% endfor %}
       </ul>
       <p class="clear" hidden><button type="button" class="link" data-clear>{{ p.ui.show_all }}</button></p>
@@ -42,7 +42,7 @@
         {% for rule in rows %}
           <li class="rule-item"><a class="rule-link" href="{{ rule_href(rule.id, t.lang) }}"><span class="idm">{{ rule.id }}</span> <span class="title">{{ rule.pages[t.lang].title }}</span></a>
             {% if rule.meta.brief %}<p class="brief">{{ rule.meta.brief[t.lang] }}</p>{% endif %}
-            <p class="marks">{% if rule.meta.examples.invalid %}<span class="mark">{{ p.ui.mark_example }}</span>{% endif %}<span class="mark">{{ p.ui.origin_short["fr" if rule.id.startswith("BR-FR") else "eu"] }}</span></p></li>
+            <p class="marks">{% if rule.meta.examples.invalid %}<span class="mark">{{ p.ui.mark_example }}</span>{% endif %}<span class="mark">{{ p.ui.country_short["fr" if rule.id.startswith("BR-FR") else "eu"] }}</span></p></li>
         {% endfor %}
         </ul>
       </section>
@@ -54,6 +54,6 @@
 <div class="rules-check"><p>{{ p.check_lead }}</p><a class="btn primary" href="{{ links.check }}">{{ p.check_button }}</a></div>
 {% endif %}
 <p class="foot standard">{{ p.versions | replace("{en16931}", site.rule_sets.en16931) | replace("{facturx}", site.rule_sets.facturx) | replace("{brfr}", site.rule_sets.brfr) }} {{ t.rule.cen_statement }}</p>
-<script type="application/json" id="rules-texts">{{ dict(p.ui, topics=p.topics, origins=p.origins, lang=t.lang, check=links.check if links.check is defined else "") | tojson }}</script>
+<script type="application/json" id="rules-texts">{{ dict(p.ui, topics=p.topics, countries=p.countries, lang=t.lang, check=links.check if links.check is defined else "") | tojson }}</script>
 <script type="module" src="/static/rules.mjs"></script>
 {% endblock %}

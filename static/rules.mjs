@@ -1,4 +1,4 @@
-// The rules index: search, filter by subject and origin, in the browser. Without JavaScript, the page lists every
+// The rules index: search, filter by subject and country, in the browser. Without JavaScript, the page lists every
 // explained rule by subject; this script adds the search over every rule of the official files (static/rules/
 // index.json, built with the site), the filters, and keeps the state in the address (?q=…), so a search can be shared
 // and the back button works. Nothing is sent anywhere.
@@ -23,14 +23,14 @@ let entries = [];
 
 function state() {
   const u = new URLSearchParams(location.search);
-  return { q: u.get(P.q) || "", topic: u.get(P.topic) || "", origin: u.get(P.origin) || "" };
+  return { q: u.get(P.q) || "", topic: u.get(P.topic) || "", country: u.get(P.country) || "" };
 }
 
 function address(s, push) {
   const u = new URLSearchParams();
   if (s.q) u.set(P.q, s.q);
   if (s.topic) u.set(P.topic, s.topic);
-  if (s.origin) u.set(P.origin, s.origin);
+  if (s.country) u.set(P.country, s.country);
   const url = `${location.pathname}${u.toString() ? `?${u}` : ""}`;
   history[push ? "pushState" : "replaceState"](null, "", url);
 }
@@ -83,13 +83,17 @@ function item(e) {
   }
   return `<li class="rule-item"><a class="rule-link" href="${esc(e.href[lang])}"><span class="idm">${esc(e.id)}</span> <span class="title">${esc(e.title[lang])}</span></a>
     ${e.brief[lang] ? `<p class="brief">${esc(e.brief[lang])}</p>` : ""}
-    <p class="marks"><span class="mark">${esc(T.topics[e.topic])}</span>${e.example ? `<span class="mark">${esc(T.mark_example)}</span>` : ""}<span class="mark">${esc(T.origin_short[e.origin])}</span></p></li>`;
+    <p class="marks"><span class="mark">${esc(T.topics[e.topic])}</span>${e.example ? `<span class="mark">${esc(T.mark_example)}</span>` : ""}<span class="mark">${esc(T.country_short[e.origin])}</span></p></li>`;
 }
 
-// The entries that match the query and the origin, before the subject filter: what the subject counts are counted on.
+// A country shows its own rules and the European standard's, which every country's format builds on; "eu" shows the
+// European standard's only.
+const inCountry = (e, country) => !country || e.origin === "eu" || e.origin === country;
+
+// The entries that match the query and the country, before the subject filter: what the subject counts are counted on.
 function matching(s) {
   return entries
-    .filter((e) => (!s.origin || e.origin === s.origin) && (s.q ? true : e.page))
+    .filter((e) => inCountry(e, s.country) && (s.q ? true : e.page))
     .map((e) => ({ e, score: s.q ? score(e, s.q) : 1 }))
     .filter((x) => x.score > 0);
 }
@@ -99,7 +103,7 @@ function render() {
   if (input.value !== s.q && document.activeElement !== input) input.value = s.q;
   const pool = matching(s);
   const shown = pool.filter((x) => !s.topic || x.e.topic === s.topic).sort((a, b) => b.score - a.score || Number(b.e.page) - Number(a.e.page) || a.e.id.localeCompare(b.e.id));
-  // subject and origin counts follow the query
+  // subject and country counts follow the query
   document.querySelectorAll("[data-topic]").forEach((a) => {
     const n = pool.filter((x) => x.e.topic === a.dataset.topic).length;
     a.querySelector(".n").textContent = n;
@@ -107,14 +111,14 @@ function render() {
     a.classList.toggle("on", a.dataset.topic === s.topic);
     a.setAttribute("aria-current", a.dataset.topic === s.topic ? "true" : "false");
   });
-  document.querySelectorAll("[data-origin]").forEach((a) => {
-    const n = entries.filter((e) => e.origin === a.dataset.origin && (s.q ? score(e, s.q) > 0 : e.page) && (!s.topic || e.topic === s.topic)).length;
+  document.querySelectorAll("[data-country]").forEach((a) => {
+    const n = entries.filter((e) => inCountry(e, a.dataset.country) && (s.q ? score(e, s.q) > 0 : e.page) && (!s.topic || e.topic === s.topic)).length;
     a.querySelector(".n").textContent = n;
     a.classList.toggle("zero", n === 0);
-    a.classList.toggle("on", a.dataset.origin === s.origin);
-    a.setAttribute("aria-current", a.dataset.origin === s.origin ? "true" : "false");
+    a.classList.toggle("on", a.dataset.country === s.country);
+    a.setAttribute("aria-current", a.dataset.country === s.country ? "true" : "false");
   });
-  const filtered = s.q || s.topic || s.origin;
+  const filtered = s.q || s.topic || s.country;
   clear.hidden = !filtered;
   browse.hidden = Boolean(filtered);
   results.hidden = !filtered;
@@ -145,19 +149,19 @@ document.getElementById("rules-search").addEventListener("submit", (ev) => {
   const hit = exact(input.value);
   if (hit) location.href = hit.href[lang];
 });
-document.querySelectorAll("[data-topic], [data-origin]").forEach((a) =>
+document.querySelectorAll("[data-topic], [data-country]").forEach((a) =>
   a.addEventListener("click", (ev) => {
     ev.preventDefault();
     const s = state();
     if (a.dataset.topic) s.topic = s.topic === a.dataset.topic ? "" : a.dataset.topic;
-    if (a.dataset.origin) s.origin = s.origin === a.dataset.origin ? "" : a.dataset.origin;
+    if (a.dataset.country) s.country = s.country === a.dataset.country ? "" : a.dataset.country;
     address(s, true);
     render();
   }),
 );
 clear.addEventListener("click", () => {
   input.value = "";
-  address({ q: "", topic: "", origin: "" }, true);
+  address({ q: "", topic: "", country: "" }, true);
   render();
 });
 window.addEventListener("popstate", render);

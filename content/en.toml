@@ -139,7 +139,7 @@ examples_label = "For example:"
 example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
 filters = "Filter"
 topics_title = "Subjects"
-origin_title = "Origin"
+country_title = "Country"
 check_lead = "Got the invoice? Check it, and each error comes explained."
 check_button = "Check an invoice"
 versions = "Rules applied: EN 16931 {en16931}, Factur-X {facturx}, BR-FR {brfr}."
@@ -155,12 +155,12 @@ lines = "Lines, allowances and charges"
 corrections = "Credit notes, corrections and advance payments"
 attachments = "Attachments"
 
-[rules.origins]
-fr = "French rules (reform)"
-eu = "European rules (EN 16931)"
+[rules.countries]
+eu = "All of Europe (EN 16931)"
+fr = "France"
 
 [rules.ui]
-params = { q = "q", topic = "topic", origin = "origin" }
+params = { q = "q", topic = "topic", country = "country" }
 count_one = "{n} rule"
 count_many = "{n} rules"
 none = "No rule matches. Try a code, such as BR-FR-10, or another word."
@@ -169,7 +169,7 @@ official = "Official message, {source}"
 in_english = ""
 check_link = "Check an invoice"
 mark_example = "example"
-origin_short = { fr = "France", eu = "Europe" }
+country_short = { fr = "France", eu = "Europe" }
 show_all = "Show all"
 
 [rule]
