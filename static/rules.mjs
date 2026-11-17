@@ -4,14 +4,13 @@
 // and the back button works. Nothing is sent anywhere.
 
 const T = JSON.parse(document.getElementById("rules-texts").textContent);
-document.body.dataset.layout = new URLSearchParams(location.search).get("v") || "b"; // review only: compare layouts a and b
 const P = T.params;
 const lang = T.lang;
 const input = document.getElementById("q");
 const results = document.getElementById("rules-results");
 const browse = document.getElementById("rules-browse");
 const count = document.getElementById("rules-count");
-const clear = document.querySelector(".rules-filters .clear");
+const active = document.getElementById("active-filters");
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const fill = (s, vars) => s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
@@ -80,11 +79,9 @@ function item(e) {
   if (!e.page) {
     const source = `${fill(T.official, { source: e.source })}${e.lang === "en" && T.in_english ? ` ${T.in_english}` : ""}`;
     return `<li class="rule-item not-yet"><p class="rule-link"><span class="idm">${esc(e.id)}</span> <span class="title">${esc(T.not_yet)}</span></p>
-      <blockquote class="official" lang="${e.lang}">${esc(e.message)}</blockquote><p class="marks"><span class="mark">${esc(source)}</span>${T.check ? ` <a href="${esc(T.check)}">${esc(T.check_link)}</a>` : ""}</p></li>`;
+      <blockquote class="official" lang="${e.lang}">${esc(e.message)}</blockquote><p class="source">${esc(source)}${T.check ? ` · <a href="${esc(T.check)}">${esc(T.check_link)}</a>` : ""}</p></li>`;
   }
-  return `<li class="rule-item"><a class="rule-link" href="${esc(e.href[lang])}"><span class="idm">${esc(e.id)}</span> <span class="title">${esc(e.title[lang])}</span></a>
-    ${e.brief[lang] ? `<p class="brief">${esc(e.brief[lang])}</p>` : ""}
-    <p class="marks"><span class="mark">${esc(T.topics[e.topic])}</span>${e.example ? `<span class="mark">${esc(T.mark_example)}</span>` : ""}<span class="mark">${esc(T.country_short[e.origin])}</span></p></li>`;
+  return `<li class="rule-item"><a class="rule-link" href="${esc(e.href[lang])}"><span class="idm">${esc(e.id)}</span> <span class="title">${esc(e.title[lang])}</span></a>${e.brief[lang] ? `<p class="brief">${esc(e.brief[lang])}</p>` : ""}</li>`;
 }
 
 // A country shows its own rules and the European standard's, which every country's format builds on; "eu" shows the
@@ -99,36 +96,44 @@ function matching(s) {
     .filter((x) => x.score > 0);
 }
 
+const counted = (n) => fill(n === 1 || (lang === "fr" && n === 0) ? T.count_one : T.count_many, { n }); // French: « 0 règle »
+
 function render() {
   const s = state();
   if (input.value !== s.q && document.activeElement !== input) input.value = s.q;
   const pool = matching(s);
   const shown = pool.filter((x) => !s.topic || x.e.topic === s.topic).sort((a, b) => b.score - a.score || Number(b.e.page) - Number(a.e.page) || a.e.id.localeCompare(b.e.id));
-  // subject and country counts follow the query
+  // the subject cards count what the query and the country leave
   document.querySelectorAll("[data-topic]").forEach((a) => {
     const n = pool.filter((x) => x.e.topic === a.dataset.topic).length;
-    a.querySelector(".n").textContent = n;
+    a.querySelector(".n").textContent = counted(n);
     a.classList.toggle("zero", n === 0);
     a.classList.toggle("on", a.dataset.topic === s.topic);
     a.setAttribute("aria-current", a.dataset.topic === s.topic ? "true" : "false");
   });
   document.querySelectorAll("[data-country]").forEach((a) => {
-    const n = entries.filter((e) => inCountry(e, a.dataset.country) && (s.q ? score(e, s.q) > 0 : e.page) && (!s.topic || e.topic === s.topic)).length;
-    a.querySelector(".n").textContent = n;
-    a.classList.toggle("zero", n === 0);
     a.classList.toggle("on", a.dataset.country === s.country);
     a.setAttribute("aria-current", a.dataset.country === s.country ? "true" : "false");
   });
+  // the filters in use, as tags above the results, each one removable, then "clear all"
+  const tags = [];
+  if (s.topic) tags.push(["topic", T.topics[s.topic]]);
+  if (s.country) tags.push(["country", T.countries[s.country]]);
+  active.hidden = !tags.length && !s.q;
+  active.innerHTML = tags.map(([key, name]) => `<button type="button" class="tag" data-remove="${key}" aria-label="${esc(fill(T.remove, { name }))}">${esc(name)} <span aria-hidden="true">×</span></button>`).join("")
+    + (tags.length || s.q ? `<button type="button" class="link" data-clear>${esc(T.clear_all)}</button>` : "");
   const filtered = s.q || s.topic || s.country;
-  clear.hidden = !filtered;
   browse.hidden = Boolean(filtered);
   results.hidden = !filtered;
   if (!filtered) {
-    count.textContent = "";
+    count.textContent = T.all_title;
     return;
   }
   results.innerHTML = shown.map(({ e }) => item(e)).join("");
-  count.textContent = shown.length ? fill(shown.length === 1 ? T.count_one : T.count_many, { n: shown.length }) : T.none;
+  let title = shown.length ? counted(shown.length) : T.none;
+  if (shown.length && s.q) title = fill(T.for_query, { count: title, q: s.q });
+  if (shown.length && s.topic) title = fill(T.count_topic, { count: title, topic: T.topics[s.topic] });
+  count.textContent = title;
 }
 
 function exact(q) {
@@ -158,17 +163,23 @@ document.querySelectorAll("[data-topic], [data-country]").forEach((a) =>
     if (a.dataset.country) s.country = s.country === a.dataset.country ? "" : a.dataset.country;
     address(s, true);
     render();
+    if (a.dataset.topic) document.getElementById("rules-all").scrollIntoView({ behavior: "smooth", block: "start" });
   }),
 );
-clear.addEventListener("click", () => {
-  input.value = "";
-  address({ q: "", topic: "", country: "" }, true);
+active.addEventListener("click", (ev) => {
+  const b = ev.target.closest("button");
+  if (!b) return;
+  const s = state();
+  if (b.dataset.clear !== undefined) {
+    input.value = "";
+    address({ q: "", topic: "", country: "" }, true);
+  } else {
+    s[b.dataset.remove] = "";
+    address(s, true);
+  }
   render();
 });
 window.addEventListener("popstate", render);
-
-// on a phone, the filters start folded: the search and the results come first
-if (matchMedia("(max-width: 820px)").matches) document.getElementById("rules-filters").open = false;
 
 await load();
 render();

@@ -137,7 +137,8 @@ placeholder = "Par exemple BR-FR-10, SIREN, total TTC"
 coverage = "{n} règles expliquées sur {total}. Les autres arrivent famille par famille."
 examples_label = "Par exemple :"
 example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
-filters = "Filtrer"
+browse_title = "Parcourir par sujet"
+all_title = "Toutes les règles expliquées"
 topics_title = "Sujets"
 country_title = "Pays"
 check_lead = "Vous avez la facture ? Vérifiez-la, chaque erreur y est expliquée."
@@ -168,9 +169,10 @@ not_yet = "Pas encore expliquée : elle arrive avec sa famille."
 official = "Message officiel, {source}"
 in_english = "(en anglais)"
 check_link = "Vérifier une facture"
-mark_example = "exemple"
-country_short = { fr = "France", eu = "Europe" }
-show_all = "Tout afficher"
+count_topic = "{count} · {topic}"
+remove = "Retirer le filtre {name}"
+clear_all = "Tout effacer"
+for_query = "{count} pour « {q} »"
 
 [rule]
 rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Texte des pages de règles sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) ; fichiers d'exemple dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)). Logo lintvoice © 2026 AllGood Services SAS."

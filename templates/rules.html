@@ -12,48 +12,40 @@
   {% if ix.complete %}<p class="coverage">{{ p.coverage | replace("{n}", ix.explained | string) | replace("{total}", ix.total | string) }}</p>{% endif %}
   <p class="try">{{ p.examples_label }}{% for code in p.example_codes if code in ix.ids %} <a class="code" href="{{ rule_href(code, t.lang) }}">{{ code }}</a>{% endfor %}</p>
 </div>
-<div class="rules-layout">
-  <aside class="rules-filters">
-    <details open id="rules-filters">
-      <summary>{{ p.filters }}</summary>
-      <div class="facet-row"><h2>{{ p.topics_title }}</h2>
-      <ul class="facet" id="facet-topic">
-      {% for key, rows in ix.topics if rows %}
-        <li><a href="#topic-{{ key }}" data-topic="{{ key }}">{{ p.topics[key] }} <span class="n">{{ rows | length }}</span></a></li>
-      {% endfor %}
-      </ul></div>
-      <div class="facet-row"><h2>{{ p.country_title }}</h2>
-      <ul class="facet" id="facet-country">
-      {% for key in ("eu", "fr") %}
-        <li><a href="?{{ p.ui.params.country }}={{ key }}" data-country="{{ key }}">{{ p.countries[key] }} <span class="n"></span></a></li>
-      {% endfor %}
-      </ul></div>
-      <p class="clear" hidden><button type="button" class="link" data-clear>{{ p.ui.show_all }}</button></p>
-    </details>
-  </aside>
-  <div class="rules-main">
-    <p class="rules-count" id="rules-count" aria-live="polite"></p>
-    <ol class="rule-list" id="rules-results" hidden></ol>
-    <div id="rules-browse">
-    {% for key, rows in ix.topics if rows %}
-      <section class="topic" id="topic-{{ key }}">
-        <h2>{{ p.topics[key] }} <small>{{ rows | length }}</small></h2>
-        <ul class="rule-list">
-        {% for rule in rows %}
-          <li class="rule-item"><a class="rule-link" href="{{ rule_href(rule.id, t.lang) }}"><span class="idm">{{ rule.id }}</span> <span class="title">{{ rule.pages[t.lang].title }}</span></a>
-            {% if rule.meta.brief %}<p class="brief">{{ rule.meta.brief[t.lang] }}</p>{% endif %}
-            <p class="marks">{% if rule.meta.examples.invalid %}<span class="mark">{{ p.ui.mark_example }}</span>{% endif %}<span class="mark">{{ p.ui.country_short["fr" if rule.id.startswith("BR-FR") else "eu"] }}</span></p></li>
-        {% endfor %}
-        </ul>
-      </section>
-    {% endfor %}
-    </div>
+
+<section class="rules-subjects" aria-labelledby="subjects-title">
+  <h2 id="subjects-title">{{ p.browse_title }}</h2>
+  <ul class="subject-grid">
+  {% for key, rows in ix.topics if rows %}
+    <li><a href="#topic-{{ key }}" data-topic="{{ key }}"><span class="name">{{ p.topics[key] }}</span><span class="n">{{ (p.ui.count_one if rows | length == 1 else p.ui.count_many) | replace("{n}", rows | length | string) }}</span></a></li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section class="rules-all" id="rules-all" aria-labelledby="rules-count">
+  <div class="results-head">
+    <h2 id="rules-count" aria-live="polite">{{ p.all_title }}</h2>
+    <p class="country"><span class="label">{{ p.country_title }}</span>{% for key in ("eu", "fr") %} <a href="?{{ p.ui.params.country }}={{ key }}" data-country="{{ key }}">{{ p.countries[key] }}</a>{% endfor %}</p>
   </div>
-</div>
+  <p class="active-filters" id="active-filters" hidden></p>
+  <ol class="rule-list" id="rules-results" hidden></ol>
+  <div id="rules-browse">
+  {% for key, rows in ix.topics if rows %}
+    <section class="topic" id="topic-{{ key }}">
+      <h3>{{ p.topics[key] }} <small>{{ rows | length }}</small></h3>
+      <ul class="rule-list">
+      {% for rule in rows %}
+        <li class="rule-item"><a class="rule-link" href="{{ rule_href(rule.id, t.lang) }}"><span class="idm">{{ rule.id }}</span> <span class="title">{{ rule.pages[t.lang].title }}</span></a>{% if rule.meta.brief %}<p class="brief">{{ rule.meta.brief[t.lang] }}</p>{% endif %}</li>
+      {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
+  </div>
+</section>
 {% if links.check is defined %}
 <div class="rules-check"><p>{{ p.check_lead }}</p><a class="btn primary" href="{{ links.check }}">{{ p.check_button }}</a></div>
 {% endif %}
 <p class="foot standard">{{ p.versions | replace("{en16931}", site.rule_sets.en16931) | replace("{facturx}", site.rule_sets.facturx) | replace("{brfr}", site.rule_sets.brfr) }} {{ t.rule.cen_statement }}</p>
-<script type="application/json" id="rules-texts">{{ dict(p.ui, topics=p.topics, countries=p.countries, lang=t.lang, check=links.check if links.check is defined else "") | tojson }}</script>
+<script type="application/json" id="rules-texts">{{ dict(p.ui, topics=p.topics, countries=p.countries, all_title=p.all_title, lang=t.lang, check=links.check if links.check is defined else "") | tojson }}</script>
 <script type="module" src="/static/rules.mjs"></script>
 {% endblock %}
