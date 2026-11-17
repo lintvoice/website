@@ -2,7 +2,7 @@
 // engine.mjs, then show the analysis next to a preview of the invoice: what was detected, and for each error the
 // values the invoice holds, why they fail, and how to fix them, without leaving the page.
 import { check } from "./engine.mjs";
-import { computation, day, money, read } from "./invoice.mjs";
+import { day, money } from "./invoice.mjs";
 
 const T = JSON.parse(document.getElementById("check-texts").textContent);
 const lang = document.documentElement.lang;
@@ -96,7 +96,7 @@ function errorCard(g, n, inv, pages) {
   const p = pages[id];
   const official = g.messages[0]?.message || "";
   const title = g.rule === "XSD" ? T.xsd_title : p ? p.title[lang] : official;
-  const calc = computation(id, inv);
+  const calc = g.computation;
   let observed = "";
   if (calc) {
     const gap = calc.gap.replace(/^-/, "");
@@ -170,14 +170,14 @@ function render(name, r, pages) {
     const why = fill(T.reasons[r.code] || r.error, { lines, max: 300 });
     return `${filebar(name, r)}<div class="verdict-line ${r.status === "too-large" ? "v-warn" : "v-muted"}"><p><strong>${esc(r.status === "too-large" ? T.verdict_too_large : T.verdict_unreadable)}</strong> · ${esc(why)}</p></div>`;
   }
-  const inv = read(r.xml);
+  const inv = r.values || { terms: {}, schemes: {}, lines: [], notes: [] }; // read by the engine, as lintvoice reads it
   currency = inv.terms["BT-5"] || "EUR";
   const errors = r.findings.filter((g) => g.severity === "error");
   const warnings = r.findings.filter((g) => g.severity !== "error");
   // each finding gets a number, shown on its card and next to the invoice fields it is about
   const marks = new Map();
   [...errors, ...warnings].forEach((g, i) => {
-    const calc = computation(pageOf(g.rule), inv);
+    const calc = g.computation;
     const terms = calc ? [calc.result, ...calc.parts.map(([, , bt]) => bt)] : termsOf(g, pages);
     for (const bt of terms) marks.set(bt, [...(marks.get(bt) || []), i + 1]);
   });

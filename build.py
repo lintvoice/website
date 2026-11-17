@@ -117,6 +117,7 @@ def _check_assets(out, source, rules):
     for folder in ("vendor", "sef", "xsd", "licenses"):
         shutil.copytree(Path(source) / folder, out / "static" / "check" / folder)
     shutil.copy(Path(source) / "NOTICES.txt", out / "static" / "check")
+    shutil.copy(Path(source) / "terms.json", out / "static" / "check")
     index = {
         r["id"]: {
             "title": {lang: r["pages"][lang]["title"] for lang in LANGS},
