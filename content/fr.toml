@@ -18,7 +18,7 @@ nav_rules = "Règles de facturation"
 nav_github = "GitHub"
 cta = "Démarrer"
 footer_disclaimer = "lintvoice aide à vérifier vos factures électroniques. Il ne certifie pas leur conformité."
-footer_rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Textes et logo lintvoice © 2026 AllGood Services SAS."
+footer_rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Textes et logo lintvoice © 2026 AllGood Services SAS. Icônes Carbon (IBM) sous licence [Apache-2.0](/static/icons/LICENSE-carbon-icons-Apache-2.0.txt)."
 footer_legal = "Mentions légales"
 
 [home]
@@ -51,9 +51,10 @@ subjects = ["addresses", "identifiers", "payment", "totals", "vat", "invoice"]
 subjects_all = "Tous les sujets et toutes les règles"
 europe_title = "Une base commune dans toute l'Europe, et les règles de chaque pays"
 europe_text = "La facture électronique repose partout sur la même norme européenne, EN 16931 ; chaque pays y ajoute ses propres règles. lintvoice applique aujourd'hui les règles européennes et les règles françaises, sur les formats Factur-X / ZUGFeRD, CII et UBL. L'Allemagne et le réseau Peppol (Belgique, puis Royaume-Uni) sont les prochaines étapes."
-formats_label = "Règles et formats"
+formats_now_label = "Aujourd'hui"
+formats_next_label = "Prochaines étapes"
 formats_now = ["EN 16931, l'Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, la France"]
-formats_next = ["XRechnung, l'Allemagne · prochaine étape", "Peppol · prochaine étape"]
+formats_next = ["XRechnung, l'Allemagne", "Peppol"]
 builders_title = "Vous développez un logiciel de facturation ?"
 builders_text = "Repérez une facture invalide avant qu'elle ne parte, en une commande, hors ligne, dans votre intégration continue."
 builders_code = """uvx lintvoice rules install
@@ -143,8 +144,6 @@ thumb_alt = "Extrait d'une facture d'exemple : l'avis d'erreur BR-CO-15 et le to
 search_label = "Code d'erreur ou mot-clé"
 placeholder = "Par exemple BR-FR-10, SIREN, total TTC"
 coverage = "{n} règles expliquées sur {total}. Les autres arrivent famille par famille."
-examples_label = "Par exemple :"
-example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
 browse_title = "Parcourir par sujet"
 all_title = "Toutes les règles expliquées"
 topics_title = "Sujets"
@@ -194,7 +193,7 @@ clear_all = "Tout effacer"
 for_query = "{count} pour « {q} »"
 
 [rule]
-rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Texte des pages de règles sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) ; fichiers d'exemple dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)). Logo lintvoice © 2026 AllGood Services SAS."
+rights = "Code sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE). Texte des pages de règles sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) ; fichiers d'exemple dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)). Logo lintvoice © 2026 AllGood Services SAS. Icônes Carbon (IBM) sous licence [Apache-2.0](/static/icons/LICENSE-carbon-icons-Apache-2.0.txt)."
 fatal_help = "Une facture qui échoue à cette règle n'est pas valide au regard de son jeu de règles."
 warning_help = "Cette règle signale un point à vérifier : la facture reste valide."
 status_title = "Statut"
@@ -302,7 +301,15 @@ how_to_fix = "Comment corriger"
 copy_link = "Copier le lien de la règle pour votre éditeur"
 copied = "Lien copié. Collez-le dans votre message à l'éditeur."
 copy_failed = "Copiez ce lien et envoyez-le à votre éditeur :"
-learn_more = "Causes fréquentes et détails de la règle"
+rule_label = "La règle :"
+why_title = "Pourquoi cette erreur ?"
+more_title = "En savoir plus sur la règle"
+not_explained = "{family}, pas encore expliquée"
+not_explained_line = "Sa page n'est pas encore écrite. Son message officiel dit ce qu'elle vérifie, et vous pouvez le transmettre à l'éditeur de votre logiciel."
+copy_message = "Copier le message officiel"
+message_copied = "Message copié. Collez-le dans votre message à l'éditeur."
+official_message = "Message officiel"
+in_english = "(en anglais)"
 calc_expected = "Résultat attendu"
 calc_stated = "{what} indiqué"
 calc_gap = "Écart : {gap}"
@@ -330,6 +337,24 @@ not_given = "non indiqué"
 note_no_profile_rules = "Les fichiers officiels actuels ne contiennent pas de règles propres au profil Factur-X {profile}, donc aucune règle propre à ce profil n'est vérifiée."
 note_other_rules = "Ici, seules les règles EN 16931 sont vérifiées, pas encore les règles {name}."
 note_unknown = "La facture déclare une spécification que nous ne connaissons pas, donc seules les règles EN 16931 sont vérifiées."
+
+# the title of an error on a rule without a page yet, by its family (longest prefix first)
+[check.ui.families]
+"BR-FR-MV" = "Une règle des factures à plusieurs vendeurs"
+"BR-FR-BD" = "Une règle de facturation pour le compte d'un tiers"
+"BR-FR" = "Une règle de la réforme française"
+"BR-AE" = "Une règle d'autoliquidation de la TVA"
+"BR-IC" = "Une règle de livraison intracommunautaire"
+"BR-DEC" = "Une règle sur le nombre de décimales"
+"BR-CO" = "Une règle de cohérence des montants"
+"BR-CL" = "Une règle sur une liste de codes"
+"BR-S" = "Une règle de TVA au taux normal"
+"BR-Z" = "Une règle de TVA à taux zéro"
+"BR-E" = "Une règle d'exonération de TVA"
+"BR-G" = "Une règle d'exportation hors de l'Union"
+"BR-O" = "Une règle hors du champ de la TVA"
+"BR-B" = "Une règle de TVA en paiement scindé (Italie)"
+"BR" = "Une règle de la norme européenne"
 
 [check.ui.terms]
 BT-1 = "Numéro de facture"

@@ -47,7 +47,7 @@ function render(name, r, pages) {
   // the rule sets and their versions go to the note at the bottom, next to the engine's
   rulesUsed.textContent = fill(T.rules_line, { names: families(r.rule_sets).join(", ") });
   rulesUsed.hidden = false;
-  const cards = (list, offset) => `<ol class="errors">${list.map((g, i) => errorCard(g, offset + i + 1, inv, pages)).join("")}</ol>`;
+  const cards = (list, offset) => `<ol class="errors">${list.map((g, i) => errorCard(g, offset + i + 1, inv, pages, { first: offset + i === 0 })).join("")}</ol>`;
   const warned = warnings.length
     ? `<h2 class="tally v-warn">${esc(fill(warnings.length === 1 ? T.warn_one : T.warn_many, { n: warnings.length }))}</h2>${cards(warnings, errors.length)}`
     : "";
@@ -105,7 +105,7 @@ result.addEventListener("click", (e) => {
   if (copy) {
     const said = copy.parentElement.querySelector(".copied");
     navigator.clipboard.writeText(copy.dataset.copy).then(
-      () => { said.textContent = T.copied; },
+      () => { said.textContent = copy.dataset.what === "message" ? T.message_copied : T.copied; },
       () => { said.textContent = `${T.copy_failed} ${copy.dataset.copy}`; }, // no clipboard: the address to copy by hand
     );
     return;

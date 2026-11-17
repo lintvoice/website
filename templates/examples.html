@@ -2,6 +2,7 @@
 {% block body %}
 <div class="band">
   <h1>{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
   <p class="brief">{{ p.brief }}</p>
   <div class="chips"><span class="chip">CC0 1.0</span>{% for chip in rule_chips %}<span class="chip">{{ chip }}</span>{% endfor %}</div>
 </div>

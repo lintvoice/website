@@ -1,12 +1,14 @@
 {% extends "base.html" %}
+{% block cta %}<a class="cta current" href="{{ links.check }}" aria-current="page">{{ t.cta_check }}</a>{% endblock %}
 {% block body %}
 <div id="check-page" data-base="{{ base_url }}">
 <div class="band compact intro">
-  <h1>{{ p.h1 }}</h1>
+  <h1>{{ icon("document--view") }}{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
   <p class="brief">{{ p.brief }}</p>
   <ul class="trust">{% for item in p.trust %}<li>✓ {{ item }}</li>{% endfor %}</ul>
 </div>
-<section class="check" id="check">
+<section class="check tint" id="check">
   <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-formats">
     <p class="drop-title">{{ p.drop_title }}</p>
     <p class="drop-or">{{ p.drop_or }} <label class="btn primary" for="file">{{ p.drop_button }}</label></p>

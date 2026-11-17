@@ -29,9 +29,18 @@ export function pageOf(id) {
   return m ? m[1] : id;
 }
 
+// The rule pages (title, brief, sections, subject) and each subject's name and icon, fetched once.
+let subjects = {};
+const json = (url) => fetch(url).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
 export async function rulePages() {
-  rules ??= await fetch("/static/check/rules.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+  if (!rules) [rules, subjects] = await Promise.all([json("/static/check/rules.json"), json("/static/check/subjects.json")]);
   return rules;
+}
+
+// The family of a rule without a page (its title says which kind of rule it is): the longest prefix the texts know.
+function familyOf(id) {
+  const keys = Object.keys(T.families || {}).sort((a, b) => b.length - a.length);
+  return keys.find((k) => id === k || id.startsWith(`${k}-`)) || "BR";
 }
 
 const label = (bt) => T.terms[bt] || bt;
@@ -96,13 +105,15 @@ export function preview(inv, marks) {
 // When the fix sends the visitor to their software's publisher, they get the rule page's address to forward: an
 // action that copies it, not a link that leaves this page.
 const SENDS_TO_PUBLISHER = /éditeur|publisher|vendor/;
-// On the rule's own page (own), the card keeps the invoice's values and the link to copy: the page around it already
-// says how to fix and why.
-export function errorCard(g, n, inv, pages, { own = false } = {}) {
+// The card, in this order: what is wrong (code, subject, plain title), the rule in plain words, the invoice's values,
+// why (the common causes), how to fix, then two quiet folds (more about the rule; the technical details). On the
+// rule's own page (own), it keeps the invoice's values and the link to copy: the page around it says the rest. The
+// causes are visible on the first card only (first), folded on the others.
+export function errorCard(g, n, inv, pages, { own = false, first = true } = {}) {
   const id = pageOf(g.rule);
   const p = pages[id];
   const official = g.messages[0]?.message || "";
-  const title = g.rule === "XSD" ? T.xsd_title : p ? p.title[lang] : official;
+  const title = g.rule === "XSD" ? T.xsd_title : p ? p.title[lang] : fill(T.not_explained, { family: T.families[familyOf(g.rule)] });
   const calc = g.computation;
   let observed = "";
   if (calc) {
@@ -128,17 +139,46 @@ export function errorCard(g, n, inv, pages, { own = false } = {}) {
   }
   const section = (key) => (p?.sections[lang][key] ? `<div class="rule-text"><h4>${esc(p.headings[lang][key])}</h4>${p.sections[lang][key]}</div>` : "");
   const locations = g.messages.flatMap((m) => m.locations).filter(Boolean);
-  return `<li class="card ${g.severity === "error" ? "sev-err" : "sev-warn"}" id="error-${n}">
-    <p class="head"><span class="marker">${n}</span><span class="idm">${esc(g.rule === "XSD" ? "XSD" : id)}</span>${g.count > 1 ? `<span class="count">${esc(fill(T.occurrences, { n: g.count }))}</span>` : ""}</p>
-    <p class="title">${esc(title)}</p>
-    ${observed ? `<div class="in-invoice"><p class="label">${esc(T.in_your_invoice)}</p>${observed}</div>` : ""}
-    ${own ? "" : p?.sections[lang].fix ? `<div class="fix"><p class="label">${esc(T.how_to_fix)}</p>${p.sections[lang].fix}</div>` : `<p class="official">${esc(official)}</p>`}
-    ${p && SENDS_TO_PUBLISHER.test(p.sections[lang].fix) ? `<p class="share"><button type="button" class="btn secondary" data-copy="${esc(base + p.href[lang])}">${esc(T.copy_link)}</button> <span class="copied" role="status"></span></p>` : ""}
-    ${own ? "" : `<details><summary>${esc(T.learn_more)}</summary>${section("causes")}${section("checks")}${section("why")}
-      <div class="rule-text"><h4>${esc(T.technical)}</h4><p><code>${esc(g.rule)}</code> · ${esc(g.rule_set)}</p>${p ? `<p class="official">${esc(official)}</p>` : ""}
-      ${locations.length ? `<p class="where">${locations.slice(0, 5).map((l) => `<code>${esc(l)}</code>`).join(" ")}${locations.length > 5 ? " …" : ""}</p>` : ""}</div>
-    </details>`}
-  </li>`;
+  const xsd = g.rule === "XSD";
+  const subject = p && subjects[p.topic] ? `<span class="subject">${subjects[p.topic].icon}${esc(subjects[p.topic].name[lang])}</span>` : "";
+  const copy = (value, label, what) =>
+    `<span class="share"><button type="button" class="link" data-copy="${esc(value)}" data-what="${what}">${esc(label)}</button><span class="copied" role="status"></span></span>`;
+  const publisher = p && SENDS_TO_PUBLISHER.test(p.sections[lang].fix) ? copy(base + p.href[lang], T.copy_link, "link") : "";
+  const observedBlock = observed ? `<div class="in-invoice"><p class="label">${esc(T.in_your_invoice)}</p>${observed}</div>` : "";
+  const head = `<p class="head"><span class="marker">${n}</span><span class="idm">${esc(xsd ? "XSD" : id)}</span>${g.count > 1 ? `<span class="count">${esc(fill(T.occurrences, { n: g.count }))}</span>` : ""}${subject}</p>`;
+  const card = (body) => `<li class="card ${g.severity === "error" ? "sev-err" : "sev-warn"}" id="error-${n}">${head}${body}</li>`;
+  if (own) return card(`${observedBlock}${publisher ? `<p>${publisher}</p>` : ""}`);
+  // the rule in plain words; for a rule without a page, what it is and its official message to pass on
+  const ruleLine = p?.brief?.[lang] ? `<p class="rule-line"><b>${esc(T.rule_label)}</b> ${esc(p.brief[lang])}</p>` : "";
+  const unexplained = !p && !xsd ? `<p class="rule-line">${esc(T.not_explained_line)}</p><p>${copy(official, T.copy_message, "message")}</p>` : "";
+  // why: the common causes, three at most, visible on the first card, folded under the same words on the others
+  let why = "";
+  const causes = p?.sections[lang].causes;
+  if (causes) {
+    const items = causes.match(/<li>[\s\S]*?<\/li>/g);
+    const list = items ? `<ul>${items.slice(0, 3).join("")}</ul>` : causes;
+    why = first ? `<div class="why"><p class="label">${esc(T.why_title)}</p>${list}</div>`
+      : `<details class="why"><summary class="label">${esc(T.why_title)}</summary>${list}</details>`;
+  }
+  // how to fix; the publisher's link as words, at the end of the step that names the publisher
+  let fix = "";
+  if (p?.sections[lang].fix) {
+    let placed = false;
+    const steps = p.sections[lang].fix.replace(/<li>([\s\S]*?)<\/li>/g, (m, inner) => {
+      if (placed || !publisher || !SENDS_TO_PUBLISHER.test(inner)) return m;
+      placed = true;
+      return `<li>${inner} ${publisher}</li>`;
+    });
+    fix = `<div class="fix"><p class="label">${esc(T.how_to_fix)}</p>${steps}${publisher && !placed ? `<p>${publisher}</p>` : ""}</div>`;
+  }
+  // two quiet folds: more about the rule, then the technical details (the official message once)
+  const more = section("checks") || section("why") ? `<details class="more"><summary>${esc(T.more_title)}</summary>${section("checks")}${section("why")}</details>` : "";
+  const english = !/^BR-FR/.test(g.rule) && T.in_english;
+  const tech = `<details class="more"><summary>${esc(T.technical)}</summary><div class="rule-text tech-mark">
+      <p><code>${esc(g.rule)}</code> · ${esc(g.rule_set)}</p>
+      ${xsd ? "" : `<p class="label">${esc(T.official_message)}${english ? ` ${esc(T.in_english)}` : ""}</p><p class="official">${esc(official)}</p>`}
+      ${locations.length ? `<p class="where">${locations.slice(0, 5).map((l) => `<code>${esc(l)}</code>`).join(" ")}${locations.length > 5 ? " …" : ""}</p>` : ""}</div></details>`;
+  return card(`<p class="title">${esc(title)}</p>${ruleLine}${unexplained}${observedBlock}${xsd ? `<p class="official">${esc(official)}</p>` : ""}${why}${fix}${more}${tech}`);
 }
 
 // The rule sets as families with their version, in a fixed order: "EN 16931 1.3.17, Factur-X 1.09.2, BR-FR 1.4.0.04".

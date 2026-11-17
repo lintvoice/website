@@ -18,7 +18,7 @@ nav_rules = "Invoicing rules"
 nav_github = "GitHub"
 cta = "Quick start"
 footer_disclaimer = "lintvoice helps check your e-invoices. It does not certify their compliance."
-footer_rights = "Code under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE). Texts and the lintvoice logo © 2026 AllGood Services SAS."
+footer_rights = "Code under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE). Texts and the lintvoice logo © 2026 AllGood Services SAS. Icons: Carbon (IBM), under the [Apache-2.0 licence](/static/icons/LICENSE-carbon-icons-Apache-2.0.txt)."
 footer_legal = "Legal notice"
 
 [home]
@@ -51,9 +51,10 @@ subjects = ["addresses", "identifiers", "payment", "totals", "vat", "invoice"]
 subjects_all = "All subjects and all rules"
 europe_title = "A common base across Europe, and each country's own rules"
 europe_text = "E-invoicing rests everywhere on the same European standard, EN 16931; each country adds its own rules. lintvoice runs the European rules and the French rules today, on Factur-X / ZUGFeRD, CII and UBL. Germany and the Peppol network (Belgium, then the United Kingdom) are the next steps."
-formats_label = "Rules and formats"
+formats_now_label = "Today"
+formats_next_label = "Next steps"
 formats_now = ["EN 16931, Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, France"]
-formats_next = ["XRechnung, Germany · next step", "Peppol · next step"]
+formats_next = ["XRechnung, Germany", "Peppol"]
 builders_title = "Building invoicing software?"
 builders_text = "Catch an invalid invoice before it goes out, in one command, offline, in your continuous integration."
 builders_code = """uvx lintvoice rules install
@@ -143,8 +144,6 @@ thumb_alt = "Part of an example invoice: the BR-CO-15 error notice and the wrong
 search_label = "Error code or keyword"
 placeholder = "For example BR-FR-10, SIREN, total with VAT"
 coverage = "{n} rules explained out of {total}. The others come family by family."
-examples_label = "For example:"
-example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR-CO-25"]
 browse_title = "Browse by subject"
 all_title = "All explained rules"
 topics_title = "Subjects"
@@ -194,7 +193,7 @@ clear_all = "Clear all"
 for_query = "{count} for “{q}”"
 
 [rule]
-rights = "Code under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE). Rule page text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); example files in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). The lintvoice logo © 2026 AllGood Services SAS."
+rights = "Code under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE). Rule page text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); example files in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). The lintvoice logo © 2026 AllGood Services SAS. Icons: Carbon (IBM), under the [Apache-2.0 licence](/static/icons/LICENSE-carbon-icons-Apache-2.0.txt)."
 fatal_help = "An invoice that fails this rule is not valid under its rule set."
 warning_help = "This rule points to something to check: the invoice stays valid."
 status_title = "Status"
@@ -302,7 +301,15 @@ how_to_fix = "How to fix it"
 copy_link = "Copy the rule's link for your software publisher"
 copied = "Link copied. Paste it into your message to the publisher."
 copy_failed = "Copy this link and send it to your software publisher:"
-learn_more = "Common causes and rule details"
+rule_label = "The rule:"
+why_title = "Why this error?"
+more_title = "More about the rule"
+not_explained = "{family}, not explained yet"
+not_explained_line = "Its page is not written yet. Its official message says what it checks, and you can pass it on to your software's publisher."
+copy_message = "Copy the official message"
+message_copied = "Message copied. Paste it into your message to the publisher."
+official_message = "Official message"
+in_english = ""
 calc_expected = "Expected result"
 calc_stated = "{what} stated"
 calc_gap = "Difference: {gap}"
@@ -330,6 +337,24 @@ not_given = "not given"
 note_no_profile_rules = "The current official files hold no rules specific to the Factur-X {profile} profile, so no rule specific to this profile is checked."
 note_other_rules = "Only the EN 16931 rules are checked here, not yet the {name} rules."
 note_unknown = "The invoice declares a specification we do not know, so only the EN 16931 rules are checked."
+
+# the title of an error on a rule without a page yet, by its family (longest prefix first)
+[check.ui.families]
+"BR-FR-MV" = "A multi-seller invoice rule"
+"BR-FR-BD" = "A billing-on-behalf rule"
+"BR-FR" = "A French reform rule"
+"BR-AE" = "A reverse-charge VAT rule"
+"BR-IC" = "An intra-EU supply rule"
+"BR-DEC" = "A decimals rule"
+"BR-CO" = "An amounts consistency rule"
+"BR-CL" = "A code list rule"
+"BR-S" = "A standard-rate VAT rule"
+"BR-Z" = "A zero-rate VAT rule"
+"BR-E" = "A VAT exemption rule"
+"BR-G" = "An export rule"
+"BR-O" = "An out-of-scope VAT rule"
+"BR-B" = "A split-payment VAT rule (Italy)"
+"BR" = "A European standard rule"
 
 [check.ui.terms]
 BT-1 = "Invoice number"

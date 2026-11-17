@@ -4,14 +4,14 @@
 {% set ix = rules_index %}
 <div class="band compact rules-band">
  <div class="rules-band-main">
-  <h1>{{ p.h1 }}</h1>
+  <h1>{{ icon("book") }}{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
   <p class="brief">{{ p.lead }}</p>
   <form class="rules-search" role="search" id="rules-search">
     <label for="q">{{ p.search_label }}</label>
     <input id="q" name="{{ p.ui.params.q }}" type="search" placeholder="{{ p.placeholder }}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
   </form>
   {% if ix.complete %}<p class="coverage">{{ p.coverage | replace("{n}", ix.explained | string) | replace("{total}", ix.total | string) }}</p>{% endif %}
-  <p class="try">{{ p.examples_label }}{% for code in p.example_codes if code in ix.ids %} <a class="code" href="{{ rule_href(code, t.lang) }}">{{ code }}</a>{% endfor %}</p>
  </div>
  <div class="rules-values">
   <h2>{{ p.values_title }}</h2>
@@ -24,11 +24,11 @@
  </div>
 </div>
 
-<section class="rules-subjects" aria-labelledby="subjects-title">
+<section class="rules-subjects tint" aria-labelledby="subjects-title">
   <h2 id="subjects-title">{{ p.browse_title }}</h2>
   <ul class="subject-grid">
   {% for key, rows in ix.topics if rows %}
-    <li><a href="#topic-{{ key }}" data-topic="{{ key }}"><span class="name">{{ p.topics[key] }}</span><span class="line">{{ p.topic_lines[key] }}</span><span class="n">{{ (p.ui.count_one if rows | length == 1 else p.ui.count_many) | replace("{n}", rows | length | string) }}</span></a></li>
+    <li><a href="#topic-{{ key }}" data-topic="{{ key }}">{{ icon(topic_icons[key]) }}<span class="name">{{ p.topics[key] }}</span><span class="line">{{ p.topic_lines[key] }}</span><span class="n">{{ (p.ui.count_one if rows | length == 1 else p.ui.count_many) | replace("{n}", rows | length | string) }}</span></a></li>
   {% endfor %}
   </ul>
 </section>
@@ -43,7 +43,7 @@
   <div id="rules-browse">
   {% for key, rows in ix.topics if rows %}
     <section class="topic" id="topic-{{ key }}">
-      <h3>{{ p.topics[key] }} <small>{{ rows | length }}</small></h3>
+      <h3>{{ icon(topic_icons[key]) }}{{ p.topics[key] }} <small>{{ rows | length }}</small></h3>
       <ul class="rule-list">
       {% for rule in rows %}
         <li class="rule-item"><a class="rule-link" href="{{ rule_href(rule.id, t.lang) }}"><span class="idm">{{ rule.id }}</span> <span class="title">{{ rule.pages[t.lang].title }}</span></a>{% if rule.meta.brief %}<p class="brief">{{ rule.meta.brief[t.lang] }}</p>{% endif %}</li>

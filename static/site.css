@@ -46,14 +46,14 @@ tr:target td{background:color-mix(in srgb,var(--accent) 8%,var(--bg))}
 .chip.ok::before{content:"✓ "}
 .chip.err::before{content:"✗ "}
 .actions-row{margin-top:var(--sp-3)}
-a.btn{display:inline-block;text-decoration:none}
 
 /* rule pages: breadcrumb with the id, severity with a tooltip, numbered steps, the technical block, example files */
-.band.compact{padding:var(--sp-5) var(--sp-6);margin:var(--sp-6) 0 var(--sp-5)}
 .crumbs{margin:0 0 var(--sp-3);font-size:var(--fs-sm);color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-1) var(--sp-2)}
 .crumbs a{color:inherit}
 .crumbs .idm{font-size:var(--fs-sm);color:var(--bg);background:var(--accent);padding:1px var(--sp-2);border-radius:var(--r-sm)}
-.band h1{margin-bottom:var(--sp-2)}
+.band h1{margin-bottom:0}
+.band h1 .ic{width:.9em;height:.9em;vertical-align:-.1em;margin-right:.3em}
+.status-line .subject .ic{width:1.15em;height:1.15em}
 .status-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-5);margin:var(--sp-3) 0 0;font-size:var(--fs-sm)}
 .foot.standard{margin-top:var(--sp-4)}
 .sev{display:inline-flex;align-items:center;gap:var(--sp-2)}
@@ -84,7 +84,7 @@ a.btn{display:inline-block;text-decoration:none}
   border:var(--bw-hair) solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-size:var(--fs-sm);
   display:flex;align-items:center;justify-content:center}
 .steps>li:first-child::before{top:.1rem}
-.tech{background:var(--head);border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-6);margin:var(--sp-6) 0 var(--sp-5);min-width:0}
+.tech{background:var(--bg);border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);padding:var(--sp-5) var(--sp-6);margin:var(--sp-6) 0 var(--sp-5);min-width:0}
 .tech p{margin:0 0 var(--sp-3)}
 .tech-intro{color:var(--muted);font-size:var(--fs-sm)}
 .tech-cols>div{min-width:0}
@@ -100,11 +100,13 @@ a.btn{display:inline-block;text-decoration:none}
 pre.diff .gap{display:block;color:var(--muted)}
 .diff-legend{font-size:var(--fs-sm);color:var(--muted)}
 .tech blockquote.source{margin:0 0 var(--sp-3);padding-left:var(--sp-4);border-left:var(--bw-mark) solid var(--line)}
-.callout-files{border-color:var(--accent)}
-.callout-files>h2{background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
+/* the side panels stay lighter than the content: no filled title bar, a smaller title; the example files' bar in
+   manila (the highlighted panel) */
+.grid>aside .panel>h2{background:none;font-size:var(--fs-sm)}
+.grid>aside .callout-files>h2{background:var(--tile)}
 .files-box .file-row{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-3)}
-.files-box .btns{display:flex;flex-wrap:wrap;gap:var(--sp-2)}
-.files-box .btn{text-decoration:none;color:var(--text);background:transparent;font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-3)}
+.files-box .links{margin:0;font-size:var(--fs-sm);color:var(--muted)}
+.files-box .links a{color:var(--text)}
 .files-box .more{margin:0}
 @media (max-width:640px){.steps>li{padding-left:2.6rem}.tech{padding:var(--sp-4)}.tech .kv div{grid-template-columns:1fr;gap:2px}}
 
@@ -145,7 +147,6 @@ html{scroll-padding-top:9rem}
 .tech h2{font-size:var(--fs-xl)}
 
 /* the check page: before a check, the intro and the drop zone; after, a file bar, the analysis and the invoice preview */
-.trust{list-style:none;display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-5);padding:0;margin:var(--sp-3) 0 0;font-size:var(--fs-sm);color:var(--muted)}
 .check{margin-bottom:var(--sp-8)}
 .drop{border:2px dashed var(--line);border-radius:var(--r-lg);padding:var(--sp-8) var(--sp-6);text-align:center;background:var(--bg);cursor:pointer;transition:border-color .15s,background .15s}
 .drop:hover,.drop:focus,.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,var(--bg));outline:none}
@@ -176,7 +177,7 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .context p{margin:0 0 var(--sp-1)}
 .context .rules{font-size:var(--fs-sm);color:var(--muted)}
 /* the data detected: secondary, so in its own panel, with a smaller title (site principles: side column) */
-.preview-col{background:var(--surface);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5) var(--sp-5)}
+.preview-col{background:var(--band);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5) var(--sp-5)}
 .result .preview-col>h2{font-size:var(--fs-lg);margin:0 0 var(--sp-1)}
 .col-sub{font-size:var(--fs-xs);color:var(--muted);margin:0 0 var(--sp-4)}
 
@@ -256,7 +257,7 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .invoice .bad::before{content:attr(data-mark);display:inline-block;vertical-align:1px;min-width:1.5em;height:1.5em;padding:0 .25em;margin-right:4px;border-radius:var(--r-pill);background:var(--error);color:var(--bg);font-size:10px;font-weight:600;font-style:normal;font-family:var(--font-text);line-height:1.5em;text-align:center}
 
 @media (max-width:820px){
-  .analysis{grid-template-columns:1fr}
+  .analysis{grid-template-columns:minmax(0,1fr)}
   .preview-col{position:static;max-height:none;overflow:visible}
   .observed dt{min-width:0}
 }
@@ -294,6 +295,14 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .subject-grid .n{font-size:var(--fs-xs);color:var(--muted);margin-top:auto;padding-top:var(--sp-1)}
 .subject-grid a.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--surface)}
 .subject-grid a.zero{opacity:.5}
+/* the subjects on a kraft band: cards with their icon, no border, a soft shadow; the selected one ringed */
+.rules-subjects{margin-top:0;padding:var(--sp-12) 0}
+.subject-grid a{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:var(--sp-3);row-gap:2px;align-content:start;border:0;box-shadow:var(--shadow-1);transition:box-shadow .15s}
+.subject-grid a .ic{grid-row:1/4;margin-top:2px}
+.subject-grid a:hover{border:0;box-shadow:var(--shadow-2)}
+.subject-grid a.on{background:var(--bg);box-shadow:inset 0 0 0 2px var(--accent)}
+.subject-grid .n{font-family:var(--font-mono)}
+.rules-all .topic h3 .ic{margin-right:.4em}
 .rules-all{scroll-margin-top:var(--sp-8)}
 .results-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--sp-2) var(--sp-6);border-bottom:var(--bw-hair) solid var(--text);margin-bottom:var(--sp-2)}
 .results-head h2{margin-bottom:var(--sp-2)!important}
@@ -335,46 +344,45 @@ a.rule-link:hover .title{text-decoration:underline}
   .subject-grid a{padding:var(--sp-2) var(--sp-3)}
 }
 
-/* Page building blocks, first used by the home page; generic, tokens only, so a redesign changes them in one place.
-   A section: a heading, an optional muted line, then its content; sections are set apart by space and a hairline. */
-.section{margin-top:var(--sp-8);padding-top:var(--sp-6);border-top:var(--bw-hair) solid var(--line)}
-.section>h2{font-size:var(--fs-xl);line-height:var(--lh-tight);margin:0 0 var(--sp-3)}
-.section>.sub{color:var(--muted);margin:0 0 var(--sp-5);max-width:62rem}
-.section>p{max-width:62rem}
-.section .more{font-size:var(--fs-sm);margin-top:var(--sp-3)}
-/* two equal columns (text and image, or two images), one on narrow screens */
+/* Page-level additions to the page building blocks of components.css: the home page's header in two columns, captures
+   of our pages that follow the theme, the large button, the quiet search, the open facts as ledger rows. */
+.band.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:var(--sp-8);align-items:center}
 .split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--layout-gap) var(--sp-8);align-items:start}
-.band.split{align-items:center}
-/* cards: panels side by side, as many as fit; a panel's title may be an h3 inside a section */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:var(--layout-gap)}
-.cards>.panel{margin:0;display:flex;flex-direction:column}
-.cards>.panel>.body{flex:1}
-.panel>h3{font-size:var(--fs-base);font-weight:600;margin:0;padding:var(--sp-2) var(--sp-4);background:var(--head);border-bottom:var(--bw-hair) solid var(--line)}
-/* a framed image of the product (a capture of one of our pages, an example invoice) with its caption; captures follow
-   the theme: the OS preference, or the toggle (data-theme) */
-.shot{margin:0;border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg)}
-.shot img{display:block;width:100%;height:auto}
-.shot figcaption{font-size:var(--fs-xs);color:var(--muted);padding:var(--sp-2) var(--sp-3);border-top:var(--bw-hair) solid var(--line)}
-.shot img.for-dark{display:none}
+.split>*>:first-child{margin-top:0}
+.section>p{max-width:62ch}
+.section>.sub+*{margin-top:var(--sp-6)}
+.section .more{margin:var(--sp-5) 0 0}
+.section>h2 .ic{vertical-align:-.1em}
+/* captures of our pages follow the theme: the OS preference, or the toggle (data-theme); a picture of paper (an
+   example invoice) is dimmed a little in the dark theme */
+.frame img.for-dark{display:none}
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme=light]) .shot img.for-light{display:none}
-  :root:not([data-theme=light]) .shot img.for-dark{display:block}
+  :root:not([data-theme=light]) .frame img.for-light{display:none}
+  :root:not([data-theme=light]) .frame img.for-dark{display:block}
+  :root:not([data-theme=light]) .frame img.paper{filter:brightness(.92)}
 }
-:root[data-theme=dark] .shot img.for-light{display:none}
-:root[data-theme=dark] .shot img.for-dark{display:block}
+:root[data-theme=dark] .frame img.for-light{display:none}
+:root[data-theme=dark] .frame img.for-dark{display:block}
+:root[data-theme=dark] .frame img.paper{filter:brightness(.92)}
+.frame-bar .file{font-family:var(--font-mono);font-weight:600;margin-right:var(--sp-2)}
+.frame-bar .what{color:var(--muted)}
 /* the one main action of a page */
 .btn.large{font-size:var(--fs-base);padding:var(--sp-3) var(--sp-5)}
 /* a quiet one-field search: a label, then the field; Enter searches */
-.search-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-3);margin-top:var(--sp-5);padding-top:var(--sp-3);border-top:var(--bw-hair) solid var(--line);font-size:var(--fs-sm)}
+.search-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-3);margin-top:var(--sp-6);padding-top:var(--sp-4);border-top:var(--bw-hair) solid var(--line);font-size:var(--fs-sm)}
 .search-row label{color:var(--muted)}
-.search-row input{font:inherit;flex:1 1 12rem;max-width:20rem;padding:var(--sp-1) var(--sp-3);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text)}
+.search-row input{font:inherit;flex:1 1 12rem;max-width:20rem;padding:var(--sp-2) var(--sp-3);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text)}
 .search-row input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-/* chips as a list; a dashed chip is something still to come, and its words say so */
-ul.chips{list-style:none;padding:0;margin-bottom:0}
-ul.chips li{margin:0}
-.chip.next{border-style:dashed}
-.split>*>:first-child{margin-top:0}
-@media (max-width:820px){.split{grid-template-columns:minmax(0,1fr)}}
+/* the pillars' links: text, quieter than the page's one button */
+.pillars h3 .ic{vertical-align:-.15em}
+.pillars a.go{font-weight:600}
+/* the open facts: ledger rows on hairlines, a muted ✓ (a trust fact, not a status) */
+.checks{list-style:none;padding:0;margin:var(--sp-6) 0 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--sp-8);border-top:var(--bw-hair) solid var(--text)}
+.checks li{margin:0;padding:var(--sp-3) 0 var(--sp-3) var(--sp-6);border-bottom:var(--bw-hair) solid var(--line);position:relative}
+.checks li::before{content:"✓";position:absolute;left:0;color:var(--muted)}
+/* the top bar's button waits while the page's own main button is in view (without JavaScript it stays) */
+.cta.waiting{visibility:hidden}
+@media (max-width:820px){.split,.band.split{grid-template-columns:minmax(0,1fr)}.checks{grid-template-columns:minmax(0,1fr)}}
 
 /* a rule page's own check, after the explanation: the answer for this rule, then one line on the rest */
 .rule-check{margin-top:var(--sp-8)}
@@ -387,3 +395,26 @@ ul.chips li{margin:0}
 .rule-check .checking{padding:var(--sp-4) 0;font-size:var(--fs-base)}
 .rule-check.checked .start{display:none}
 .rule-check.checked .what{margin-top:0}
+
+/* the check page: the drop zone on a kraft band; the top bar's button shows as the current page. The error card, in
+   the order the visitor needs: what is wrong, the rule in plain words, the invoice's values, why, how to fix, then two
+   quiet folds under one hairline; one action at most, as words */
+.check.tint{padding:var(--sp-8) 0 var(--sp-6)}
+.cta.current{border-color:transparent;color:var(--muted)}
+.card{background:var(--bg)}
+.card .head{flex-wrap:wrap}
+.card .subject{margin-left:auto;color:var(--muted)}
+.card .rule-line{font-size:var(--fs-sm);color:var(--muted);margin:calc(-1 * var(--sp-2)) 0 var(--sp-3)}
+.card .rule-line b{color:var(--text);font-weight:600}
+.card .why{margin:0 0 var(--sp-3);font-size:var(--fs-sm)}
+.card .why ul{margin:0;padding-left:var(--sp-5)}
+.card .why li{margin:0 0 var(--sp-1)}
+.card details.why>summary{cursor:pointer}
+.card details.more{border-top:var(--bw-hair) solid var(--line);padding-top:var(--sp-3);margin-top:var(--sp-4);font-size:var(--fs-sm)}
+.card details.more+details.more{border-top:0;padding-top:0;margin-top:var(--sp-2)}
+.card details.more>summary{cursor:pointer;color:var(--muted)}
+.card details.more[open]>summary{margin-bottom:var(--sp-2)}
+.card .tech-mark{padding-top:var(--sp-3)}
+.card .share{display:inline;margin:0}
+.card .share .copied{display:block;color:var(--muted);font-size:var(--fs-sm)}
+.card .share .link{font-size:var(--fs-sm)}

@@ -4,14 +4,16 @@
 {% set ix = rules_index if rules_index is defined else none %}
 {% set counts = dict(en16931=site.rule_sets.en16931, facturx=site.rule_sets.facturx, brfr=site.rule_sets.brfr, examples=invalid | length, explained=ix.explained if ix else "", total=ix.total if ix else "") %}
 {% set example = invalid | selectattr("id", "equalto", "BR-CO-15") | first %}
+{% set pillar_icons = {"check": "document--view", "rules": "book", "examples": "edit"} %}
 {# A capture of one of our pages, in the visitor's theme (tools/home_images.py makes them, from the product itself). #}
 {% macro shot(name, alt, width, height, lazy=true) %}<img class="for-light" src="/static/home/{{ name }}-light.webp" alt="{{ alt }}" width="{{ width }}" height="{{ height }}"{% if lazy %} loading="lazy"{% endif %}><img class="for-dark" src="/static/home/{{ name }}-dark.webp" alt="{{ alt }}" width="{{ width }}" height="{{ height }}" loading="lazy">{% endmacro %}
 
 <div class="band split">
   <div>
-    <h1>{{ p.h1 }}</h1>
-    <p class="brief">{{ p.lead }}</p>
-    {% if links.check is defined %}<p class="actions-row"><a class="btn primary large" href="{{ links.check }}">{{ t.cta_check }}</a></p>{% endif %}
+    <h1 class="display">{{ p.h1 }}</h1>
+    <span class="total-rule" aria-hidden="true"></span>
+    <p class="lead">{{ p.lead }}</p>
+    {% if links.check is defined %}<p class="actions-row"><a class="btn primary large" id="main-action" href="{{ links.check }}">{{ t.cta_check }}</a></p>{% endif %}
     <ul class="trust">{% for item in p.trust %}<li>✓ {{ item | links }}</li>{% endfor %}</ul>
     {% if links.rules is defined %}
     <form class="search-row" action="{{ links.rules }}" method="get" role="search">
@@ -20,23 +22,25 @@
     </form>
     {% endif %}
   </div>
-  {% if links.check is defined %}
-  <figure class="shot">{{ shot("check-" ~ t.lang, p.check_alt, 1040, 618, lazy=false) }}<figcaption>{{ p.check_caption }}</figcaption></figure>
+  {% if links.check is defined and example %}
+  <figure class="shot">
+    <div class="frame"><div class="frame-bar"><span class="file">{{ t.file_prefix }}-{{ example.id }}.pdf</span><span class="what">PDF · Factur-X EN 16931</span></div>{{ shot("check-" ~ t.lang, p.check_alt, 1040, {"fr": 780, "en": 825}[t.lang], lazy=false) }}</div>
+    <figcaption>{{ p.check_caption }}</figcaption>
+  </figure>
   {% endif %}
 </div>
 
-<section class="section" aria-labelledby="values-title">
+<section class="section tint" aria-labelledby="values-title">
   <h2 id="values-title">{{ p.values_title }}</h2>
-  <div class="cards">
+  <div class="pillars">
   {% for v in p["values"] if links[v.page] is defined %}
-    <div class="panel">
-      <h3>{{ v.head }}</h3>
-      <div class="body">
-        <p><strong>{{ v.question }}</strong></p>
-        <p>{{ v.text }}</p>
-        <a class="btn secondary" href="{{ links[v.page] }}">{{ v.link }}</a>
-      </div>
-      <p class="note">{{ v.proof | fill(counts) }}</p>
+    <div>
+      <span class="n" aria-hidden="true">{{ loop.index }}</span>
+      <h3>{{ icon(pillar_icons[v.page]) }}{{ v.head }}</h3>
+      <p class="pain">{{ v.question }}</p>
+      <p>{{ v.text }}</p>
+      <p><a class="go" href="{{ links[v.page] }}">{{ v.link }} →</a></p>
+      <p class="proof">{{ v.proof | fill(counts) }}</p>
     </div>
   {% endfor %}
   </div>
@@ -47,35 +51,39 @@
   <h2 id="proof-title">{{ p.proof_title }}</h2>
   <p class="sub">{{ p.proof_sub }}</p>
   <div class="split">
-    <figure class="shot">{{ shot("rule-" ~ t.lang, p.rule_alt, 1040, 703) }}<figcaption>{{ p.rule_caption }} <a href="{{ rule_href("BR-CO-15", t.lang) }}">{{ p.rule_link }}</a></figcaption></figure>
-    <figure class="shot"><img src="/static/home/invoice.webp" alt="{{ p.invoice_alt }}" width="1040" height="980" loading="lazy"><figcaption>{{ p.invoice_caption }} <a href="{{ files_href }}{{ example.files.pdf }}" download="{{ t.file_prefix }}-{{ example.id }}.pdf">{{ p.invoice_link }}</a></figcaption></figure>
+    <figure class="shot"><div class="frame">{{ shot("rule-" ~ t.lang, p.rule_alt, 1040, 703) }}</div><figcaption>{{ p.rule_caption }} <a href="{{ rule_href("BR-CO-15", t.lang) }}">{{ p.rule_link }}</a></figcaption></figure>
+    <figure class="shot"><div class="frame"><img class="paper" src="/static/home/invoice.webp" alt="{{ p.invoice_alt }}" width="1040" height="980" loading="lazy"></div><figcaption>{{ p.invoice_caption }} <a href="{{ files_href }}{{ example.files.pdf }}" download="{{ t.file_prefix }}-{{ example.id }}.pdf">{{ p.invoice_link }}</a></figcaption></figure>
   </div>
 </section>
 {% endif %}
 
 {% if ix %}
 {% set topics = dict(ix.topics) %}
-<section class="section" aria-labelledby="subjects-title">
+<section class="section tint" aria-labelledby="subjects-title">
   <h2 id="subjects-title">{{ p.subjects_title }}</h2>
   <p class="sub">{{ p.subjects_sub }}</p>
-  <ul class="subject-grid">
+  <ul class="ledger">
   {% for key in p.subjects if topics[key] %}
     {% set n = topics[key] | length %}
-    <li><a href="{{ links.rules }}?{{ t.rules.ui.params.topic }}={{ key }}#rules-all"><span class="name">{{ t.rules.topics[key] }}</span><span class="line">{{ t.rules.topic_lines[key] }}</span><span class="n">{{ (t.rules.ui.count_one if n == 1 else t.rules.ui.count_many) | replace("{n}", n | string) }}</span></a></li>
+    <li><a href="{{ links.rules }}?{{ t.rules.ui.params.topic }}={{ key }}#rules-all">{{ icon(topic_icons[key]) }}<span class="what"><b>{{ t.rules.topics[key] }}</b><span>{{ t.rules.topic_lines[key] }}</span></span><span class="dots" aria-hidden="true"></span><span class="n">{{ n }} <small>{{ (t.rules.ui.count_one if n == 1 else t.rules.ui.count_many) | replace("{n}", "") | trim }}</small></span></a></li>
   {% endfor %}
   </ul>
-  <p class="more"><a href="{{ links.rules }}">{{ p.subjects_all }}</a></p>
+  <span class="total-rule wide" aria-hidden="true"></span>
+  <p class="more"><a href="{{ links.rules }}">{{ p.subjects_all }} →</a></p>
 </section>
 {% endif %}
 
 <section class="section" aria-labelledby="europe-title">
   <h2 id="europe-title">{{ p.europe_title }}</h2>
   <p>{{ p.europe_text }}</p>
-  <ul class="chips" aria-label="{{ p.formats_label }}">{% for f in p.formats_now %}<li class="chip">{{ f }}</li>{% endfor %}{% for f in p.formats_next %}<li class="chip next">{{ f }}</li>{% endfor %}</ul>
+  <dl class="ledger-kv">
+    <div><dt>{{ p.formats_now_label }}</dt><dd>{% for f in p.formats_now %}<span>{{ f }}</span>{% endfor %}</dd></div>
+    <div class="next"><dt>{{ p.formats_next_label }}</dt><dd>{% for f in p.formats_next %}<span>{{ f }}</span>{% endfor %}</dd></div>
+  </dl>
 </section>
 
-<section class="section" id="quick-start" aria-labelledby="builders-title">
-  <h2 id="builders-title">{{ p.builders_title }}</h2>
+<section class="section on-navy" id="quick-start" aria-labelledby="builders-title">
+  <h2 id="builders-title">{{ icon("terminal") }}{{ p.builders_title }}</h2>
   <div class="split">
     <div>
       <p>{{ p.builders_text }}</p>
@@ -91,6 +99,12 @@
 
 <section class="section" aria-labelledby="open-title">
   <h2 id="open-title">{{ p.open_title }}</h2>
-  <ul>{% for item in p.open_items %}<li>{{ item | fill(counts) }}</li>{% endfor %}</ul>
+  <ul class="checks">{% for item in p.open_items %}<li>{{ item | fill(counts) }}</li>{% endfor %}</ul>
 </section>
+{% endblock %}
+{% block scripts %}
+<script>
+(function(){var b=document.getElementById('main-action'),c=document.querySelector('.topbar .cta');if(!b||!c||!('IntersectionObserver' in window))return;
+new IntersectionObserver(function(e){c.classList.toggle('waiting',e[0].isIntersecting)}).observe(b)})();
+</script>
 {% endblock %}

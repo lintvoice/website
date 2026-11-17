@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="band"><h1>{{ p.h1 }}</h1></div>
+<div class="band"><h1>{{ p.h1 }}</h1><span class="total-rule" aria-hidden="true"></span></div>
 <div class="grid">
 <aside>
   <div class="panel"><h2>{{ p.host_title }}</h2><div class="body"><p>{{ site.legal.host }}<br>{{ site.legal.host_details }}<br><a href="{{ site.legal.host_url }}">{{ site.legal.host_url | replace("https://www.", "") | trim("/") }}</a></p></div></div>

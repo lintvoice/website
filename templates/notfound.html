@@ -2,6 +2,7 @@
 {% block body %}
 <div class="band">
   <h1>{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
   <p class="brief">{{ p.text }} <a href="{{ links.home }}">{{ p.back }}</a></p>
   <p class="brief" lang="{{ other_texts.lang }}">{{ other_texts.notfound.text }} <a href="{{ other.href }}">{{ other_texts.notfound.back }}</a></p>
 </div>

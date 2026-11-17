@@ -53,6 +53,16 @@ def links(text):
     return Markup(LINK.sub(lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', escaped))  # noqa: S704
 
 
+ICONS = ROOT / "static" / "icons"  # Carbon icons (IBM), Apache-2.0: the licence is published next to them
+
+
+def icon(name):
+    """An icon inlined in the page, next to its words: it takes the text's colour and says nothing to screen readers."""
+    svg = (ICONS / f"{name}.svg").read_text(encoding="utf-8").strip()
+    attrs = 'class="ic" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"'
+    return Markup(svg.replace("<svg ", f"<svg {attrs} ", 1))  # noqa: S704 (our own files)
+
+
 PLACEHOLDER = re.compile(r"\{(\w+)\}")
 
 
@@ -132,6 +142,7 @@ def _check_assets(out, source, rules):
             "brief": {lang: r["meta"]["brief"][lang] for lang in LANGS},
             "href": {lang: rulepages.href(r["id"], lang) for lang in LANGS},
             "terms": r["meta"].get("business_terms", []),
+            "topic": r["meta"].get("topic"),
             # the page's own explanations, shown under the error on the check page itself
             "sections": {
                 lang: {
@@ -177,6 +188,14 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     _static(out)
     if check_assets:
         _check_assets(out, check_assets, rules)
+        # each subject's name and icon, for the subject an error card names
+        subjects = {
+            key: {"name": {lang: texts[lang]["rules"]["topics"][key] for lang in LANGS}, "icon": str(icon(name))}
+            for key, name in rulepages.TOPIC_ICONS.items()
+        }
+        (out / "static" / "check" / "subjects.json").write_text(
+            json.dumps(subjects, ensure_ascii=False, sort_keys=True), encoding="utf-8"
+        )
         for lang in LANGS:  # the check's texts, which a rule page loads only when it checks a file
             (out / "static" / "check" / f"texts.{lang}.json").write_text(
                 json.dumps(texts[lang]["check"]["ui"], ensure_ascii=False, sort_keys=True), encoding="utf-8"
@@ -191,6 +210,8 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     )
     env.filters["links"] = links
     env.filters["fill"] = fill
+    env.globals["icon"] = icon
+    env.globals["topic_icons"] = rulepages.TOPIC_ICONS
     env.globals["rule_href"] = rulepages.href
     rs = site["rule_sets"]
     common = {

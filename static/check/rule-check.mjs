@@ -91,7 +91,7 @@ function answer(name, r, pages, { report, T }) {
   const rest = n
     ? `<p class="others">${esc(fill(n === 1 ? (failed ? W.others_one : W.elsewhere_one) : failed ? W.others_many : W.elsewhere_many, { n }))}
         <button type="button" class="link" data-all>${esc(W.see_all)}</button></p>
-      <div class="all-errors" hidden><h3>${esc(W.all_title)}</h3><ol class="errors">${others.map((g, i) => report.errorCard(g, own.length + i + 1, inv, pages)).join("")}</ol></div>`
+      <div class="all-errors" hidden><h3>${esc(W.all_title)}</h3><ol class="errors">${others.map((g, i) => report.errorCard(g, own.length + i + 1, inv, pages, { first: false })).join("")}</ol></div>`
     : r.status === "incomplete" ? "" : `<p class="others">${esc(failed ? W.none_other : W.none_elsewhere)}</p>`;
   return `${file}${verdict}${rest}`;
 }
@@ -135,7 +135,7 @@ out.addEventListener("click", (e) => {
   if (copy) {
     const said = copy.parentElement.querySelector(".copied");
     navigator.clipboard.writeText(copy.dataset.copy).then(
-      () => { said.textContent = copyTexts.copied; },
+      () => { said.textContent = copy.dataset.what === "message" ? copyTexts.message_copied : copyTexts.copied; },
       () => { said.textContent = `${copyTexts.copy_failed} ${copy.dataset.copy}`; }, // no clipboard: the address to copy by hand
     );
   }
