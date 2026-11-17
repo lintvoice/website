@@ -149,6 +149,19 @@ def _check_assets(out, source, rules):
     (out / "static" / "check" / "rules.json").write_text(
         json.dumps(index, ensure_ascii=False, sort_keys=True), encoding="utf-8"
     )
+    # each rule page's own check: the ids the rule is reported under and, in each compiled rule file, the contexts
+    # they fire on, so that the page can tell a rule that applies to an invoice from one that does not
+    rule_contexts = json.loads((Path(source) / "contexts.json").read_text(encoding="utf-8"))
+    for r in rules:
+        ids = sorted({r["id"], *r["meta"].get("reported_ids", [])})
+        r["check"] = {
+            "ids": ids,
+            "contexts": {
+                name: sorted({c for i in ids for c in found.get(i, [])})
+                for name, found in rule_contexts.items()
+                if any(i in found for i in ids)
+            },
+        }
 
 
 def build(out, strict=False, rules_dir=None, check_assets=None):
@@ -164,6 +177,10 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     _static(out)
     if check_assets:
         _check_assets(out, check_assets, rules)
+        for lang in LANGS:  # the check's texts, which a rule page loads only when it checks a file
+            (out / "static" / "check" / f"texts.{lang}.json").write_text(
+                json.dumps(texts[lang]["check"]["ui"], ensure_ascii=False, sort_keys=True), encoding="utf-8"
+            )
     manifest = _examples(out)
     env = Environment(
         loader=FileSystemLoader(ROOT / "templates"),

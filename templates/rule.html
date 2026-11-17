@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% set m = rule.meta %}{% set r = rule.pages[t.lang] %}{% set s = t.rule_sets[rule.set] %}{% set fatal = m.severity == "fatal" %}
+{# the rule's own check, on rules the official files hold, when the site has the check page #}
+{% set checkable = rule.check is defined and rule.check.contexts and links.check is defined %}
 {% block topbar_extra %}
 <div class="mini" id="mini" aria-hidden="true">
   <p class="mini-title"><span class="idm">{{ rule.id }}</span> {{ r.title }}</p>
@@ -9,7 +11,7 @@
 {% block rights %}{{ t.rule.rights | links }}{% endblock %}
 {% block body %}
 <div class="band compact" id="band">{% include "_rule_head.html" %}
-  <p class="status-line">{% include "_rule_severity.html" %}{% if s.status %}<span>{{ t.rule.in_force }} {{ s.status }}</span>{% endif %}</p>
+  <p class="status-line">{% include "_rule_severity.html" %}{% if s.status %}<span>{{ t.rule.in_force }} {{ s.status }}</span>{% endif %}{% if checkable %}<a class="rule-check-link" href="#rule-check" data-rule-check-link hidden>{{ t.rule.check.band_link }}</a>{% endif %}</p>
 </div>
 <div class="grid content-first">
 <aside>{% include "_rule_aside.html" %}</aside>
@@ -20,6 +22,7 @@
 <p class="foot standard">{{ t.rule.cen_statement }}</p>
 {% endblock %}
 {% block scripts %}
+{% if checkable %}<script type="module" src="/static/check/rule-check.mjs"></script>{% endif %}
 <script>
 (function(){var band=document.getElementById('band'),top=document.querySelector('.topbar');if(!band||!top||!('IntersectionObserver' in window))return;
 new IntersectionObserver(function(e){document.documentElement.classList.toggle('past-band',!e[0].isIntersecting)},

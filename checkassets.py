@@ -14,6 +14,7 @@ The result is cached in .check-cache/ and rebuilt only when one of these version
 """
 
 import hashlib
+import html
 import io
 import json
 import posixpath
@@ -129,6 +130,7 @@ def _stamp():
         "notices": NOTICES,
         "package-lock": hashlib.sha256(lock).hexdigest(),
         "stylesheets": STYLESHEETS,
+        "outputs": ["contexts.json"],  # a new output rebuilds the cache once
     }
 
 
@@ -147,6 +149,29 @@ def _compile(rules, name, out):
     xsl, sef = rules / STYLESHEETS[name], out / f"{name}.sef.json"
     command = ["npx", "--no-install", "xslt3", f"-xsl:{xsl}", f"-export:{sef}", "-nogo", "-relocate:on", "-ns:##html5"]
     subprocess.run(command, cwd=ROOT, check=True, capture_output=True)  # noqa: S603 (our pinned tool and paths)
+
+
+TEMPLATE = re.compile(r"<xsl:template\b[^>]*>(.*?)</xsl:template>", re.S)
+FIRED = re.compile(r'<svrl:fired-rule\b[^>]*\bcontext="([^"]*)"')
+ASSERT_ID = re.compile(
+    r'<svrl:(?:failed-assert|successful-report)\b[^>]*\bid="([^"]+)"|<xsl:attribute name="id">\s*([^<]+?)\s*</xsl:attribute>'
+)
+
+
+def contexts(xslt):
+    """For one compiled Schematron file, the rule context of each assert id: the context the result names when that
+    rule fired (svrl:fired-rule). An assert whose context fired applies to the invoice; one whose context never
+    fired does not. The context is read as the result writes it: XML entities and doubled braces undone."""
+    found = {}
+    for template in TEMPLATE.finditer(xslt):
+        body = template.group(1)
+        fired = FIRED.search(body)
+        if not fired:
+            continue
+        context = html.unescape(fired.group(1)).replace("{{", "{").replace("}}", "}")
+        for a in ASSERT_ID.finditer(body):
+            found.setdefault(a.group(1) or a.group(2), set()).add(context)
+    return {rule: sorted(c) for rule, c in sorted(found.items())}
 
 
 def _manifest(xsd):
@@ -168,7 +193,7 @@ def _manifest(xsd):
 
 def build(cache=CACHE):
     """Build the assets (or reuse them when nothing changed); return the folder that holds vendor/, sef/, xsd/,
-    licenses/, NOTICES.txt and terms.json."""
+    licenses/, NOTICES.txt, terms.json and contexts.json."""
     out = cache / "assets"
     stamp = _stamp()
     if (out / "stamp.json").exists() and json.loads((out / "stamp.json").read_text(encoding="utf-8")) == stamp:
@@ -216,6 +241,9 @@ def build(cache=CACHE):
         lines += [n["name"], f"  Source: {n['source']}", f"  Licence: {n['licence']}", f"  Served as: {n['files']}", ""]
     (staging / "NOTICES.txt").write_text("\n".join(lines), encoding="utf-8")
 
+    # for each compiled rule file, the rule context of each assert: what tells a rule that applies from one that does not
+    rule_contexts = {name: contexts((rules / path).read_text(encoding="utf-8")) for name, path in STYLESHEETS.items()}
+    (staging / "contexts.json").write_text(json.dumps(rule_contexts, ensure_ascii=False), encoding="utf-8")
     # where each business term is read and the totals computations: the command-line tool's own data
     (staging / "terms.json").write_bytes(files("lintvoice").joinpath("terms.json").read_bytes())
     (staging / "stamp.json").write_text(json.dumps(stamp, indent=1), encoding="utf-8")

@@ -1,5 +1,6 @@
 <ol class="steps">
 {% for key in ("checks", "causes", "fix", "why") %}
-  <li id="{{ key }}"><h2>{{ r.sections[key].heading }}</h2>{{ r.sections[key].html }}</li>
+  <li id="{{ key }}"><h2>{{ r.sections[key].heading }}</h2>{{ r.sections[key].html }}
+  {% if key == "fix" and checkable %}{% include "_rule_check.html" %}{% endif %}</li>
 {% endfor %}
 </ol>

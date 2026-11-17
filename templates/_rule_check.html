@@ -1,0 +1,11 @@
+{# The rule's own check: shown by rule-check.mjs (it needs JavaScript), which loads the check only once a file is picked. #}
+<section class="panel rule-check" id="rule-check" aria-labelledby="rule-check-title" hidden>
+  <h3 id="rule-check-title">{{ t.rule.check.title }}</h3>
+  <div class="body">
+    <p class="start">{{ t.rule.check.lead }}</p>
+    <p class="actions-row start"><label class="btn primary" for="rule-file">{{ t.rule.check.choose }}</label>{% if rule.example %} <button type="button" class="link" data-example>{{ t.rule.check.try }}</button>{% endif %}</p>
+    <input type="file" id="rule-file" accept=".pdf,.xml,application/pdf,application/xml,text/xml" hidden>
+    <div class="rule-check-result" aria-live="polite"></div>
+  </div>
+</section>
+<script type="application/json" id="rule-check-data">{{ dict(id=rule.id, ids=rule.check.ids, contexts=rule.check.contexts, example=(rule.example | replace(".xml", ".pdf")) if rule.example else "", example_name=t.file_prefix ~ "-" ~ rule.id ~ ".pdf", texts=t.rule.check, check=links.check, base=base_url) | tojson }}</script>

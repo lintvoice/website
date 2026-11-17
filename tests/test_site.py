@@ -238,3 +238,16 @@ def test_the_check_page_asks_only_for_rule_files_the_build_compiles():
     asked = set(re.findall(r'sef: "([a-z0-9-]+)"', engine))
     asked |= {f"facturx-{p}" for p in ("basicwl", "en16931", "extended")}  # sef: `facturx-${d.profile}`
     assert asked == set(checkassets.STYLESHEETS)
+
+
+def test_rule_contexts_are_read_as_the_check_result_writes_them():
+    # an assert id given as an attribute or as xsl:attribute; the context with its XML entities and doubled braces
+    xslt = """
+    <xsl:template match="a" priority="2" mode="M7"><svrl:fired-rule context="//a[. = &apos;E&apos;][{{1}}]" />
+      <xsl:choose><xsl:when test="t"/><xsl:otherwise><svrl:failed-assert test="t">
+        <xsl:attribute name="id">BR-E-10</xsl:attribute></svrl:failed-assert></xsl:otherwise></xsl:choose></xsl:template>
+    <xsl:template match="b" priority="1" mode="M8"><svrl:fired-rule context="/r"/>
+      <svrl:failed-assert id="BR-FR-21_BT-49" test="t"/></xsl:template>
+    <xsl:template match="text()" mode="M8"/>
+    """
+    assert checkassets.contexts(xslt) == {"BR-E-10": ["//a[. = 'E'][{1}]"], "BR-FR-21_BT-49": ["/r"]}

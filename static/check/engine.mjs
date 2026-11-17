@@ -259,14 +259,15 @@ async function runXsd(set, d) {
     initialMemoryPages: 256,
     maxMemoryPages: memoryPages.GiB,
   });
-  if (result.valid) return [];
-  return result.errors.filter((e) => e.loc && e.loc.fileName === "invoice.xml").map((e) => ({
+  if (result.valid) return { findings: [] };
+  const findings = result.errors.filter((e) => e.loc && e.loc.fileName === "invoice.xml").map((e) => ({
     rule: "XSD",
     severity: "error",
     message: e.message.replace(/^.*?Schemas validity error : /, "").replace(/\{[^}]*\}/g, ""),
     location: `line ${e.loc.lineNumber}`,
     rule_set: set.id,
   }));
+  return { findings };
 }
 
 const stylesheets = new Map();
@@ -280,6 +281,8 @@ async function runSchematron(set, d) {
   );
   const svrl = new DOMParser().parseFromString(result.principalResult, "application/xml");
   const findings = [];
+  // the rule contexts that fired: a rule whose context never fired does not apply to this invoice
+  const fired = [...new Set([...svrl.getElementsByTagNameNS(SVRL, "fired-rule")].map((f) => f.getAttribute("context")))];
   for (const f of svrl.getElementsByTagNameNS(SVRL, "*")) {
     if (f.localName !== "failed-assert" && f.localName !== "successful-report") continue;
     const flag = (f.getAttribute("flag") || "fatal").toLowerCase();
@@ -292,7 +295,7 @@ async function runSchematron(set, d) {
       rule_set: set.id,
     });
   }
-  return findings;
+  return { findings, fired };
 }
 
 function group(findings) {
@@ -319,7 +322,7 @@ export async function check(name, bytes) {
     throw e;
   }
   const { sets, notes } = select(d);
-  const findings = [], seen = new Map(), notRun = [];
+  const findings = [], seen = new Map(), notRun = [], fired = {};
   const timings = {};
   for (const set of sets) {
     const t0 = performance.now();
@@ -330,12 +333,13 @@ export async function check(name, bytes) {
       // reported as incomplete.
       found = await run().catch(() => run());
     } catch (e) {
-      notRun.push({ rule_set: set.id, name: set.name, error: String(e.message || e).split(/\s+/).join(" ") });
+      notRun.push({ rule_set: set.id, ...(set.sef ? { sef: set.sef } : {}), name: set.name, error: String(e.message || e).split(/\s+/).join(" ") });
       continue;
     } finally {
       timings[set.id] = Math.round(performance.now() - t0);
     }
-    for (const f of found) {
+    if (found.fired) fired[set.sef] = found.fired;
+    for (const f of found.findings) {
       if (!seen.has(f.rule)) seen.set(f.rule, set.id);
       if (seen.get(f.rule) === set.id) findings.push(f);
     }
@@ -368,6 +372,9 @@ export async function check(name, bytes) {
     }),
     // what the invoice says, read as lintvoice reads it (terms.json): to show an error with the invoice's values
     values,
+    // for each compiled rule file that ran, the rule contexts that fired (a rule page tells from them whether its
+    // rule applies to the invoice)
+    fired,
     timings_ms: timings,
   };
 }
