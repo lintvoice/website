@@ -137,7 +137,7 @@ title = "E-invoice error codes (BR-FR, BR-CO) explained · validator"
 description = "Type an error code (BR-FR-10, BR-CO-15…) or browse by subject. What each rule checks, why an invoice fails it and how to fix it, with an example invoice."
 h1 = "Find and understand the e-invoicing rules"
 lead = "Type an error code or a word, or browse by subject."
-values_title = "For each rule"
+values_title = "On each rule page"
 values = [{ head = "In plain words", text = "What the rule checks and why your invoice fails it." }, { head = "How to fix it", text = "The steps in your software, and what to tell its publisher." }, { head = "An example invoice", text = "It fails the rule, with the error in red." }]
 thumb_alt = "Part of an example invoice: the BR-CO-15 error notice and the wrong total with VAT, in red."
 search_label = "Error code or keyword"

@@ -137,7 +137,7 @@ title = "Codes d'erreur de la facture électronique (BR-FR, BR-CO) expliqués ·
 description = "Tapez un code d'erreur (BR-FR-10, BR-CO-15…) ou parcourez par sujet. Ce que vérifie chaque règle, pourquoi une facture y échoue et comment corriger, avec une facture d'exemple."
 h1 = "Trouvez et comprenez les règles de la facture électronique"
 lead = "Tapez un code d'erreur ou un mot, ou parcourez par sujet."
-values_title = "Pour chaque règle"
+values_title = "Sur chaque page de règle"
 values = [{ head = "En mots simples", text = "Ce que vérifie la règle et pourquoi votre facture y échoue." }, { head = "Comment corriger", text = "Les étapes dans votre logiciel, et quoi dire à son éditeur." }, { head = "Une facture d'exemple", text = "Elle échoue à la règle, l'erreur en rouge." }]
 thumb_alt = "Extrait d'une facture d'exemple : l'avis d'erreur BR-CO-15 et le total TTC faux, en rouge."
 search_label = "Code d'erreur ou mot-clé"
