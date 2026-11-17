@@ -24,6 +24,7 @@ import urllib.request
 import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from importlib.metadata import version
+from importlib.resources import files
 from pathlib import Path
 
 from lintvoice import rulepacks
@@ -167,7 +168,7 @@ def _manifest(xsd):
 
 def build(cache=CACHE):
     """Build the assets (or reuse them when nothing changed); return the folder that holds vendor/, sef/, xsd/,
-    licenses/ and NOTICES.txt."""
+    licenses/, NOTICES.txt and terms.json."""
     out = cache / "assets"
     stamp = _stamp()
     if (out / "stamp.json").exists() and json.loads((out / "stamp.json").read_text(encoding="utf-8")) == stamp:
@@ -215,6 +216,8 @@ def build(cache=CACHE):
         lines += [n["name"], f"  Source: {n['source']}", f"  Licence: {n['licence']}", f"  Served as: {n['files']}", ""]
     (staging / "NOTICES.txt").write_text("\n".join(lines), encoding="utf-8")
 
+    # where each business term is read and the totals computations: the command-line tool's own data
+    (staging / "terms.json").write_bytes(files("lintvoice").joinpath("terms.json").read_bytes())
     (staging / "stamp.json").write_text(json.dumps(stamp, indent=1), encoding="utf-8")
     shutil.rmtree(out, ignore_errors=True)
     staging.rename(out)

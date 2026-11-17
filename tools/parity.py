@@ -219,7 +219,8 @@ def comparable(f):
             (re.sub(r"\s+", " ", m["message"]).strip() if g["rule"] == "XSD" else m["message"], tuple(m["locations"]))
             for m in g["messages"]
         )
-        findings.append((g["rule"], g["severity"], g["rule_set"], g["count"], tuple(messages)))
+        computation = json.dumps(g.get("computation"), sort_keys=True)  # the values behind a totals rule
+        findings.append((g["rule"], g["severity"], g["rule_set"], g["count"], tuple(messages), computation))
     return {
         "status": f["status"],
         "document": f["document"],
@@ -228,6 +229,7 @@ def comparable(f):
         "not_run": [n["rule_set"] for n in f["not_run"]],
         "summary": f["summary"],
         "findings": findings,
+        "values": f.get("values"),  # what the invoice says, read the same way on both sides
     }
 
 

@@ -8,6 +8,7 @@
 // them, so that a small PDF cannot unfold into gigabytes.
 import { validateXML, memoryPages } from "./vendor/index-browser.mjs";
 import * as pdfjs from "./vendor/pdf.min.mjs";
+import { computation, read } from "./invoice.mjs";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL("./vendor/pdf.worker.min.mjs", import.meta.url).href;
 
@@ -237,6 +238,10 @@ async function download(url) {
   return r;
 }
 
+// Where each business term is read and the totals computations: lintvoice's own terms.json, copied at build time.
+const termsCache = new Map();
+const terms = () => cached(termsCache, "terms", () => download(new URL("terms.json", base)).then((r) => r.json()));
+
 const fileCache = new Map();
 async function fetchText(path) {
   return cached(fileCache, path, () => download(new URL(path, base)).then((r) => r.text()));
@@ -336,6 +341,14 @@ export async function check(name, bytes) {
     }
   }
   const errors = findings.filter((f) => f.severity === "error");
+  let spec = null;
+  let values = null;
+  try {
+    spec = await terms();
+    values = read(d.xml, spec);
+  } catch {
+    // the values are an aid: a file the rules could check never fails for them
+  }
   return {
     path: name,
     status: errors.length ? "errors" : notRun.length ? "incomplete" : "ok",
@@ -344,12 +357,17 @@ export async function check(name, bytes) {
     notes,
     not_run: notRun,
     summary: { errors: errors.length, warnings: findings.length - errors.length, rules_failed: new Set(errors.map((f) => f.rule)).size },
-    findings: group(findings).map((g) => ({
-      rule: g.rule, severity: g.severity, rule_set: g.rule_set,
-      count: [...g.messages.values()].reduce((n, l) => n + l.length, 0),
-      messages: [...g.messages.entries()].map(([message, locations]) => ({ message, locations })),
-    })),
+    findings: group(findings).map((g) => {
+      const calc = values && computation(g.rule, values, spec);
+      return {
+        rule: g.rule, severity: g.severity, rule_set: g.rule_set,
+        count: [...g.messages.values()].reduce((n, l) => n + l.length, 0),
+        messages: [...g.messages.entries()].map(([message, locations]) => ({ message, locations })),
+        ...(calc ? { computation: calc } : {}),
+      };
+    }),
+    // what the invoice says, read as lintvoice reads it (terms.json): to show an error with the invoice's values
+    values,
     timings_ms: timings,
-    xml: d.xml, // for the page: the values it shows next to the findings
   };
 }
