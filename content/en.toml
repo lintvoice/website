@@ -22,52 +22,57 @@ footer_rights = "Code under the [MIT licence](https://github.com/lintvoice/websi
 footer_legal = "Legal notice"
 
 [home]
-title = "lintvoice: check e-invoices against the official rules, offline"
-description = "Open-source validator for CII, UBL and Factur-X e-invoices. It runs the official EN 16931, Factur-X and French BR-FR rules, offline."
-h1 = "Check e-invoices against the official rules, offline"
-brief = "lintvoice is an open-source command-line validator for CII, UBL and Factur-X invoices. It runs the official EN 16931, Factur-X and French BR-FR rules offline: your invoices are never sent anywhere."
-glance_title = "At a glance"
-glance = [
-    ["Licence", "[MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE)"],
-    ["Python", "3.10 or later"],
-    ["Reads", "CII, UBL, Factur-X and ZUGFeRD PDF"],
-    ["Network", "only to install the rules, once"],
+title = "Check, understand and fix your e-invoices · Factur-X / ZUGFeRD validator | lintvoice"
+description = "Check an e-invoice against the official rules, understand the errors in plain words and fix them, with an example invoice. Free, no account, nothing is sent."
+h1 = "Check, understand and fix your e-invoices"
+lead = "lintvoice runs the official rules on your invoices, the European standard's and each country's own, starting with France, explains the errors in plain words and shows how to fix them."
+trust = ["Free, no account", "Your invoice never leaves your computer", "[Public code on GitHub](https://github.com/lintvoice)"]
+code_label = "Already have an error code?"
+code_placeholder = "For example BR-FR-10"
+check_alt = "The result of a check: a BR-CO-15 error, the invoice's amounts, the expected computation, the steps to fix it, and the invoice redrawn with the amounts concerned circled."
+check_caption = "A real check, on an example invoice."
+values_title = "lintvoice takes you from an error code to a fixed invoice"
+values = [
+    { head = "Check", question = "“Will my invoice pass the rules?”", text = "You know before you send it, by dropping it here. The check runs the official European and French rules, in your browser.", link = "Check an invoice", page = "check", proof = "EN 16931 {en16931}, Factur-X {facturx} and BR-FR {brfr} rules, as published." },
+    { head = "Understand", question = "“BR-FR-10, what does it mean?”", text = "Errors are explained in plain words, with your invoice's values and the reason the rule exists.", link = "See the invoicing rules", page = "rules", proof = "{explained} of {total} rules explained, in English and French. The others follow, family by family." },
+    { head = "Fix", question = "“What do I change, and who has to do it?”", text = "The steps to fix it in your software, an example invoice that shows the error, and the rule's link to send to your software publisher.", link = "See the example invoices", page = "examples", proof = "{examples} example invoices, each failing a named rule, in the public domain." },
 ]
-exit_title = "Exit codes"
-exit_codes = [
-    ["0", "No errors"],
-    ["1", "Errors found"],
-    ["2", "A file could not be read"],
-    ["3", "Rule packs not installed"],
-    ["4", "Incomplete check: a rule set could not run"],
-]
-links_title = "Links"
-quick_title = "Quick start"
-quick_hint = "Python 3.10+"
-quick_code = """uvx lintvoice rules install      # once: downloads the pinned rule packs
-uvx lintvoice check invoice.pdf
+proof_title = "Each explained rule has its page, and an example invoice that shows the error"
+proof_sub = "The page says, in plain words, what the rule checks and how to fix it. The example invoice fails that rule, and the error is in red."
+rule_alt = "The top of the BR-CO-15 rule page: its title in plain words, the In short line, what the rule checks and its common causes."
+rule_caption = "The BR-CO-15 rule page."
+rule_link = "Read it"
+invoice_alt = "The example invoice that fails BR-CO-15: the error notice at the top, and the wrong total with VAT in red."
+invoice_caption = "Its example invoice, fictitious and in the public domain. The examples are French invoices."
+invoice_link = "Download the PDF"
+subjects_title = "What your e-invoice must contain"
+subjects_sub = "Getting ready for e-invoicing? Browse the rules by subject, in plain words."
+subjects = ["addresses", "identifiers", "payment", "totals", "vat", "invoice"]
+subjects_all = "All subjects and all rules"
+europe_title = "The same base rules across Europe"
+europe_text = "E-invoicing rests everywhere on the same European standard, EN 16931; each country adds its own rules. lintvoice runs the European rules and the French rules today, on Factur-X / ZUGFeRD, CII and UBL. Germany and the Peppol network (Belgium, then the United Kingdom) are the next steps."
+formats_label = "Rules and formats"
+formats_now = ["EN 16931, Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, France"]
+formats_next = ["XRechnung, Germany · next step", "Peppol · next step"]
+builders_title = "Building invoicing software?"
+builders_text = "Check your invoices in one command, offline, in your continuous integration."
+builders_code = """uvx lintvoice rules install
 uvx lintvoice check invoices/ --format json"""
-quick_note = "Or pip install lintvoice. The rule packs are downloaded once from their official sources, pinned to an exact version (a SHA-256 hash or a git commit); after that, every check runs offline."
-output_title = "What a report looks like"
-output_hint = "lintvoice check facture.pdf"
-output_note = "Findings are grouped by rule. BR-FR messages are the official French text, published by FNFE-MPE."
-rules_title = "Rules it runs"
-rules_head = ["Rule set", "Version", "Published by", "Applied to"]
-rules_rows = [
-    ["EN 16931", "1.3.17", "CEN, via ConnectingEurope", "every CII and UBL invoice"],
-    ["Factur-X profile rules", "1.09.2", "FNFE-MPE", "Factur-X PDFs (BASIC WL, EN 16931, EXTENDED)"],
-    ["BR-FR", "1.4.0.04", "FNFE-MPE (France_RFE)", "invoices whose seller is in France"],
-    ["XML schemas", "CII D22B, Factur-X 1.09.2, UBL 2.1", "UN/CEFACT, FNFE-MPE, OASIS", "every invoice"],
+builders_facts = [
+    "The European (EN 16931), Factur-X / ZUGFeRD and French rules, for CII, UBL and Factur-X / ZUGFeRD PDFs.",
+    "No JVM, no server, no account; exit codes and JSON output for CI.",
+    "Complete example invoices, each failing a named rule, for your tests ([invoice-examples](https://github.com/lintvoice/invoice-examples)).",
+    "The rule pages, to give your users, with the technical details for you.",
 ]
-not_checked_title = "Not checked yet"
-not_checked = [
-    "PDF/A-3 validation of Factur-X PDFs.",
-    "XRechnung and Peppol BIS rules: those invoices get EN 16931 only, and the report says so.",
-    "Factur-X MINIMUM and BASIC profile rules: France_RFE 1.4.0.04 does not ship them.",
+builders_button = "Get started on GitHub"
+builders_more = "The exit codes, the rule sets and what is not checked yet are in the [README](https://github.com/lintvoice/lintvoice#readme)."
+open_title = "Everything is open, so you can check it"
+open_items = [
+    "The code is public on GitHub, under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE).",
+    "The rule texts are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).",
+    "The example invoices are in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)).",
+    "The official rules come from their sources, at versions EN 16931 {en16931}, Factur-X {facturx} and BR-FR {brfr}.",
 ]
-examples_title = "Example invoices"
-examples_text = "92 French Factur-X invoices: one valid, and 91 invalid variants that each fail a named rule. Each one is checked against the official rules. Public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/))."
-examples_link = "Browse the examples"
 
 [examples]
 title = "Example e-invoices, valid and invalid (Factur-X, CII)"

@@ -112,6 +112,7 @@ def test_every_internal_link_and_resource_resolves(dist):
                 continue
             assert href.startswith("/"), f"{path}: {href} is not a local absolute path"
             target, _, anchor = href.partition("#")
+            target = target.partition("?")[0]  # a query (a search, a filter) is read by the page's script
             file = dist / target.lstrip("/")
             file = file / "index.html" if target.endswith("/") else file
             assert file.exists(), f"{path}: {href}"

@@ -1,45 +1,96 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="band">
-  <h1>{{ p.h1 }}</h1>
-  <p class="brief">{{ p.brief }}</p>
-  <div class="chips">{% for chip in rule_chips %}<span class="chip">{{ chip }}</span>{% endfor %}<span class="chip">MIT</span></div>
-</div>
-<div class="grid content-first">
-<aside>
-  <div class="panel"><h2>{{ p.glance_title }}</h2><div class="flush"><div class="kv">
-    {% for label, value in p.glance %}<div><span>{{ label }}</span><span>{{ value | links }}</span></div>{% endfor %}
-  </div></div></div>
-  <div class="panel"><h2>{{ p.exit_title }}</h2><div class="flush"><div class="kv">
-    {% for code, meaning in p.exit_codes %}<div><span><code>{{ code }}</code></span><span>{{ meaning }}</span></div>{% endfor %}
-  </div></div></div>
-  <div class="panel"><h2>{{ p.links_title }}</h2><div class="flush"><div class="kv">
-    <div><span>GitHub</span><span><a href="https://github.com/lintvoice/lintvoice">lintvoice/lintvoice</a></span></div>
-    <div><span>PyPI</span><span><a href="https://pypi.org/project/lintvoice/">lintvoice</a></span></div>
-    <div><span>{{ t.nav_examples }}</span><span><a href="{{ links.examples }}">{{ links.examples }}</a></span></div>
-  </div></div></div>
-</aside>
-<article>
-  <div class="panel" id="quick-start"><h2>{{ p.quick_title }}<small>{{ p.quick_hint }}</small></h2>
-    <div class="flush"><pre><code>{{ p.quick_code }}</code></pre></div>
-    <p class="note">{{ p.quick_note }}</p>
+{# Counts and versions come from the build, so no sentence claims more than is true on the day. #}
+{% set ix = rules_index if rules_index is defined else none %}
+{% set counts = dict(en16931=site.rule_sets.en16931, facturx=site.rule_sets.facturx, brfr=site.rule_sets.brfr, examples=invalid | length, explained=ix.explained if ix else "", total=ix.total if ix else "") %}
+{% set example = invalid | selectattr("id", "equalto", "BR-CO-15") | first %}
+{# A capture of one of our pages, in the visitor's theme (tools/home_images.py makes them, from the product itself). #}
+{% macro shot(name, alt, width, height, lazy=true) %}<img class="for-light" src="/static/home/{{ name }}-light.webp" alt="{{ alt }}" width="{{ width }}" height="{{ height }}"{% if lazy %} loading="lazy"{% endif %}><img class="for-dark" src="/static/home/{{ name }}-dark.webp" alt="{{ alt }}" width="{{ width }}" height="{{ height }}" loading="lazy">{% endmacro %}
+
+<div class="band split">
+  <div>
+    <h1>{{ p.h1 }}</h1>
+    <p class="brief">{{ p.lead }}</p>
+    {% if links.check is defined %}<p class="actions-row"><a class="btn primary large" href="{{ links.check }}">{{ t.cta_check }}</a></p>{% endif %}
+    <ul class="trust">{% for item in p.trust %}<li>✓ {{ item | links }}</li>{% endfor %}</ul>
+    {% if links.rules is defined %}
+    <form class="search-row" action="{{ links.rules }}" method="get" role="search">
+      <label for="code">{{ p.code_label }}</label>
+      <input id="code" name="{{ t.rules.ui.params.q }}" type="search" placeholder="{{ p.code_placeholder }}" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="search">
+    </form>
+    {% endif %}
   </div>
-  <div class="panel"><h2>{{ p.output_title }}<small>{{ p.output_hint }}</small></h2>
-    <div class="flush"><pre class="cli"><code>{{ sample_output }}</code></pre></div>
-    <p class="note">{{ p.output_note }}</p>
-  </div>
-  <div class="panel"><h2>{{ p.rules_title }}</h2><div class="body">
-    <div class="table-wrap"><table>
-      <thead><tr>{% for head in p.rules_head %}<th>{{ head }}</th>{% endfor %}</tr></thead>
-      <tbody>{% for name, version, publisher, scope in p.rules_rows %}<tr><td>{{ name }}</td><td class="mono">{{ version }}</td><td>{{ publisher }}</td><td>{{ scope }}</td></tr>{% endfor %}</tbody>
-    </table></div>
-    <h3>{{ p.not_checked_title }}</h3>
-    <ul>{% for item in p.not_checked %}<li>{{ item }}</li>{% endfor %}</ul>
-  </div></div>
-  <div class="panel"><h2>{{ p.examples_title }}<small>CC0</small></h2><div class="body">
-    <p>{{ p.examples_text | links }}</p>
-    <div class="actions-row"><a class="btn secondary" href="{{ links.examples }}">{{ p.examples_link }}</a></div>
-  </div></div>
-</article>
+  {% if links.check is defined %}
+  <figure class="shot">{{ shot("check-" ~ t.lang, p.check_alt, 1040, 618, lazy=false) }}<figcaption>{{ p.check_caption }}</figcaption></figure>
+  {% endif %}
 </div>
+
+<section class="section" aria-labelledby="values-title">
+  <h2 id="values-title">{{ p.values_title }}</h2>
+  <div class="cards">
+  {% for v in p["values"] if links[v.page] is defined %}
+    <div class="panel">
+      <h3>{{ v.head }}</h3>
+      <div class="body">
+        <p><strong>{{ v.question }}</strong></p>
+        <p>{{ v.text }}</p>
+        <a class="btn secondary" href="{{ links[v.page] }}">{{ v.link }}</a>
+      </div>
+      <p class="note">{{ v.proof | fill(counts) }}</p>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+{% if ix and "BR-CO-15" in ix.ids and example %}
+<section class="section" aria-labelledby="proof-title">
+  <h2 id="proof-title">{{ p.proof_title }}</h2>
+  <p class="sub">{{ p.proof_sub }}</p>
+  <div class="split">
+    <figure class="shot">{{ shot("rule-" ~ t.lang, p.rule_alt, 1040, 703) }}<figcaption>{{ p.rule_caption }} <a href="{{ rule_href("BR-CO-15", t.lang) }}">{{ p.rule_link }}</a></figcaption></figure>
+    <figure class="shot"><img src="/static/home/invoice.webp" alt="{{ p.invoice_alt }}" width="1040" height="980" loading="lazy"><figcaption>{{ p.invoice_caption }} <a href="{{ files_href }}{{ example.files.pdf }}" download="{{ t.file_prefix }}-{{ example.id }}.pdf">{{ p.invoice_link }}</a></figcaption></figure>
+  </div>
+</section>
+{% endif %}
+
+{% if ix %}
+{% set topics = dict(ix.topics) %}
+<section class="section" aria-labelledby="subjects-title">
+  <h2 id="subjects-title">{{ p.subjects_title }}</h2>
+  <p class="sub">{{ p.subjects_sub }}</p>
+  <ul class="subject-grid">
+  {% for key in p.subjects if topics[key] %}
+    {% set n = topics[key] | length %}
+    <li><a href="{{ links.rules }}?{{ t.rules.ui.params.topic }}={{ key }}#rules-all"><span class="name">{{ t.rules.topics[key] }}</span><span class="line">{{ t.rules.topic_lines[key] }}</span><span class="n">{{ (t.rules.ui.count_one if n == 1 else t.rules.ui.count_many) | replace("{n}", n | string) }}</span></a></li>
+  {% endfor %}
+  </ul>
+  <p class="more"><a href="{{ links.rules }}">{{ p.subjects_all }}</a></p>
+</section>
+{% endif %}
+
+<section class="section" aria-labelledby="europe-title">
+  <h2 id="europe-title">{{ p.europe_title }}</h2>
+  <p>{{ p.europe_text }}</p>
+  <ul class="chips" aria-label="{{ p.formats_label }}">{% for f in p.formats_now %}<li class="chip">{{ f }}</li>{% endfor %}{% for f in p.formats_next %}<li class="chip next">{{ f }}</li>{% endfor %}</ul>
+</section>
+
+<section class="section" id="quick-start" aria-labelledby="builders-title">
+  <h2 id="builders-title">{{ p.builders_title }}</h2>
+  <div class="split">
+    <div>
+      <p>{{ p.builders_text }}</p>
+      <div class="panel"><div class="flush"><pre><code>{{ p.builders_code }}</code></pre></div></div>
+      <a class="btn secondary" href="https://github.com/lintvoice/lintvoice">{{ p.builders_button }}</a>
+    </div>
+    <div>
+      <ul>{% for fact in p.builders_facts %}<li>{{ fact | links }}</li>{% endfor %}</ul>
+      <p class="more">{{ p.builders_more | links }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="open-title">
+  <h2 id="open-title">{{ p.open_title }}</h2>
+  <ul>{% for item in p.open_items %}<li>{{ item | fill(counts) }}</li>{% endfor %}</ul>
+</section>
 {% endblock %}

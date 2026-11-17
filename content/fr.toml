@@ -22,52 +22,57 @@ footer_rights = "Code sous [licence MIT](https://github.com/lintvoice/website/bl
 footer_legal = "Mentions légales"
 
 [home]
-title = "lintvoice : vérifier ses factures électroniques avec les règles officielles, hors ligne"
-description = "Validateur open source pour les factures électroniques CII, UBL et Factur-X. Il applique les règles officielles EN 16931, Factur-X et BR-FR, hors ligne."
-h1 = "Vérifiez vos factures électroniques avec les règles officielles, hors ligne"
-brief = "lintvoice est un validateur open source en ligne de commande pour les factures CII, UBL et Factur-X. Il applique les règles officielles EN 16931, Factur-X et françaises BR-FR hors ligne : vos factures ne sont envoyées nulle part."
-glance_title = "En bref"
-glance = [
-    ["Licence", "[MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE)"],
-    ["Python", "3.10 ou plus"],
-    ["Lit", "CII, UBL, PDF Factur-X et ZUGFeRD"],
-    ["Réseau", "seulement pour installer les règles, une fois"],
+title = "Vérifiez, comprenez et corrigez vos factures électroniques · validateur Factur-X | lintvoice"
+description = "Vérifiez une facture électronique selon les règles officielles, comprenez les erreurs en mots simples et corrigez-les, avec une facture d'exemple. Gratuit, sans compte, rien n'est envoyé."
+h1 = "Vérifiez, comprenez et corrigez vos factures électroniques"
+lead = "lintvoice applique les règles officielles, européennes et françaises, à vos factures, explique les erreurs en mots simples et montre comment les corriger."
+trust = ["Gratuit, sans compte", "Votre facture ne quitte pas votre ordinateur", "[Code public sur GitHub](https://github.com/lintvoice)"]
+code_label = "Vous avez déjà un code d'erreur ?"
+code_placeholder = "Par exemple BR-FR-10"
+check_alt = "Résultat d'une vérification : une erreur BR-CO-15, les montants de la facture, le calcul attendu, les étapes pour corriger, et la facture redessinée avec les montants concernés entourés."
+check_caption = "Une vraie vérification, sur une facture d'exemple."
+values_title = "lintvoice vous guide d'un code d'erreur jusqu'à une facture corrigée"
+values = [
+    { head = "Vérifiez", question = "« Ma facture va-t-elle passer les règles ? »", text = "Vous le savez avant de l'envoyer, en la déposant ici. La vérification applique les règles officielles européennes et françaises, dans votre navigateur.", link = "Vérifier une facture", page = "check", proof = "Règles EN 16931 {en16931}, Factur-X {facturx} et BR-FR {brfr}, telles que publiées." },
+    { head = "Comprenez", question = "« BR-FR-10, qu'est-ce que ça veut dire ? »", text = "Les erreurs sont expliquées en mots simples, avec les valeurs de votre facture et la raison d'être de la règle.", link = "Voir les règles de facturation", page = "rules", proof = "{explained} règles expliquées sur {total}, en français et en anglais. Les autres arrivent famille par famille." },
+    { head = "Corrigez", question = "« Que dois-je changer, et qui doit le faire ? »", text = "Les étapes pour corriger dans votre logiciel, une facture d'exemple qui montre l'erreur, et le lien de la règle à envoyer à votre éditeur.", link = "Voir les exemples de factures", page = "examples", proof = "{examples} factures d'exemple, chacune en échec sur une règle nommée, dans le domaine public." },
 ]
-exit_title = "Codes de sortie"
-exit_codes = [
-    ["0", "Aucune erreur"],
-    ["1", "Erreurs trouvées"],
-    ["2", "Un fichier n'a pas pu être lu"],
-    ["3", "Jeux de règles non installés"],
-    ["4", "Vérification incomplète : un jeu de règles n'a pas pu s'exécuter"],
-]
-links_title = "Liens"
-quick_title = "Démarrer"
-quick_hint = "Python 3.10+"
-quick_code = """uvx lintvoice rules install      # une fois : télécharge les jeux de règles figés
-uvx lintvoice check facture.pdf
+proof_title = "Chaque règle expliquée a sa page, et une facture d'exemple qui montre l'erreur"
+proof_sub = "La page dit, en mots simples, ce que vérifie la règle et comment corriger. La facture d'exemple échoue à cette règle, et l'erreur y est en rouge."
+rule_alt = "Haut de la page de la règle BR-CO-15 : son titre en mots simples, la phrase En bref, ce que vérifie la règle et ses causes fréquentes."
+rule_caption = "La page de la règle BR-CO-15."
+rule_link = "La lire"
+invoice_alt = "La facture d'exemple qui échoue à BR-CO-15 : l'avis d'erreur en haut, et le total TTC faux en rouge."
+invoice_caption = "Sa facture d'exemple, fictive et dans le domaine public."
+invoice_link = "Télécharger le PDF"
+subjects_title = "Ce que doit contenir votre facture électronique"
+subjects_sub = "Vous préparez vos factures électroniques ? Parcourez les règles par sujet, en mots simples."
+subjects = ["addresses", "identifiers", "payment", "totals", "vat", "invoice"]
+subjects_all = "Tous les sujets et toutes les règles"
+europe_title = "Les mêmes règles de base dans toute l'Europe"
+europe_text = "La facture électronique repose partout sur la même norme européenne, EN 16931 ; chaque pays y ajoute ses propres règles. lintvoice applique aujourd'hui les règles européennes et les règles françaises, sur les formats Factur-X / ZUGFeRD, CII et UBL. L'Allemagne et le réseau Peppol (Belgique, puis Royaume-Uni) sont les prochaines étapes."
+formats_label = "Règles et formats"
+formats_now = ["EN 16931, l'Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, la France"]
+formats_next = ["XRechnung, l'Allemagne · prochaine étape", "Peppol · prochaine étape"]
+builders_title = "Vous développez un logiciel de facturation ?"
+builders_text = "Vérifiez vos factures en une commande, hors ligne, dans votre intégration continue."
+builders_code = """uvx lintvoice rules install
 uvx lintvoice check factures/ --format json"""
-quick_note = "Ou pip install lintvoice. Les jeux de règles sont téléchargés une seule fois depuis leurs sources officielles, figés à une version exacte (une empreinte SHA-256 ou un commit git) ; ensuite, chaque vérification se fait hors ligne."
-output_title = "À quoi ressemble un rapport"
-output_hint = "lintvoice check facture.pdf"
-output_note = "Les constats sont regroupés par règle. Les messages BR-FR sont le texte officiel publié par le FNFE-MPE ; lintvoice affiche le reste en anglais."
-rules_title = "Les règles appliquées"
-rules_head = ["Jeu de règles", "Version", "Publié par", "Appliqué à"]
-rules_rows = [
-    ["EN 16931", "1.3.17", "CEN, via ConnectingEurope", "toutes les factures CII et UBL"],
-    ["Règles des profils Factur-X", "1.09.2", "FNFE-MPE", "les PDF Factur-X (BASIC WL, EN 16931, EXTENDED)"],
-    ["BR-FR", "1.4.0.04", "FNFE-MPE (France_RFE)", "les factures dont le vendeur est en France"],
-    ["Schémas XML", "CII D22B, Factur-X 1.09.2, UBL 2.1", "UN/CEFACT, FNFE-MPE, OASIS", "toutes les factures"],
+builders_facts = [
+    "Les règles européennes (EN 16931), Factur-X / ZUGFeRD et françaises, pour CII, UBL et les PDF Factur-X / ZUGFeRD.",
+    "Sans JVM, sans serveur, sans compte ; des codes de sortie et une sortie JSON pour la CI.",
+    "Des factures d'exemple complètes, chacune en échec sur une règle nommée, pour vos tests ([invoice-examples](https://github.com/lintvoice/invoice-examples)).",
+    "Les pages des règles, à donner à vos utilisateurs, avec les détails techniques pour vous.",
 ]
-not_checked_title = "Pas encore vérifié"
-not_checked = [
-    "La validation PDF/A-3 des PDF Factur-X.",
-    "Les règles XRechnung et Peppol BIS : ces factures passent EN 16931 seulement, et le rapport le signale.",
-    "Les règles des profils Factur-X MINIMUM et BASIC : France_RFE 1.4.0.04 ne les fournit pas.",
+builders_button = "Démarrer sur GitHub"
+builders_more = "Les codes de sortie, les jeux de règles et ce qui n'est pas encore vérifié sont dans le [README](https://github.com/lintvoice/lintvoice#readme)."
+open_title = "Tout est ouvert, donc vous pouvez le vérifier"
+open_items = [
+    "Le code est public sur GitHub, sous [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE).",
+    "Les textes des règles sont sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr).",
+    "Les factures d'exemple sont dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.fr)).",
+    "Les règles officielles viennent de leurs sources, aux versions EN 16931 {en16931}, Factur-X {facturx} et BR-FR {brfr}.",
 ]
-examples_title = "Factures d'exemple"
-examples_text = "92 factures Factur-X françaises : une valide, et 91 variantes invalides qui échouent chacune à une règle nommée. Chacune est vérifiée avec les règles officielles. Domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/))."
-examples_link = "Voir les exemples"
 
 [examples]
 title = "Factures électroniques d'exemple, valides et invalides (Factur-X, CII)"

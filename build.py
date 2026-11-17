@@ -53,6 +53,14 @@ def links(text):
     return Markup(LINK.sub(lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', escaped))  # noqa: S704
 
 
+PLACEHOLDER = re.compile(r"\{(\w+)\}")
+
+
+def fill(text, values):
+    """A text's {placeholders} filled with what the build knows (counts, rule versions), then its links."""
+    return links(PLACEHOLDER.sub(lambda m: str(values[m.group(1)]), text))
+
+
 class NotReady(Exception):
     """The site is not ready to go live (--strict)."""
 
@@ -165,13 +173,13 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
         lstrip_blocks=True,
     )
     env.filters["links"] = links
+    env.filters["fill"] = fill
     env.globals["rule_href"] = rulepages.href
     rs = site["rule_sets"]
     common = {
         "site": site,
         "base_url": site["base_url"],
         "rule_chips": [f"EN 16931 {rs['en16931']}", f"Factur-X {rs['facturx']}", f"BR-FR {rs['brfr']}"],
-        "sample_output": (ROOT / "content" / "sample-output.txt").read_text(encoding="utf-8").rstrip("\n"),
         "manifest": manifest,
         "valid": next(e for e in manifest["examples"] if e["status"] == "valid"),
         "invalid": [e for e in manifest["examples"] if e["status"] == "invalid"],
