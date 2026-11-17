@@ -140,7 +140,7 @@ example_codes = ["BR-FR-05", "BR-FR-08", "BR-FR-12", "BR-FR-13", "BR-CO-15", "BR
 filters = "Filter"
 topics_title = "Subjects"
 origin_title = "Origin"
-check_lead = "Got the invoice? Check it: each error is explained there."
+check_lead = "Got the invoice? Check it, and each error comes explained."
 check_button = "Check an invoice"
 versions = "Rules applied: EN 16931 {en16931}, Factur-X {facturx}, BR-FR {brfr}."
 

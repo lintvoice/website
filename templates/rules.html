@@ -9,7 +9,7 @@
     <label for="q">{{ p.search_label }}</label>
     <input id="q" name="{{ p.ui.params.q }}" type="search" placeholder="{{ p.placeholder }}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
   </form>
-  <p class="coverage">{{ p.coverage | replace("{n}", ix.explained | string) | replace("{total}", ix.total | string) }}</p>
+  {% if ix.complete %}<p class="coverage">{{ p.coverage | replace("{n}", ix.explained | string) | replace("{total}", ix.total | string) }}</p>{% endif %}
   <p class="try">{{ p.examples_label }}{% for code in p.example_codes if code in ix.ids %} <a class="code" href="{{ rule_href(code, t.lang) }}">{{ code }}</a>{% endfor %}</p>
 </div>
 <div class="rules-layout">

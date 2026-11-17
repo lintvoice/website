@@ -189,6 +189,7 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
             "total": len(data["explained"]) + len(data["others"]),
             "topics": [(key, [r for r in rules if r["meta"]["topic"] == key]) for key in rulepages.TOPICS],
             "ids": {r["id"] for r in rules},
+            "complete": bool(found),  # every rule of the official files is in the index, not only the explained ones
         }
     for page, paths in pages.items():
         for lang in LANGS:
