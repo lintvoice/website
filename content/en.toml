@@ -34,10 +34,10 @@ check_caption = "A real check, on an example invoice."
 values_title = "lintvoice takes you from an error code to a fixed invoice"
 values = [
     { head = "Check", question = "“Will my invoice pass the rules?”", text = "You know before you send it, by dropping it here. The check runs the official European and French rules, in your browser.", link = "Check an invoice", page = "check", proof = "EN 16931 {en16931}, Factur-X {facturx} and BR-FR {brfr} rules, as published." },
-    { head = "Understand", question = "“BR-FR-10, what does it mean?”", text = "Errors are explained in plain words, with your invoice's values and the reason the rule exists.", link = "See the invoicing rules", page = "rules", proof = "{explained} of {total} rules explained, in English and French. The others follow, family by family." },
-    { head = "Fix", question = "“What do I change, and who has to do it?”", text = "The steps to fix it in your software, an example invoice that shows the error, and the rule's link to send to your software publisher.", link = "See the example invoices", page = "examples", proof = "{examples} example invoices, each failing a named rule, in the public domain." },
+    { head = "Understand", question = "“BR-FR-10, what does it mean?”", text = "You understand what is wrong in your invoice, in plain words, with its own values and the reason the rule exists.", link = "See the invoicing rules", page = "rules", proof = "{explained} of {total} rules explained, in English and French. The others follow, family by family." },
+    { head = "Fix", question = "“What do I change, and who has to do it?”", text = "You know what to change in your software, or what to ask its publisher, with an example invoice that shows the error.", link = "See the example invoices", page = "examples", proof = "{examples} example invoices, each failing a named rule, in the public domain." },
 ]
-proof_title = "A page in plain words, and an example invoice that shows the error"
+proof_title = "Understand the error code, and see what to change"
 proof_sub = "The page says, in plain words, what the rule checks and how to fix it. The example invoice fails that rule, and the error is in red."
 rule_alt = "The top of the BR-CO-15 rule page: its title in plain words, the In short line, what the rule checks and its common causes."
 rule_caption = "The BR-CO-15 rule page."
@@ -55,14 +55,14 @@ formats_label = "Rules and formats"
 formats_now = ["EN 16931, Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, France"]
 formats_next = ["XRechnung, Germany · next step", "Peppol · next step"]
 builders_title = "Building invoicing software?"
-builders_text = "Check your invoices in one command, offline, in your continuous integration."
+builders_text = "Catch an invalid invoice before it goes out, in one command, offline, in your continuous integration."
 builders_code = """uvx lintvoice rules install
 uvx lintvoice check invoices/ --format json"""
 builders_facts = [
     "The European (EN 16931), Factur-X / ZUGFeRD and French rules, for CII, UBL and Factur-X / ZUGFeRD PDFs.",
     "No JVM, no server, no account; exit codes and JSON output for CI.",
     "Complete example invoices, each failing a named rule, for your tests ([invoice-examples](https://github.com/lintvoice/invoice-examples)).",
-    "The rule pages, to give your users, with the technical details for you.",
+    "When one of your users' invoices fails, a link that explains the rule to them, with the technical details for you.",
 ]
 builders_button = "Get started on GitHub"
 builders_more = "The exit codes, the rule sets and what is not checked yet are in the [README](https://github.com/lintvoice/lintvoice#readme)."
@@ -138,7 +138,7 @@ description = "Type an error code (BR-FR-10, BR-CO-15…) or browse by subject. 
 h1 = "Find and understand the e-invoicing rules"
 lead = "Type an error code or a word, or browse by subject."
 values_title = "On each rule page"
-values = [{ head = "In plain words", text = "What the rule checks and why your invoice fails it." }, { head = "How to fix it", text = "The steps in your software, and what to tell its publisher." }, { head = "An example invoice", text = "It fails the rule, with the error in red." }]
+values = [{ head = "Understand the error", text = "What the rule checks and why your invoice fails it, in plain words." }, { head = "Know what to change", text = "The steps in your software, and what to tell its publisher." }, { head = "See the error", text = "On an example invoice that fails the rule, in red." }]
 thumb_alt = "Part of an example invoice: the BR-CO-15 error notice and the wrong total with VAT, in red."
 search_label = "Error code or keyword"
 placeholder = "For example BR-FR-10, SIREN, total with VAT"

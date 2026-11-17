@@ -34,10 +34,10 @@ check_caption = "Une vraie vérification, sur une facture d'exemple."
 values_title = "lintvoice vous guide d'un code d'erreur jusqu'à une facture corrigée"
 values = [
     { head = "Vérifiez", question = "« Ma facture va-t-elle passer les règles ? »", text = "Vous le savez avant de l'envoyer, en la déposant ici. La vérification applique les règles officielles européennes et françaises, dans votre navigateur.", link = "Vérifier une facture", page = "check", proof = "Règles EN 16931 {en16931}, Factur-X {facturx} et BR-FR {brfr}, telles que publiées." },
-    { head = "Comprenez", question = "« BR-FR-10, qu'est-ce que ça veut dire ? »", text = "Les erreurs sont expliquées en mots simples, avec les valeurs de votre facture et la raison d'être de la règle.", link = "Voir les règles de facturation", page = "rules", proof = "{explained} règles expliquées sur {total}, en français et en anglais. Les autres arrivent famille par famille." },
-    { head = "Corrigez", question = "« Que dois-je changer, et qui doit le faire ? »", text = "Les étapes pour corriger dans votre logiciel, une facture d'exemple qui montre l'erreur, et le lien de la règle à envoyer à votre éditeur.", link = "Voir les exemples de factures", page = "examples", proof = "{examples} factures d'exemple, chacune en échec sur une règle nommée, dans le domaine public." },
+    { head = "Comprenez", question = "« BR-FR-10, qu'est-ce que ça veut dire ? »", text = "Vous comprenez ce qui ne va pas dans votre facture, en mots simples, avec ses propres valeurs et la raison d'être de la règle.", link = "Voir les règles de facturation", page = "rules", proof = "{explained} règles expliquées sur {total}, en français et en anglais. Les autres arrivent famille par famille." },
+    { head = "Corrigez", question = "« Que dois-je changer, et qui doit le faire ? »", text = "Vous savez quoi changer dans votre logiciel, ou quoi demander à son éditeur, avec une facture d'exemple qui montre l'erreur.", link = "Voir les exemples de factures", page = "examples", proof = "{examples} factures d'exemple, chacune en échec sur une règle nommée, dans le domaine public." },
 ]
-proof_title = "Une page en mots simples, et une facture d'exemple qui montre l'erreur"
+proof_title = "Comprenez le code d'erreur, et voyez ce qu'il faut changer"
 proof_sub = "La page dit, en mots simples, ce que vérifie la règle et comment corriger. La facture d'exemple échoue à cette règle, et l'erreur y est en rouge."
 rule_alt = "Haut de la page de la règle BR-CO-15 : son titre en mots simples, la phrase En bref, ce que vérifie la règle et ses causes fréquentes."
 rule_caption = "La page de la règle BR-CO-15."
@@ -55,14 +55,14 @@ formats_label = "Règles et formats"
 formats_now = ["EN 16931, l'Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, la France"]
 formats_next = ["XRechnung, l'Allemagne · prochaine étape", "Peppol · prochaine étape"]
 builders_title = "Vous développez un logiciel de facturation ?"
-builders_text = "Vérifiez vos factures en une commande, hors ligne, dans votre intégration continue."
+builders_text = "Repérez une facture invalide avant qu'elle ne parte, en une commande, hors ligne, dans votre intégration continue."
 builders_code = """uvx lintvoice rules install
 uvx lintvoice check factures/ --format json"""
 builders_facts = [
     "Les règles européennes (EN 16931), Factur-X / ZUGFeRD et françaises, pour CII, UBL et les PDF Factur-X / ZUGFeRD.",
     "Sans JVM, sans serveur, sans compte ; des codes de sortie et une sortie JSON pour la CI.",
     "Des factures d'exemple complètes, chacune en échec sur une règle nommée, pour vos tests ([invoice-examples](https://github.com/lintvoice/invoice-examples)).",
-    "Les pages des règles, à donner à vos utilisateurs, avec les détails techniques pour vous.",
+    "Quand une facture de vos utilisateurs échoue, un lien qui leur explique la règle, avec les détails techniques pour vous.",
 ]
 builders_button = "Démarrer sur GitHub"
 builders_more = "Les codes de sortie, les jeux de règles et ce qui n'est pas encore vérifié sont dans le [README](https://github.com/lintvoice/lintvoice#readme)."
@@ -138,7 +138,7 @@ description = "Tapez un code d'erreur (BR-FR-10, BR-CO-15…) ou parcourez par s
 h1 = "Trouvez et comprenez les règles de la facture électronique"
 lead = "Tapez un code d'erreur ou un mot, ou parcourez par sujet."
 values_title = "Sur chaque page de règle"
-values = [{ head = "En mots simples", text = "Ce que vérifie la règle et pourquoi votre facture y échoue." }, { head = "Comment corriger", text = "Les étapes dans votre logiciel, et quoi dire à son éditeur." }, { head = "Une facture d'exemple", text = "Elle échoue à la règle, l'erreur en rouge." }]
+values = [{ head = "Comprendre l'erreur", text = "Ce que vérifie la règle et pourquoi votre facture y échoue, en mots simples." }, { head = "Savoir quoi changer", text = "Les étapes dans votre logiciel, et quoi dire à son éditeur." }, { head = "Voir l'erreur", text = "Sur une facture d'exemple qui échoue à la règle, en rouge." }]
 thumb_alt = "Extrait d'une facture d'exemple : l'avis d'erreur BR-CO-15 et le total TTC faux, en rouge."
 search_label = "Code d'erreur ou mot-clé"
 placeholder = "Par exemple BR-FR-10, SIREN, total TTC"
