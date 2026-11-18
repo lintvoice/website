@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+{# What the site offers beyond the check, as the rules index's subject cards: each card says the visitor's gain, then
+   the place as its proof. #}
+<div class="band">
+  <h1>{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
+  <p class="brief">{{ p.brief }}</p>
+</div>
+<section class="section" aria-label="{{ p.h1 }}">
+  <ul class="subject-grid res-grid">
+    <li><a href="{{ links.examples }}">{{ icon("edit") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="n">{{ p.examples_link }} →</span></a></li>
+    {% if manifest.get('annotated') %}<li><a href="{{ files_href }}{{ manifest.annotated.pdf }}" download="{{ t.file_prefix }}-{{ t.file_annotated }}.pdf">{{ icon("data--structured") }}<span class="name">{{ p.annotated_head }}</span><span class="line">{{ p.annotated_text }}</span><span class="n">{{ p.annotated_link }} ↓</span></a></li>{% endif %}
+    <li><a href="{{ links.glossary }}">{{ icon("list--bulleted") }}<span class="name">{{ p.glossary_head }}</span><span class="line">{{ p.glossary_text }}</span><span class="n">{{ p.glossary_link }} →</span></a></li>
+    <li><a href="{{ links.home }}#quick-start">{{ icon("terminal") }}<span class="name">{{ p.dev_head }}</span><span class="line">{{ p.dev_text }}</span><span class="n">{{ p.dev_link }} →</span></a></li>
+  </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="band">
+  <h1>{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
+  <p class="brief">{{ p.brief }}</p>
+</div>
+<section class="section prose" aria-labelledby="about-why">
+  <h2 id="about-why">{{ p.why_head }}</h2>
+  {% for para in p.why %}<p>{{ para | links }}</p>{% endfor %}
+</section>
+<section class="section tint prose" aria-labelledby="about-open">
+  <h2 id="about-open">{{ p.open_head }}</h2>
+  <ul>{% for item in p.open %}<li>{{ item | links }}</li>{% endfor %}</ul>
+</section>
+<section class="section prose" aria-labelledby="about-who">
+  <h2 id="about-who">{{ p.who_head }}</h2>
+  {% for para in p.who %}<p{% if para.startswith("[") %} class="placeholder"{% endif %}>{{ para | links }}</p>{% endfor %}
+  <p>{{ p.legal_line }} <a href="{{ links.legal }}">{{ p.legal_link }}</a>.</p>
+  <p>{{ p.contact_line }} <a href="mailto:hello@lintvoice.com">hello@lintvoice.com</a>. {{ p.contact_after }}</p>
+</section>
+{% endblock %}

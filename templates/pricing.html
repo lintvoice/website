@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block body %}
+{# A pricing page with no price until there is one (decided 2026-11-18): what is free and why, what the tool does not do
+   yet, what could become paid and why, and an open question to the visitor. #}
+{% set ix = rules_index if rules_index is defined else none %}
+{% set counts = dict(explained=ix.explained if ix else "", total=ix.total if ix else "", max_lines=300) %}
+<div class="band">
+  <h1>{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
+  <p class="brief">{{ p.brief }}</p>
+</div>
+{% for block in p.blocks %}
+<section class="section{% if loop.index is even %} tint{% endif %}" id="{{ block.key }}" aria-labelledby="{{ block.key }}-title">
+  <h2 id="{{ block.key }}-title">{{ block.head }}</h2>
+  {% if block.get('sub') %}<p class="sub">{{ block.sub | fill(counts) }}</p>{% endif %}
+  <ul class="offer">
+  {% for item in block["items"] %}
+    <li><strong>{{ item.what | fill(counts) }}</strong>{% if item.get('why') %}<span class="why">{{ item.why | fill(counts) }}</span>{% endif %}{% if item.get('ask') %}<span class="why"><a href="mailto:hello@lintvoice.com?subject={{ item.ask | urlencode }}">{{ p.ask_link }}</a></span>{% endif %}</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+<section class="section" id="price" aria-labelledby="price-title">
+  <h2 id="price-title">{{ p.price_head }}</h2>
+  {% for para in p.price %}<p>{{ para | links }}</p>{% endfor %}
+  <p><a class="btn primary" href="mailto:hello@lintvoice.com?subject={{ p.mail_subject | urlencode }}">{{ p.price_button }}</a></p>
+  <p class="proof">{{ p.price_after | links }}</p>
+</section>
+{% endblock %}

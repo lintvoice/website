@@ -36,6 +36,10 @@ LANGS = ("en", "fr")
 PAGES = {
     "home": {"en": "/", "fr": "/fr/"},
     "examples": {"en": "/examples/", "fr": "/fr/exemples/"},
+    "resources": {"en": "/resources/", "fr": "/fr/ressources/"},
+    "glossary": {"en": "/glossary/", "fr": "/fr/glossaire/"},
+    "pricing": {"en": "/pricing/", "fr": "/fr/tarifs/"},
+    "about": {"en": "/about/", "fr": "/fr/a-propos/"},
     "legal": {"en": "/legal/", "fr": "/fr/mentions-legales/"},
 }
 FILES_HREF = "/examples/fr/"  # the example files, shared by both languages

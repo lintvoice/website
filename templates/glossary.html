@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+{# One page, grouped by subject; each term has an anchor shared by both languages (/glossary/#peppol, /fr/glossaire/#peppol),
+   so a rule page, a post or an assistant can point at one word. A rule without a page shows as text. #}
+{% set ids = rules_index.ids if rules_index is defined else [] %}
+<div class="band">
+  <h1>{{ icon("list--bulleted") }}{{ p.h1 }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
+  <p class="brief">{{ p.brief }}</p>
+  <ul class="jump">{% for g in p.groups %}<li><a href="#{{ g.key }}">{{ g.name }}</a></li>{% endfor %}</ul>
+</div>
+{% for g in p.groups %}
+<section class="section{% if loop.index is even %} tint{% endif %}" id="{{ g.key }}" aria-labelledby="{{ g.key }}-title">
+  <h2 id="{{ g.key }}-title">{{ g.name }}</h2>
+  <p class="sub">{{ g.line }}</p>
+  <dl class="glossary">
+  {% for term in p.get('terms', []) if term.group == g.key %}
+    <dt id="{{ term.id }}">{{ term.name }}{% if term.get('other') %}<span class="other" lang="{{ "en" if t.lang == "fr" else "fr" }}">{{ term.other }}</span>{% endif %}</dt>
+    <dd>
+      <p>{{ term.text | links }}</p>
+      <p class="meta">{% if term.get('rules') %}{{ p.rules_label }} {% for r in term.rules %}{% if r in ids %}<a class="idm" href="{{ rule_href(r, t.lang) }}">{{ r }}</a>{% else %}<span class="idm">{{ r }}</span>{% endif %}{% if not loop.last %}, {% endif %}{% endfor %} · {% endif %}{{ p.source_label }} <a href="{{ term.source }}">{{ term.source_name }}</a></p>
+    </dd>
+  {% endfor %}
+  </dl>
+</section>
+{% endfor %}
+<p class="foot standard">{{ p.foot | links }}</p>
+{% endblock %}

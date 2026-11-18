@@ -496,3 +496,22 @@ a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decora
 .guide h2{margin-top:var(--sp-12)}
 .guide .table-wrap{margin:0 0 var(--sp-4)}
 .guide th,.guide td{vertical-align:top}
+
+/* ---------- resources, glossary, pricing, about: the offer's own pages ---------- */
+.section>.proof{font-size:var(--fs-sm);color:var(--muted)}
+.jump{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-4);list-style:none;padding:0;margin:var(--sp-4) 0 0;font-size:var(--fs-sm)}
+.glossary{max-width:46rem}
+.glossary dt{font-weight:600;font-size:var(--fs-lg);margin-top:var(--sp-6);scroll-margin-top:5rem}
+.glossary dt .other{font-weight:400;font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-2)}
+.glossary dd{margin:var(--sp-1) 0 0}
+.glossary dd p{margin:0 0 var(--sp-2)}
+.glossary .meta{font-size:var(--fs-sm);color:var(--muted)}
+.glossary .meta .idm{font-family:var(--font-mono)}
+.offer{list-style:none;padding:0;margin:0;max-width:46rem}
+.offer li{padding:var(--sp-3) 0;border-top:var(--bw-hair) solid var(--line)}
+.offer li:first-child{border-top:0}
+.offer strong{display:block}
+.offer .why{display:block;font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)}
+.placeholder{border:var(--bw-hair) dashed var(--warn);padding:var(--sp-3);border-radius:var(--r-sm)}
+.res-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:56rem}
+@media (max-width:640px){.res-grid{grid-template-columns:1fr}}

@@ -16,6 +16,10 @@ file_prefix = "example-invoice"  # downloaded file names: example-invoice-valid.
 file_valid = "valid"
 file_annotated = "annotated"
 file_fixed = "fixed"
+nav_resources = "Resources"
+nav_pricing = "Pricing"
+footer_about = "About"
+footer_glossary = "Glossary"
 nav_rules = "Invoicing rules"
 nav_github = "GitHub"
 cta = "Quick start"
@@ -505,3 +509,173 @@ attachment-too-large = "The file attached to this PDF is too large to be checked
 
 [guide]
 checked_line = "Facts checked on"
+
+[resources]
+title = "Resources: example invoices, an annotated invoice, a glossary"
+description = "Example e-invoices to download, an annotated invoice to learn to read its data, and a glossary of e-invoicing words in English and French."
+h1 = "Resources"
+brief = "To see an error on an invoice, learn to read an e-invoice and understand its words."
+examples_head = "See the error on an invoice"
+examples_text = "One valid Factur-X invoice, and {n} variants that each fail one named rule. To understand an error, or to test invoicing software or a validator."
+examples_link = "The example invoices"
+examples_proof = "XML and a readable PDF, in the public domain (CC0)."
+examples_zip = "Download all (zip)"
+annotated_head = "Learn to read an e-invoice"
+annotated_text = "The valid example invoice, annotated: each piece of data carries its number in the European standard, the same as in error messages and on our rule pages. BT-1 is the invoice number, BT-112 the total with VAT."
+annotated_link = "The annotated invoice (PDF)"
+glossary_head = "Understand the words of e-invoicing"
+glossary_text = "Factur-X, approved platform, billing framework… Each word explained simply, with its French name, its official source and the rules that check it."
+glossary_link = "The glossary"
+dev_head = "For developers: the same rules in your tests"
+dev_text = "lintvoice checks your invoices on the command line, offline and in your continuous integration, with the same rules as this site. invoice-examples writes the same example invoices, for your generator's tests."
+dev_link = "Start in one command"
+
+
+[about]
+title = "About lintvoice"
+description = "Why lintvoice exists, what it does, what is open, and who publishes it."
+h1 = "About lintvoice"
+brief = "lintvoice explains the official e-invoicing rules in plain words, so anyone can fix their invoice."
+why_head = "Why lintvoice exists"
+why = [
+    "E-invoicing between businesses is becoming mandatory, in France as in Germany. In France, invoices go through approved platforms that check them against official rules. An invoice that fails one of them can be rejected with a code like BR-FR-10. For the person who sent it, that code says neither what is wrong nor how to fix it.",
+    "lintvoice explains the rules in plain words, starting with the French ones, shows them on an example invoice and says how to fix the error. You can check your invoice before sending it, in your browser. Developers who produce these invoices run the same rules offline, in their continuous integration, and test their software with the same example invoices.",
+    "lintvoice starts with France and the European standard. Germany and the Peppol network (Belgium, then the United Kingdom) come next.",
+]
+open_head = "Open and verifiable"
+open = [
+    "The code is public on [GitHub](https://github.com/lintvoice), under the MIT licence.",
+    "The rule texts are under CC BY-SA 4.0, and the example invoices in the public domain (CC0).",
+    "Every page cites the official rules with their source and version.",
+    "The invoice you check on this site never leaves your computer.",
+    "We run the official rules; we do not promise the result.",
+]
+who_head = "Who makes lintvoice"
+who = [
+    "[To come: the name of the person who makes lintvoice, and one sentence on why.]",
+]
+legal_line = "lintvoice is published by AllGood Services SAS, a French company. Its details are in the"
+legal_link = "legal notice"
+contact_line = "A question, a comment, an idea? Write to"
+contact_after = "We'll be glad to hear from you."
+
+[pricing]
+title = "Pricing: what is free, and what could become paid"
+description = "What lintvoice offers for free and why, what it does not do yet, and the paid services we are considering, with no price for now. Tell us what would help you."
+h1 = "Pricing"
+brief = "What is free and why, what lintvoice does not do yet, and what could become paid. There is no price yet: tell us what would help you."
+ask_link = "I'd be interested"
+price_head = "The price: unknown at this stage"
+price = [
+    "We don't know yet what these services would cost, or which of them will exist. To decide, we need to know what would help you, and at what price.",
+    "One message is enough: what you would need, for how many invoices, and what you would be ready to pay.",
+]
+mail_subject = "lintvoice pricing"
+price_button = "Write to us"
+price_after = "Your messages help us make lintvoice more useful. You can also open a discussion on [GitHub](https://github.com/lintvoice)."
+
+[[pricing.blocks]]
+key = "gratuit"
+head = "Free, and why"
+sub = "Everything that runs on your computer, and everything we publish."
+
+[[pricing.blocks.items]]
+what = "Checking an invoice on this site, with no account"
+why = "The check runs in your browser, so your invoice is sent nowhere and costs us nothing to check."
+
+[[pricing.blocks.items]]
+what = "The rule pages and the example invoices"
+why = "The rule texts are under CC BY-SA 4.0 and the example invoices in the public domain (CC0). What is published under these licences stays free to reuse."
+
+[[pricing.blocks.items]]
+what = "The lintvoice command-line tool"
+why = "It checks your invoices offline and in your continuous integration. Its code is open source under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE), and code published under it stays free."
+
+[[pricing.blocks]]
+key = "pas-encore"
+head = "What lintvoice does not do yet"
+sub = "So you know what to expect."
+
+[[pricing.blocks.items]]
+what = "A page for every rule"
+why = "{explained} rules explained out of {total} today, starting with the French ones. The others are checked, with their official message."
+
+[[pricing.blocks.items]]
+what = "The German rules (XRechnung) and those of the Peppol network"
+why = "These invoices are checked against the European standard only, and the report says so. Germany is our next step."
+
+[[pricing.blocks.items]]
+what = "The PDF's archiving format (PDF/A-3)"
+why = "lintvoice checks the invoice's data, not yet the format of the PDF that holds it."
+
+[[pricing.blocks.items]]
+what = "Invoices of more than {max_lines} lines, in the browser"
+why = "Beyond that, the check would be too slow in a web page. The command-line tool has no such limit."
+
+[[pricing.blocks.items]]
+what = "Knowing whether a SIREN exists, or whether your client will receive the invoice"
+why = "The official rules check the form of the data, not whether it is real. Only your client's platform knows whether the invoice reaches it."
+
+[[pricing.blocks]]
+key = "payant"
+head = "What could become paid, and why"
+sub = "Services that would run on our servers, in Europe, and cost us to run. None exists today."
+
+[[pricing.blocks.items]]
+what = "Being told when the rules change"
+why = "The European standard's rules have had a new version twice a year since 2024, and the French rules went through five versions in two months in 2026. We would check your test invoices against each new version as soon as it is published, and tell you what no longer passes, and why."
+ask = "Interest: rule change alerts"
+
+[[pricing.blocks.items]]
+what = "Checking with nothing to install, through an API"
+why = "For software that cannot run the command-line tool, and for invoices too large for the browser. Your invoices would then go through our servers, with a written commitment on what we do with them."
+ask = "Interest: checking API"
+
+[[pricing.blocks.items]]
+what = "A workspace for accounting firms"
+why = "Checking many clients' invoices at once, with a report per client and checks that go beyond the official rules, such as whether a SIREN or a VAT number exists. These checks query public registers, so they cannot run in your browser alone."
+ask = "Interest: accounting firm workspace"
+
+[glossary]
+title = "E-invoicing glossary: Factur-X, Peppol, approved platform, SIREN…"
+description = "The words of e-invoicing explained simply, in English and French, with their official source and the rules that check them."
+h1 = "Glossary"
+brief = "The words of e-invoicing, explained simply. Each with its French name, its official source and the rules that check it."
+rules_label = "Rules:"
+source_label = "Source:"
+foot = "This glossary cites public sources: impots.gouv.fr, service-public.fr, FNFE-MPE, Peppol and the European Commission. A mistake, a missing word? Write to us."
+
+[[glossary.groups]]
+key = "formats"
+name = "Formats and standards"
+line = "What an e-invoice is, and the formats it is written in."
+
+[[glossary.groups]]
+key = "reforme"
+name = "The French reform and its actors"
+line = "Who sends, who receives, who checks."
+
+[[glossary.groups]]
+key = "identifiants"
+name = "Identifiers and mentions"
+line = "What the invoice must say about you and your client."
+
+[[glossary.groups]]
+key = "regles"
+name = "Rules and checks"
+line = "How an invoice is checked, and what the error codes mean."
+
+[[glossary.groups]]
+key = "tva"
+name = "VAT"
+line = "The VAT categories each line carries, and the special cases."
+
+[[glossary.groups]]
+key = "public"
+name = "Public sector"
+line = "What it takes to invoice the State, local authorities and hospitals."
+
+[[glossary.groups]]
+key = "allemagne"
+name = "Germany"
+line = "The words to know to invoice in Germany."

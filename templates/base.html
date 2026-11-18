@@ -43,7 +43,8 @@
   <nav class="site-nav" aria-label="{{ t.nav_label }}">
     <a class="brand" href="{{ links.home }}"><img class="wm-light" src="/static/logo/lintvoice-wordmark-light.svg" alt="lintvoice" width="96" height="22"><img class="wm-dark" src="/static/logo/lintvoice-wordmark-dark.svg" alt="lintvoice" width="96" height="22"></a>
     {% if links.rules is defined %}<a class="wide" href="{{ links.rules }}">{{ t.nav_rules }}</a>{% endif %}
-    <a class="wide" href="{{ links.examples }}">{{ t.nav_examples }}</a>
+    <a class="wide" href="{{ links.resources }}">{{ t.nav_resources }}</a>
+    <a class="wide" href="{{ links.pricing }}">{{ t.nav_pricing }}</a>
   </nav>
   <div class="actions">
     <a class="lang wide" href="{{ other.href }}" hreflang="{{ other.lang }}" lang="{{ other.lang }}" title="{{ t.switch_title }}">{{ t.switch_label }}</a>
@@ -52,7 +53,8 @@
     <details class="menu narrow"><summary>{{ t.menu_label }}</summary>
       <div class="menu-panel">
         {% if links.rules is defined %}<a href="{{ links.rules }}">{{ t.nav_rules }}</a>{% endif %}
-        <a href="{{ links.examples }}">{{ t.nav_examples }}</a>
+        <a href="{{ links.resources }}">{{ t.nav_resources }}</a>
+        <a href="{{ links.pricing }}">{{ t.nav_pricing }}</a>
         <a href="{{ other.href }}" hreflang="{{ other.lang }}" lang="{{ other.lang }}">{{ t.switch_title }}</a>
         <button class="toggle" type="button" data-dark="{{ t.theme_dark }}" data-light="{{ t.theme_light }}">{{ t.theme_dark }}</button>
       </div>
@@ -65,7 +67,8 @@
 </main>
 <footer class="foot">
   <p>{{ t.footer_disclaimer }}</p>
-  <p>{% block rights %}{{ t.footer_rights | links }}{% endblock %} <a href="https://github.com/lintvoice">GitHub</a> · <a href="{{ links.legal }}">{{ t.footer_legal }}</a></p>
+  <p class="foot-links"><a href="{{ links.about }}">{{ t.footer_about }}</a> · <a href="{{ links.pricing }}">{{ t.nav_pricing }}</a> · <a href="{{ links.glossary }}">{{ t.footer_glossary }}</a> · <a href="{{ links.examples }}">{{ t.nav_examples }}</a> · <a href="https://github.com/lintvoice">GitHub</a> · <a href="{{ links.legal }}">{{ t.footer_legal }}</a></p>
+  <p>{% block rights %}{{ t.footer_rights | links }}{% endblock %}</p>
 </footer>
 </div>
 <script>
