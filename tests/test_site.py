@@ -29,6 +29,19 @@ EXTERNAL = (
     "https://portail.chorus-pro.gouv.fr/",  # AIFE's documents, the sources of a guide
     "https://facturation.chorus-pro.gouv.fr/",  # the French e-invoicing directory
     "https://www.boutique.afnor.org/",  # AFNOR's page for a French standard, a source of a guide
+    # the glossary's official sources
+    "https://eur-lex.europa.eu/",
+    "https://www.legifrance.gouv.fr/",
+    "https://fnfe-mpe.org/",
+    "https://www.ferd-net.de/",
+    "https://ec.europa.eu/",
+    "https://peppol.org/",
+    "https://docs.peppol.eu/",
+    "https://entreprendre.service-public.gouv.fr/",
+    "https://bofip.impots.gouv.fr/",
+    "https://www.collectivites-locales.gouv.fr/",
+    "https://xeinkauf.de/",
+    "https://www.insee.fr/",
 )
 FORBIDDEN = re.compile(r"certif|complian|conform|\bfake|fixture", re.I)  # we help check; we never certify
 QUOTED_CODES = ("FACT_NON_CONFORME",)  # Chorus Pro's reason codes, quoted on a guide as they arrive: not our wording

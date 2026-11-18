@@ -679,3 +679,301 @@ line = "What it takes to invoice the State, local authorities and hospitals."
 key = "allemagne"
 name = "Germany"
 line = "The words to know to invoice in Germany."
+
+[[glossary.terms]]
+id = "facture-electronique"
+group = "formats"
+name = "E-invoice"
+other = "Facture électronique"
+text = "An invoice issued, sent and received as structured data that software reads without retyping. A plain PDF or a scan is not one. In France it uses a format set by ministerial order and goes through an approved platform."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000053576899"
+source_name = "French tax code, art. 289 bis"
+
+[[glossary.terms]]
+id = "format-structure"
+group = "formats"
+name = "Structured format"
+other = "Format structuré"
+text = "A file where each piece of information (number, date, amount, VAT…) sits in a named field, XML for the French formats, so that software can read it directly."
+source = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32014L0055"
+source_name = "Directive 2014/55/EU, art. 2"
+
+[[glossary.terms]]
+id = "factur-x"
+group = "formats"
+name = "Factur-X"
+text = "A Franco-German hybrid format: a PDF a person reads, carrying an XML file (CII) that software reads. French law accepts it as the \"mixed format\" without naming it. Current version: 1.09.2, of 4 August 2026."
+source = "https://fnfe-mpe.org/factur-x/"
+source_name = "FNFE-MPE"
+
+[[glossary.terms]]
+id = "profil-factur-x"
+group = "formats"
+name = "Factur-X profile"
+other = "Profil Factur-X"
+text = "How much data the XML of a Factur-X carries, from the lightest to the fullest: MINIMUM, BASIC WL, BASIC, EN 16931 and EXTENDED. In France, the law recognises as an e-invoice the EN 16931 profile and EXTENDED's French subset, called EXTENDED-CTC-FR."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054606107"
+source_name = "French tax code, annex IV, art. 41 septies C"
+
+[[glossary.terms]]
+id = "zugferd"
+group = "formats"
+name = "ZUGFeRD"
+text = "Factur-X's German name, technically identical, published by FeRD with FNFE-MPE. Version 2.5.2, effective since 1 September 2026."
+source = "https://www.ferd-net.de/en/downloads/publications/details/zugferd-252-english"
+source_name = "FeRD"
+
+[[glossary.terms]]
+id = "ubl"
+group = "formats"
+name = "UBL"
+text = "An XML language for business documents (invoice, credit note, order…) published by OASIS. It is one of the two syntaxes of the European standard (UBL 2.1), used notably on the Peppol network."
+source = "https://ec.europa.eu/digital-building-blocks/sites/display/DIGITAL/Compliance+with+eInvoicing+standard"
+source_name = "European Commission"
+
+[[glossary.terms]]
+id = "cii"
+group = "formats"
+name = "CII"
+text = "An XML invoice format published by the United Nations (UN/CEFACT). It is the other syntax of the European standard, and the XML inside a Factur-X."
+source = "https://ec.europa.eu/digital-building-blocks/sites/display/DIGITAL/Navigating%2Bthe%2BeInvoicing%2Bstandard%2Bdocumentation"
+source_name = "European Commission"
+
+[[glossary.terms]]
+id = "en-16931"
+group = "formats"
+name = "EN 16931, the European standard"
+other = "EN 16931, la norme européenne"
+text = "The European standard that lists the information an e-invoice carries (the business terms) and the rules that link them, whatever the syntax, UBL or CII. A new edition, EN 16931-1:2026, came out in May 2026; the 2017 edition stays accepted during the transition."
+rules = ["BR-CO-10", "BR-CO-15"]
+source = "https://ec.europa.eu/digital-building-blocks/sites/display/DIGITAL/Navigating%2Bthe%2BeInvoicing%2Bstandard%2Bdocumentation"
+source_name = "European Commission"
+
+[[glossary.terms]]
+id = "pdf-a-3"
+group = "formats"
+name = "PDF/A-3"
+text = "A PDF variant built for long-term archiving, which lets files be attached. Factur-X uses it to carry its XML, and French law requires it for the readable part of the mixed format."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054606107"
+source_name = "French tax code, annex IV, art. 41 septies C"
+
+[[glossary.terms]]
+id = "peppol"
+group = "formats"
+name = "Peppol"
+text = "An international network for exchanging business documents (invoices, orders) between authorised providers, called \"access points\", under common rules set by the OpenPeppol association. In France the DGFiP has been the Peppol Authority since 8 July 2025, and a business reaches Peppol through its provider."
+source = "https://peppol.org/learn-more/country-profiles/france/"
+source_name = "OpenPeppol"
+
+[[glossary.terms]]
+id = "calendrier"
+group = "reforme"
+name = "The reform's calendar"
+other = "Calendrier de la réforme"
+text = "Since 1 September 2026, every VAT-registered business established in France must be able to receive e-invoices. Large and mid-sized companies must also issue them since that date, small businesses and micro-businesses from 1 September 2027. E-reporting follows the same calendar."
+source = "https://entreprendre.service-public.gouv.fr/vosdroits/F39785"
+source_name = "service-public.fr"
+
+[[glossary.terms]]
+id = "plateforme-agreee"
+group = "reforme"
+name = "Approved platform"
+other = "Plateforme agréée (PA)"
+text = "A private provider registered by the French tax administration, formerly called PDP. A business goes through one to issue, send and receive its e-invoices, and it passes the required data to the administration. The list is published on impots.gouv.fr. The official English name is not verified."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000053576899"
+source_name = "French tax code, art. 289 bis"
+
+[[glossary.terms]]
+id = "ppf"
+group = "reforme"
+name = "Public invoicing portal"
+other = "Portail public de facturation (PPF)"
+text = "A public service first planned to exchange invoices too. That is no longer the case: all invoices go through approved platforms, and the texts amended in 2026 no longer name the PPF. The State keeps the central directory and receives the data."
+source = "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054499487"
+source_name = "Decree 2026-677"
+
+[[glossary.terms]]
+id = "annuaire"
+group = "reforme"
+name = "Directory"
+other = "Annuaire"
+text = "A register kept by the State that shows, for each business, its approved platform and the electronic address to send its invoices to. Platforms keep it up to date, so the sender does not need to know the buyer's platform."
+rules = ["BR-FR-12", "BR-FR-13", "BR-FR-21"]
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000053576899"
+source_name = "French tax code, art. 289 bis"
+
+[[glossary.terms]]
+id = "e-reporting"
+group = "reforme"
+name = "E-reporting"
+text = "Sending the tax administration, through the approved platform, data on sales that are not e-invoiced (sales to consumers, transactions with other countries), and payment data for some services."
+source = "https://bofip.impots.gouv.fr/bofip/13901-PGP.html"
+source_name = "BOFiP"
+
+[[glossary.terms]]
+id = "statuts"
+group = "reforme"
+name = "Lifecycle statuses"
+other = "Statuts du cycle de vie"
+text = "The steps of an invoice that platforms exchange and report to the administration. The law sets four: deposit (the issuer's platform accepts the invoice), rejection (a platform blocks it), refusal (the buyer disputes it) and collection (the seller has been paid, for operations where VAT is due on payment)."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054606169"
+source_name = "French tax code, annex IV, art. 41 septies G"
+
+[[glossary.terms]]
+id = "siren"
+group = "identifiants"
+name = "SIREN number"
+other = "SIREN"
+text = "The 9-digit number that identifies the business itself, given at registration. Under the reform, the buyer's SIREN must also appear on the invoice."
+rules = ["BR-FR-10", "BR-FR-11", "BR-FR-32", "BR-FR-09"]
+source = "https://entreprendre.service-public.gouv.fr/vosdroits/F31190"
+source_name = "service-public.fr"
+
+[[glossary.terms]]
+id = "siret"
+group = "identifiants"
+name = "SIRET number"
+other = "SIRET"
+text = "The 14-digit number of each establishment (place of business): the 9 digits of the SIREN, followed by 5 digits for the establishment."
+rules = ["BR-FR-09"]
+source = "https://www.insee.fr/fr/metadonnees/definition/c1841"
+source_name = "Insee"
+
+[[glossary.terms]]
+id = "tva-intracommunautaire"
+group = "identifiants"
+name = "Intra-Community VAT number"
+other = "Numéro de TVA intracommunautaire"
+text = "The business's VAT number, recognised across the European Union. In France it is FR, then 2 digits, then the SIREN. It can be checked on the EU's VIES service."
+rules = ["BR-CO-09", "BR-S-02"]
+source = "https://entreprendre.service-public.gouv.fr/vosdroits/F31190"
+source_name = "service-public.fr"
+
+[[glossary.terms]]
+id = "mentions-obligatoires"
+group = "identifiants"
+name = "Mandatory invoice details"
+other = "Mentions obligatoires"
+text = "The information the law requires on every invoice: the parties, a unique number, the date, the details of the goods or services, the VAT rates and amounts, etc. The list is in article 242 nonies A of annex II of the French tax code."
+rules = ["BR-FR-05"]
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000050811276"
+source_name = "French tax code, annex II, art. 242 nonies A"
+
+[[glossary.terms]]
+id = "nouvelles-mentions"
+group = "identifiants"
+name = "The four new mandatory details"
+other = "Les quatre nouvelles mentions"
+text = "The buyer's SIREN; the delivery address, if it differs from the buyer's; whether the sale is goods, services or both; and the seller's option to pay VAT on debits (when invoicing rather than when paid), if chosen. They follow the reform's calendar: since 1 September 2026, or from 1 September 2027 for small businesses and micro-businesses."
+rules = ["BR-FR-11"]
+source = "https://entreprendre.service-public.gouv.fr/vosdroits/F31808"
+source_name = "service-public.fr"
+
+[[glossary.terms]]
+id = "cadre-de-facturation"
+group = "regles"
+name = "Business process type"
+other = "Cadre de facturation"
+text = "A code at the top of the invoice that tells the platform which case applies. The letter means goods (B), services (S) or both (M); the digit gives the scenario, for example 2 for an invoice already paid, 4 for a final invoice after a deposit. Its business term is BT-23; \"billing framework\" is a literal translation of the French name."
+rules = ["BR-FR-08", "BR-FR-CO-09", "BR-FR-CO-08"]
+source = "https://github.com/fnfempe/France_RFE"
+source_name = "FNFE-MPE, France_RFE rules 1.4.0.04"
+
+[[glossary.terms]]
+id = "terme-metier"
+group = "regles"
+name = "Business term (BT)"
+other = "Terme métier (BT)"
+text = "A piece of information defined by the European standard, numbered \"BT-n\": BT-1 is the invoice number, BT-112 the total with VAT. Groups of information are \"BG-n\", such as BG-25, the invoice line. The same term sits in a different place in UBL and in CII."
+source = "https://github.com/ConnectingEurope/eInvoicing-EN16931"
+source_name = "CEN, EN 16931 rules"
+
+[[glossary.terms]]
+id = "regle-de-gestion"
+group = "regles"
+name = "Business rule (BR)"
+other = "Règle de gestion (BR)"
+text = "A rule saying what an invoice must contain or respect. BR-nn rules check that something is present; BR-CO rules link several fields, often by a calculation; BR-S, BR-E… apply per VAT category; BR-FR are the French reform's rules, published by FNFE-MPE."
+rules = ["BR-CO-10", "BR-FR-10"]
+source = "https://github.com/fnfempe/France_RFE"
+source_name = "FNFE-MPE and CEN"
+
+[[glossary.terms]]
+id = "schematron"
+group = "regles"
+name = "Schematron"
+text = "For developers: a rule language for XML, where each rule is an XPath test with a message. It is how the European rules (CEN 1.3.17) and the French rules (France_RFE 1.4.0.04) are published."
+source = "https://github.com/ConnectingEurope/eInvoicing-EN16931"
+source_name = "CEN, EN 16931 rules"
+
+[[glossary.terms]]
+id = "rejet-refus"
+group = "regles"
+name = "Rejection and refusal"
+other = "Rejet et refus"
+text = "Rejection is technical: a platform, the issuer's or the recipient's, blocks the invoice because its format or one of its checks fails. Refusal is the buyer's decision to dispute the invoice. The English names are not official."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054606169"
+source_name = "French tax code, annex IV, art. 41 septies G"
+
+[[glossary.terms]]
+id = "rectificative-avoir"
+group = "regles"
+name = "Corrected invoice and credit note"
+other = "Facture rectificative et avoir"
+text = "To fix an invoice, you issue either a corrected invoice, or a new one that cancels and replaces it, or a credit note, which reduces or cancels the amount due. Either way, the document cites the original invoice, with its number and date."
+rules = ["BR-FR-CO-04", "BR-FR-CO-05", "BR-FR-04"]
+source = "https://bofip.impots.gouv.fr/bofip/142-PGP.html"
+source_name = "BOFiP"
+
+[[glossary.terms]]
+id = "categorie-tva"
+group = "tva"
+name = "VAT category"
+other = "Catégorie de TVA"
+text = "A code saying how VAT applies, on each line and in the VAT breakdown. France accepts S (standard rate), Z (zero rate), E (exempt, with its reason), AE (reverse charge), K (intra-Community supply), G (export outside the European Union) and O (outside the scope of VAT)."
+rules = ["BR-FR-15", "BR-CO-04", "BR-S-08", "BR-E-10"]
+source = "https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/"
+source_name = "Peppol, UNCL5305 code list"
+
+[[glossary.terms]]
+id = "autoliquidation"
+group = "tva"
+name = "Reverse charge"
+other = "Autoliquidation"
+text = "The buyer, not the seller, accounts for and pays the VAT. The seller invoices without VAT and writes \"Autoliquidation\" on the invoice; the VAT category is AE."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000050811276"
+source_name = "French tax code, annex II, art. 242 nonies A"
+
+[[glossary.terms]]
+id = "chorus-pro"
+group = "public"
+name = "Chorus Pro"
+text = "The public platform, run by the AIFE (the State's financial IT agency), through which suppliers send their invoices to the State, local authorities and public bodies. It remains the public sector's platform under the reform; since September 2026 a supplier may also go through its approved platform, except in some cases such as public works contracts."
+source = "https://www.collectivites-locales.gouv.fr/actualites/facturation-electronique-partir-de-2026-chorus-pro-restera-la-plateforme-de-reference-du-secteur"
+source_name = "collectivites-locales.gouv.fr"
+
+[[glossary.terms]]
+id = "code-service"
+group = "public"
+name = "Service code"
+other = "Code service"
+text = "The code for the department of a public body that pays the invoice. Include it when the public buyer requires it; it is listed in Chorus Pro's directory of public bodies. The English name is not official."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038794379"
+source_name = "French public procurement code, art. D2192-2"
+
+[[glossary.terms]]
+id = "numero-engagement"
+group = "public"
+name = "Commitment number"
+other = "Numéro d'engagement"
+text = "The public order's reference: the purchase order number or, failing that, the contract reference or the commitment number given by the buyer's accounting system. Ask the buyer for it before invoicing. The English name is not official."
+source = "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038794379"
+source_name = "French public procurement code, art. D2192-2"
+
+[[glossary.terms]]
+id = "xrechnung"
+group = "allemagne"
+name = "XRechnung"
+text = "Germany's e-invoice format for public administrations, published by KoSIT: a restriction of the European standard plus an extension, in UBL or CII. Version 3.0 has applied since 1 February 2024 and stays valid until at least 31 July 2027; version 4.0 is expected in spring 2027."
+source = "https://xeinkauf.de/xrechnung/"
+source_name = "KoSIT, xeinkauf.de"
