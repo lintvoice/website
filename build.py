@@ -212,7 +212,8 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     env.filters["fill"] = fill
     env.globals["icon"] = icon
     env.globals["topic_icons"] = rulepages.TOPIC_ICONS
-    sizes = ROOT / "static" / "home" / "sizes.json"  # the home page's picture of the example invoice (tools/example_pictures.py)
+    # the home page's picture of the example invoice (tools/example_pictures.py)
+    sizes = ROOT / "static" / "home" / "sizes.json"
     env.globals["home_sizes"] = json.loads(sizes.read_text(encoding="utf-8")) if sizes.is_file() else {}
     env.globals["rule_href"] = rulepages.href
     rs = site["rule_sets"]
