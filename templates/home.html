@@ -5,16 +5,16 @@
 {% set counts = dict(en16931=site.rule_sets.en16931, facturx=site.rule_sets.facturx, brfr=site.rule_sets.brfr, examples=invalid | length, explained=ix.explained if ix else "", total=ix.total if ix else "") %}
 {% set example = invalid | selectattr("id", "equalto", "BR-CO-15") | first %}
 {% set pillar_icons = {"check": "document--view", "rules": "book", "examples": "edit"} %}
-{# A capture of one of our pages, in the visitor's theme, cut for a desktop or a phone (tools/home_images.py takes
-   them from the product itself and records their sizes). #}
-{% macro shot(name, alt, lazy=true) %}{% for theme in ("light", "dark") %}{% set wide = home_sizes[name ~ "-" ~ t.lang ~ "-" ~ theme ~ ".webp"] %}{% set narrow = home_sizes[name ~ "-phone-" ~ t.lang ~ "-" ~ theme ~ ".webp"] %}<picture><source media="(max-width: 640px)" srcset="/static/home/{{ name }}-phone-{{ t.lang }}-{{ theme }}.webp" width="{{ narrow[0] }}" height="{{ narrow[1] }}"><img class="for-{{ theme }}" src="/static/home/{{ name }}-{{ t.lang }}-{{ theme }}.webp" alt="{{ alt }}" width="{{ wide[0] }}" height="{{ wide[1] }}"{% if lazy or theme == "dark" %} loading="lazy"{% endif %}></picture>{% endfor %}{% endmacro %}
+{% set try_example = invalid | selectattr("id", "equalto", "BR-FR-05-PMD") | first %}
+{% set proof_rule = rules | selectattr("id", "equalto", "BR-CO-15") | first %}
 
 <div class="band split">
   <div>
     <h1 class="display">{{ p.h1 }}</h1>
     <span class="total-rule" aria-hidden="true"></span>
     <p class="lead">{{ p.lead }}</p>
-    {% if links.check is defined %}<p class="actions-row"><a class="btn primary large" href="{{ links.check }}">{{ t.cta_check }}</a></p>{% endif %}
+    {% if links.check is defined %}<p class="actions-row"><a class="btn primary large" href="{{ links.check }}">{{ t.cta_check }}</a></p>
+    {% if try_example %}<p class="try-example">{{ p.try_lead }} <a href="{{ links.check }}?{{ t.check.example_param }}={{ try_example.id }}">{{ p.try_link }}</a></p>{% endif %}{% endif %}
     <ul class="trust">{% for item in p.trust %}<li>✓ {{ item | links }}</li>{% endfor %}</ul>
     {% if links.rules is defined %}
     <form class="search-row" action="{{ links.rules }}" method="get" role="search">
@@ -23,12 +23,7 @@
     </form>
     {% endif %}
   </div>
-  {% if links.check is defined and example %}
-  <figure class="shot">
-    <div class="frame"><div class="frame-bar"><span class="file">{{ t.file_prefix }}-{{ example.id }}.pdf</span><span class="what">PDF · Factur-X EN 16931</span></div>{{ shot("card", p.check_alt, lazy=false) }}</div>
-    <figcaption>{{ p.check_caption }}</figcaption>
-  </figure>
-  {% endif %}
+  {% include "_home_layers.html" %}
 </div>
 
 <section class="section tint" aria-labelledby="values-title">
@@ -47,12 +42,13 @@
   </div>
 </section>
 
-{% if ix and "BR-CO-15" in ix.ids and example %}
+{% if ix and "BR-CO-15" in ix.ids and example and proof_rule %}
 <section class="section" aria-labelledby="proof-title">
   <h2 id="proof-title">{{ p.proof_title }}</h2>
   <p class="sub">{{ p.proof_sub }}</p>
   <div class="split">
-    <figure class="shot"><div class="frame">{{ shot("rule", p.rule_alt) }}</div><figcaption>{{ p.rule_caption }} <a href="{{ rule_href("BR-CO-15", t.lang) }}">{{ p.rule_link }}</a></figcaption></figure>
+    {# the rule page, as a link to it: its code, title and brief come from the page itself #}
+    <a class="rule-card" href="{{ rule_href(proof_rule.id, t.lang) }}"><span class="idm">{{ proof_rule.id }}</span><span class="t">{{ proof_rule.pages[t.lang].title }}</span>{% if proof_rule.meta.brief %}<span class="b"><strong>{{ t.rule.brief_label }}</strong> {{ proof_rule.meta.brief[t.lang] }}</span>{% endif %}<span class="go">{{ p.rule_link }} →</span></a>
     <figure class="shot"><div class="frame"><img class="paper" src="/static/home/invoice.webp" alt="{{ p.invoice_alt }}" width="{{ home_sizes["invoice.webp"][0] }}" height="{{ home_sizes["invoice.webp"][1] }}" loading="lazy"></div><figcaption>{{ p.invoice_caption }} <a href="{{ files_href }}{{ example.files.pdf }}" download="{{ t.file_prefix }}-{{ example.id }}.pdf">{{ p.invoice_link }}</a></figcaption></figure>
   </div>
 </section>

@@ -1,0 +1,24 @@
+{# The home page header's picture: the same payment terms twice, as the invoice shows them (paper) and as its
+   electronic data holds them (one code each), one of them missing from the data; the rule that requires them closes
+   it. Text, so that it translates and follows the theme; the sheet and the wires are CSS; nothing copies the
+   product's interface, so the picture does not age with it. The codes are BR-FR-05's: the three payment notes a French
+   invoice must carry, and the one its example invoice BR-FR-05-PMD leaves out. #}
+{% set L = p.layers %}
+{% set notes = [("PMT", true), ("PMD", false), ("AAB", true)] %}
+<figure class="shot">
+  <div class="stage on-navy layers">
+    <p class="hd seen">{{ icon("view") }}{{ L.seen }}</p>
+    <p class="hd data">{{ icon("data--structured") }}{{ L.data }}</p>
+    <div class="paper" aria-hidden="true"></div>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <p class="pl t r2">{{ L.paper_title }}</p>
+    <p class="dl t r2">factur-x.xml</p>
+    {% for code, present in notes %}{% set row = "r" ~ (loop.index + 2) %}
+    <p class="pl {{ row }}{% if loop.last %} last{% endif %}">{{ L.printed[loop.index0] }}</p>
+    <span class="wire {{ row }}{% if not present %} gone{% endif %}" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="d"></i></span>
+    {% if present %}<p class="dl {{ row }}"><code>{{ code }}</code><span class="ok">✓<span class="w"> {{ L.present }}</span></span></p>
+    {% else %}<p class="dl miss {{ row }}"><code>{{ code }}</code><span class="slot">✗ {{ L.missing }}</span></p>{% endif %}
+    {% endfor %}
+    <p class="closing"><strong>{{ L.closing_lead }}</strong> {{ L.closing }}{% if ix and "BR-FR-05" in ix.ids %}<a href="{{ rule_href("BR-FR-05", t.lang) }}">BR-FR-05</a>{% endif %}</p>
+  </div>
+</figure>

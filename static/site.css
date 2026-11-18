@@ -346,8 +346,8 @@ a.rule-link:hover .title{text-decoration:underline}
   .subject-grid a{padding:var(--sp-2) var(--sp-3)}
 }
 
-/* Page-level additions to the page building blocks of components.css: the home page's header in two columns, captures
-   of our pages that follow the theme, the large button, the quiet search, the open facts as ledger rows. */
+/* Page-level additions to the page building blocks of components.css: the home page's header in two columns with its
+   picture, the large button, the quiet search, the rule as a link card, the open facts as ledger rows. */
 .band.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:var(--sp-8);align-items:center}
 .split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--layout-gap) var(--sp-8);align-items:start}
 .split>*>:first-child{margin-top:0}
@@ -355,20 +355,79 @@ a.rule-link:hover .title{text-decoration:underline}
 .section>.sub+*{margin-top:var(--sp-6)}
 .section .more{margin:var(--sp-5) 0 0}
 .section>h2 .ic{vertical-align:-.1em}
-/* captures of our pages follow the theme: the OS preference, or the toggle (data-theme); a picture of paper (an
-   example invoice) is dimmed a little in the dark theme */
-.frame img.for-dark{display:none}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme=light]) .frame img.for-light{display:none}
-  :root:not([data-theme=light]) .frame img.for-dark{display:block}
-  :root:not([data-theme=light]) .frame img.paper{filter:brightness(.92)}
-}
-:root[data-theme=dark] .frame img.for-light{display:none}
-:root[data-theme=dark] .frame img.for-dark{display:block}
+/* a picture of paper (an example invoice) is dimmed a little in the dark theme: the OS preference, or the toggle */
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .frame img.paper{filter:brightness(.92)}}
 :root[data-theme=dark] .frame img.paper{filter:brightness(.92)}
-.frame picture{display:block}
-.frame-bar .file{font-family:var(--font-mono);font-weight:600;margin-right:var(--sp-2)}
-.frame-bar .what{color:var(--muted)}
+/* the header's picture, in a language of its own (a stage, paper and data, wires), built from the site's tokens:
+   - a stage of the developers' navy, in both themes, so that it reads as a picture, apart from the page;
+   - two materials, never mixed: paper, the invoice as people see it (words on a warm sheet lifted by its shadow,
+     dimmed a little in the dark theme), and data, what the rules read (mono codes on a faint dot grid);
+   - a sepia wire with a dot at each end joins what corresponds; a dashed wire to an open circle, and a dashed slot,
+     say that the data is missing; one status colour, the error, always with ✗ and a word;
+   - paper, wires and data sit on one grid, so that each wire meets its line; text stays HTML. */
+.stage{--paper:#FBF8F1;--ink:#1F1D1A;--ink-2:#6E695F;--rule:#DED7C9;--wire:var(--accent);position:relative;background:var(--bg);border-image:none;color:var(--text);border-radius:var(--r-lg);box-shadow:var(--shadow-2);padding:var(--sp-6);overflow:hidden}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .stage{--paper:#E8E2D6;--rule:#CCC4B4;--ink-2:#58544C}}
+:root[data-theme=dark] .stage{--paper:#E8E2D6;--rule:#CCC4B4;--ink-2:#58544C}
+.stage p{margin:0}
+.stage .hd{display:flex;align-items:flex-end;gap:var(--sp-2);margin:0 0 var(--sp-3);font-size:13px;font-weight:600;line-height:1.3;color:var(--muted)}
+.stage .hd .ic{width:16px;height:16px;color:var(--wire);flex:none}
+.stage .paper{background:var(--paper);border-radius:3px;box-shadow:0 1px 0 rgb(0 0 0 / .25),0 14px 32px rgb(0 0 0 / .35)}
+.stage .pl{padding:var(--sp-2) var(--sp-5);color:var(--ink);font-size:13px;line-height:1.45}
+.stage .pl.t{padding-top:var(--sp-4);padding-bottom:var(--sp-1);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.stage .pl.t::after{content:"";display:block;margin-top:6px;border-top:1px solid var(--rule)}
+.stage .grid-bg{background-image:radial-gradient(rgb(237 234 227 / .10) 1px,transparent 1.3px);background-size:12px 12px}
+.stage .dl{display:flex;flex-wrap:wrap;align-items:center;gap:2px var(--sp-3);padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)}
+.stage .dl code{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.06em;color:var(--wire);min-width:2.6em}
+.stage .dl .ok{color:var(--muted);font-size:var(--fs-xs)}
+.stage .dl.miss .slot{border:1px dashed var(--error);border-radius:var(--r-sm);padding:0 var(--sp-2);color:var(--error);font-weight:600}
+.wire{display:flex;align-items:center;margin:0 -3px;position:relative;z-index:2}
+.wire i{display:block}
+.wire .d{width:6px;height:6px;border-radius:50%;background:var(--wire);flex:none}
+.wire .l{flex:1;border-top:1px solid var(--wire)}
+.wire.gone .l{border-top:1px dashed var(--error)}
+.wire.gone .d:last-child{background:var(--bg);box-shadow:inset 0 0 0 1px var(--error)}
+.layers{display:grid;grid-template-columns:minmax(0,1.2fr) 2.5rem minmax(0,1fr);align-items:stretch}
+.layers .hd{align-self:end;grid-row:1}
+.layers .hd.seen{grid-column:1}
+.layers .hd.data{grid-column:3}
+.layers .paper{grid-column:1;grid-row:2 / 6}
+.layers .grid-bg{grid-column:3;grid-row:2 / 6;border:var(--bw-hair) solid var(--line);border-radius:var(--r-md)}
+.layers .pl,.layers .dl{position:relative;z-index:1}
+.layers .pl{grid-column:1}
+.layers .dl{grid-column:3}
+.layers .wire{grid-column:2}
+.layers .r2{grid-row:2}
+.layers .r3{grid-row:3}
+.layers .r4{grid-row:4}
+.layers .r5{grid-row:5}
+.layers .pl.last{padding-bottom:var(--sp-5)}
+.layers .dl.t{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--muted);padding-top:var(--sp-4)}
+/* it ends on what the rule requires: « printing it is not enough » in the wires' sepia, then the rule's code */
+.layers .closing{grid-column:1 / -1;grid-row:6;margin:var(--sp-5) 0 0;padding-top:var(--sp-4);border-top:var(--bw-hair) solid var(--line);font-size:var(--fs-sm);line-height:1.5;color:var(--text);text-wrap:balance}
+.layers .closing strong{color:var(--wire);font-weight:600}
+.layers .closing a{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.04em;color:var(--muted);margin-left:var(--sp-2);white-space:nowrap}
+@media (max-width:640px){
+  .stage{padding:var(--sp-4)}
+  .layers{grid-template-columns:minmax(0,1.5fr) 1.5rem minmax(0,1fr)}
+  .stage .pl{padding:6px var(--sp-3);font-size:12px}
+  .stage .pl.t{letter-spacing:.05em}
+  .stage .hd{font-size:12px}
+  .layers .dl{padding:6px var(--sp-2)}
+  /* the ✓ alone on a phone; its word stays for screen readers */
+  .layers .dl .ok .w{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .layers .closing{font-size:13px;margin-top:var(--sp-4);padding-top:var(--sp-3)}
+}
+/* for a visitor without an invoice at hand, under the main button: words, quieter than the button */
+.try-example{margin:var(--sp-3) 0 0;font-size:var(--fs-sm);color:var(--muted)}
+.try-example a{font-weight:600}
+/* a rule page as a link card: its code, title and brief, then where the link goes */
+a.rule-card{display:block;padding:var(--sp-6);border-radius:var(--r-lg);background:var(--bg);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none;transition:box-shadow .15s}
+a.rule-card:hover{box-shadow:var(--shadow-2)}
+a.rule-card .idm{font-size:var(--fs-sm);color:var(--bg);background:var(--accent);padding:1px var(--sp-2);border-radius:var(--r-sm)}
+a.rule-card .t{display:block;font-size:var(--fs-lead);font-weight:600;line-height:var(--lh-tight);margin:var(--sp-3) 0 var(--sp-2)}
+a.rule-card .b{display:block;color:var(--muted)}
+a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decoration:underline}
+@media (prefers-reduced-motion:reduce){a.rule-card{transition:none}}
 /* the one main action of a page */
 .btn.large{font-size:var(--fs-base);padding:var(--sp-3) var(--sp-5)}
 /* a quiet one-field search: a label, then the field; Enter searches */

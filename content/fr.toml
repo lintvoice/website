@@ -29,8 +29,18 @@ lead = "lintvoice applique les règles officielles, européennes et françaises,
 trust = ["Gratuit, sans compte", "Votre facture ne quitte pas votre ordinateur", "[Code public sur GitHub](https://github.com/lintvoice)"]
 code_label = "Vous avez déjà un code d'erreur ?"
 code_placeholder = "Par exemple BR-FR-10"
-check_alt = "Une erreur BR-CO-15 telle que la vérification la montre : son titre en mots simples, la règle, les montants de la facture et le calcul attendu, pourquoi cette erreur et comment corriger."
-check_caption = "Une vraie vérification, sur une facture d'exemple."
+# under the main button, for a visitor without an invoice at hand: the check page checks the BR-FR-05 example on arrival
+try_lead = "Pas de facture sous la main ?"
+try_link = "Essayez avec une facture d'exemple"
+# the header's picture: the same payment terms, as the invoice shows them and as its electronic data holds them
+layers.seen = "Visible sur la facture"
+layers.data = "Dans les données électroniques"
+layers.paper_title = "Conditions de paiement"
+layers.printed = ["Indemnité forfaitaire pour frais de recouvrement : 40\u00a0€.", "Pénalités de retard : trois fois le taux d'intérêt légal.", "Pas d'escompte pour paiement anticipé."]
+layers.present = "présente"
+layers.missing = "absente"
+layers.closing_lead = "Imprimer ne suffit pas :"
+layers.closing = "chaque mention doit être dans les données, avec son code."
 values_title = "lintvoice vous guide d'un code d'erreur jusqu'à une facture corrigée"
 values = [
     { head = "Vérifiez", question = "« Ma facture va-t-elle passer les règles ? »", text = "Vous le savez avant de l'envoyer, en la déposant ici. La vérification applique les règles officielles européennes et françaises, dans votre navigateur.", link = "Vérifier une facture", page = "check", proof = "Règles EN 16931 {en16931}, Factur-X {facturx} et BR-FR {brfr}, telles que publiées." },
@@ -39,9 +49,7 @@ values = [
 ]
 proof_title = "Comprenez le code d'erreur, et voyez ce qu'il faut changer"
 proof_sub = "La page dit, en mots simples, ce que vérifie la règle et comment corriger. La facture d'exemple échoue à cette règle, et l'erreur y est en rouge."
-rule_alt = "Haut de la page de la règle BR-CO-15 : son titre en mots simples, la phrase En bref et ce que vérifie la règle."
-rule_caption = "La page de la règle BR-CO-15."
-rule_link = "La lire"
+rule_link = "Lire la page de la règle"
 invoice_alt = "La facture d'exemple qui échoue à BR-CO-15 : l'avis d'erreur en haut, et le total TTC faux en rouge."
 invoice_caption = "Sa facture d'exemple, fictive et dans le domaine public."
 invoice_link = "Télécharger le PDF"
@@ -268,6 +276,8 @@ status = ""
 title = "Validateur Factur-X en ligne : vérifier une facture électronique"
 description = "Vérifiez une facture Factur-X, UBL ou CII selon les règles officielles EN 16931 et BR-FR, comprenez chaque erreur et corrigez-la. Gratuit, sans compte. La vérification se fait dans votre navigateur, donc la facture n'est envoyée nulle part."
 h1 = "Vérifier une facture électronique"
+# the address of one of our example invoices, checked on arrival: /fr/verifier/?exemple=BR-FR-05-PMD
+example_param = "exemple"
 brief = "Déposez votre facture pour la vérifier selon les règles officielles. Pour chaque erreur, vous voyez ce qui ne va pas dans votre facture et comment le corriger."
 trust = ["Gratuit, sans compte", "Votre facture ne quitte pas votre ordinateur", "Règles officielles européennes (EN 16931) et françaises (BR-FR)"]
 drop_title = "Déposez votre facture ici"

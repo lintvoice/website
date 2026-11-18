@@ -29,8 +29,18 @@ lead = "lintvoice runs the official rules on your invoices: the European standar
 trust = ["Free, no account", "Your invoice never leaves your computer", "[Public code on GitHub](https://github.com/lintvoice)"]
 code_label = "Already have an error code?"
 code_placeholder = "For example BR-FR-10"
-check_alt = "A BR-CO-15 error as the check shows it: its title in plain words, the rule, the invoice's amounts and the expected computation, why this error and how to fix it."
-check_caption = "A real check, on an example invoice."
+# under the main button, for a visitor without an invoice at hand: the check page checks the BR-FR-05 example on arrival
+try_lead = "No invoice at hand?"
+try_link = "Try an example invoice"
+# the header's picture: the same payment terms, as the invoice shows them and as its electronic data holds them
+layers.seen = "Visible on the invoice"
+layers.data = "In the electronic data"
+layers.paper_title = "Payment terms"
+layers.printed = ["Fixed indemnity for recovery costs: €40.", "Late-payment penalties: three times the legal interest rate.", "No discount for early payment."]
+layers.present = "present"
+layers.missing = "missing"
+layers.closing_lead = "Printing it is not enough:"
+layers.closing = "each statement must be in the data, with its code."
 values_title = "lintvoice takes you from an error code to a fixed invoice"
 values = [
     { head = "Check", question = "“Will my invoice pass the rules?”", text = "You know before you send it, by dropping it here. The check runs the official European and French rules, in your browser.", link = "Check an invoice", page = "check", proof = "EN 16931 {en16931}, Factur-X {facturx} and BR-FR {brfr} rules, as published." },
@@ -39,9 +49,7 @@ values = [
 ]
 proof_title = "Understand the error code, and see what to change"
 proof_sub = "The page says, in plain words, what the rule checks and how to fix it. The example invoice fails that rule, and the error is in red."
-rule_alt = "The top of the BR-CO-15 rule page: its title in plain words, the In short line and what the rule checks."
-rule_caption = "The BR-CO-15 rule page."
-rule_link = "Read it"
+rule_link = "Read the rule page"
 invoice_alt = "The example invoice that fails BR-CO-15: the error notice at the top, and the wrong total with VAT in red."
 invoice_caption = "Its example invoice, fictitious and in the public domain. The examples are French invoices."
 invoice_link = "Download the PDF"
@@ -268,6 +276,8 @@ status = ""
 title = "Online e-invoice validator: check a Factur-X, UBL or CII invoice"
 description = "Check a Factur-X, UBL or CII invoice against the official EN 16931 and BR-FR rules, understand each error and fix it. Free, no account. The check runs in your browser, so the invoice is not sent anywhere."
 h1 = "Check an e-invoice"
+# the address of one of our example invoices, checked on arrival: /check/?example=BR-FR-05-PMD
+example_param = "example"
 brief = "Drop your invoice to check it against the official rules. For each error, you see what is wrong in your invoice and how to fix it."
 trust = ["Free, no account", "Your invoice never leaves your computer", "Official European (EN 16931) and French (BR-FR) rules"]
 drop_title = "Drop your invoice here"

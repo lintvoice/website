@@ -94,11 +94,11 @@ document.addEventListener("dragover", (e) => { e.preventDefault(); drop.classLis
 document.addEventListener("dragleave", (e) => { if (!e.relatedTarget) drop.classList.remove("over"); });
 document.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); fromFile(e.dataTransfer.files[0]); });
 drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); } });
-document.querySelectorAll("[data-example]").forEach((b) => b.addEventListener("click", async () => {
-  const path = b.dataset.example;
-  const bytes = new Uint8Array(await (await fetch(`/examples/fr/${path}`)).arrayBuffer());
-  await run(b.dataset.name, bytes);
-}));
+async function example(path, name) {
+  const response = await fetch(`/examples/fr/${path}`);
+  if (response.ok) await run(name, new Uint8Array(await response.arrayBuffer()));
+}
+document.querySelectorAll("[data-example]").forEach((b) => b.addEventListener("click", () => example(b.dataset.example, b.dataset.name)));
 result.addEventListener("click", (e) => {
   if (e.target.closest("[data-again]")) { reset(); return; }
   const copy = e.target.closest("[data-copy]");
@@ -114,3 +114,7 @@ result.addEventListener("click", (e) => {
   if (mark) document.getElementById(`error-${mark.dataset.mark.split(",")[0]}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
 });
 window.lintvoiceReady = true;
+// an address can name one of our failing example invoices, checked on arrival (the home page's « try » line):
+// /fr/verifier/?exemple=BR-FR-05-PMD, /check/?example=BR-FR-05-PMD; only a code's letters, digits and hyphens
+const asked = new URLSearchParams(location.search).get(page.dataset.exampleParam);
+if (asked && /^[A-Z0-9]+(-[A-Z0-9]+)*$/.test(asked)) example(`invalid/${asked}.pdf`, `${page.dataset.filePrefix}-${asked}.pdf`);

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block cta %}<a class="cta current" href="{{ links.check }}" aria-current="page">{{ t.cta_check }}</a>{% endblock %}
 {% block body %}
-<div id="check-page" data-base="{{ base_url }}">
+<div id="check-page" data-base="{{ base_url }}" data-example-param="{{ p.example_param }}" data-file-prefix="{{ t.file_prefix }}">
 <div class="band compact intro">
   <h1>{{ icon("document--view") }}{{ p.h1 }}</h1>
   <span class="total-rule" aria-hidden="true"></span>
