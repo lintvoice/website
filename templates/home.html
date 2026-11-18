@@ -31,7 +31,6 @@
   <div class="pillars">
   {% for v in p["values"] if links[v.page] is defined %}
     <div>
-      <span class="n" aria-hidden="true">{{ loop.index }}</span>
       <h3>{{ icon(pillar_icons[v.page]) }}{{ v.head }}</h3>
       <p class="pain">{{ v.question }}</p>
       <p>{{ v.text }}</p>

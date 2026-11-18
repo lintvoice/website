@@ -156,14 +156,18 @@ figure.shot{margin:0;min-width:0}
 .frame img{display:block;width:100%;height:auto}
 figure.shot figcaption{font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-3)}
 
-/* ---------- the three pillars: open columns, a big mono numeral, the pillar's icon by its name */
+/* ---------- the three pillars: open columns, the pillar's icon by its name. Their order is a path: a hairline between
+   two pillars, their full height, broken at its middle by a small arrow, thinner and greyer than a link's arrow; once
+   they stack, the arrow alone points down (each proof already has its hairline). */
 .pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-8);margin-top:var(--sp-8)}
-.pillars .n{display:block;font-family:var(--font-mono);font-size:var(--fs-display);font-weight:600;line-height:1;color:var(--accent)}
-.pillars h3{font-size:var(--fs-lead);margin:var(--sp-3) 0 var(--sp-2)}
+.pillars>div{position:relative}
+.pillars>div+div::before{content:"";position:absolute;top:0;bottom:0;left:calc(var(--sp-8) / -2);width:var(--bw-hair);background:linear-gradient(var(--line),var(--line)) top/100% calc(50% - var(--sp-4)) no-repeat,linear-gradient(var(--line),var(--line)) bottom/100% calc(50% - var(--sp-4)) no-repeat}
+.pillars>div+div::after{content:"";position:absolute;top:50%;left:calc(var(--sp-8) / -2 - var(--sp-2));width:var(--sp-4);height:var(--sp-4);margin-top:calc(var(--sp-2) * -1);background:var(--muted);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h18M15 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h18M15 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat}
+.pillars h3{font-size:var(--fs-lead);margin:0 0 var(--sp-2)}
 .pillars p{margin:0 0 var(--sp-3)}
 .pillars .pain{font-style:italic;color:var(--muted)}
 .pillars .proof{font-size:var(--fs-sm);color:var(--muted);border-top:var(--bw-hair) solid var(--line);padding-top:var(--sp-3);margin-top:var(--sp-4)}
-@media (max-width:820px){.pillars{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:820px){.pillars{grid-template-columns:minmax(0,1fr)}.pillars>div+div::before{display:none}.pillars>div+div::after{top:calc(var(--sp-8) / -2);left:0;transform:rotate(90deg)}}
 
 /* ---------- a ledger: rows on hairlines, the count in a mono column after a dotted leader, a double rule at the foot */
 .ledger{list-style:none;padding:0;margin:var(--sp-6) 0 0;border-top:var(--bw-hair) solid var(--text)}
