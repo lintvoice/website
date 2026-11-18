@@ -29,7 +29,7 @@ lead = "lintvoice applique les règles officielles, européennes et françaises,
 trust = ["Gratuit, sans compte", "Votre facture ne quitte pas votre ordinateur", "[Code public sur GitHub](https://github.com/lintvoice)"]
 code_label = "Vous avez déjà un code d'erreur ?"
 code_placeholder = "Par exemple BR-FR-10"
-check_alt = "Résultat d'une vérification : une erreur BR-CO-15, les montants de la facture, le calcul attendu, les étapes pour corriger, et la facture redessinée avec les montants concernés entourés."
+check_alt = "Une erreur BR-CO-15 telle que la vérification la montre : son titre en mots simples, la règle, les montants de la facture et le calcul attendu, pourquoi cette erreur et comment corriger."
 check_caption = "Une vraie vérification, sur une facture d'exemple."
 values_title = "lintvoice vous guide d'un code d'erreur jusqu'à une facture corrigée"
 values = [
@@ -39,7 +39,7 @@ values = [
 ]
 proof_title = "Comprenez le code d'erreur, et voyez ce qu'il faut changer"
 proof_sub = "La page dit, en mots simples, ce que vérifie la règle et comment corriger. La facture d'exemple échoue à cette règle, et l'erreur y est en rouge."
-rule_alt = "Haut de la page de la règle BR-CO-15 : son titre en mots simples, la phrase En bref, ce que vérifie la règle et ses causes fréquentes."
+rule_alt = "Haut de la page de la règle BR-CO-15 : son titre en mots simples, la phrase En bref et ce que vérifie la règle."
 rule_caption = "La page de la règle BR-CO-15."
 rule_link = "La lire"
 invoice_alt = "La facture d'exemple qui échoue à BR-CO-15 : l'avis d'erreur en haut, et le total TTC faux en rouge."

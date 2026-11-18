@@ -29,7 +29,7 @@ lead = "lintvoice runs the official rules on your invoices: the European standar
 trust = ["Free, no account", "Your invoice never leaves your computer", "[Public code on GitHub](https://github.com/lintvoice)"]
 code_label = "Already have an error code?"
 code_placeholder = "For example BR-FR-10"
-check_alt = "The result of a check: a BR-CO-15 error, the invoice's amounts, the expected computation, the steps to fix it, and the invoice redrawn with the amounts concerned circled."
+check_alt = "A BR-CO-15 error as the check shows it: its title in plain words, the rule, the invoice's amounts and the expected computation, why this error and how to fix it."
 check_caption = "A real check, on an example invoice."
 values_title = "lintvoice takes you from an error code to a fixed invoice"
 values = [
@@ -39,7 +39,7 @@ values = [
 ]
 proof_title = "Understand the error code, and see what to change"
 proof_sub = "The page says, in plain words, what the rule checks and how to fix it. The example invoice fails that rule, and the error is in red."
-rule_alt = "The top of the BR-CO-15 rule page: its title in plain words, the In short line, what the rule checks and its common causes."
+rule_alt = "The top of the BR-CO-15 rule page: its title in plain words, the In short line and what the rule checks."
 rule_caption = "The BR-CO-15 rule page."
 rule_link = "Read it"
 invoice_alt = "The example invoice that fails BR-CO-15: the error notice at the top, and the wrong total with VAT in red."
