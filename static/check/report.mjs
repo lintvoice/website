@@ -44,12 +44,16 @@ function familyOf(id) {
 }
 
 const label = (bt) => T.terms[bt] || bt;
-const isAmount = (bt) => /^BT-1(0[6-9]|1[0-7]|31|46)$/.test(bt);
+const isAmount = (bt) => /^BT-(92|99|1(0[6-9]|1[0-7]|31|46))$/.test(bt);
 const isDate = (bt) => ["BT-2", "BT-7", "BT-9", "BT-26"].includes(bt);
+const isRate = (bt) => ["BT-96", "BT-103", "BT-119", "BT-152"].includes(bt);
+// A rate with its unit, as written (the format itself may be the error), with the page's decimal sign: "5,5 %".
+const rate = (v) => (/^-?\d+(\.\d+)?$/.test(v) ? `${lang === "fr" ? v.replace(".", ",") : v}\u00a0%` : v);
 export function show(bt, v) {
   if (!v) return `<em class="absent">${esc(T.absent)}</em>`;
   if (isAmount(bt)) return esc(money(v, lang, currency));
   if (isDate(bt)) return esc(day(v, lang));
+  if (isRate(bt)) return esc(rate(v));
   return esc(v);
 }
 
@@ -85,7 +89,7 @@ export function preview(inv, marks) {
       <p class="name">${field(name, t[name])}</p>
       ${line(siren, idLabel(inv, siren))}${line(siret, idLabel(inv, siret))}${line(vat, T.vat_number)}${line(address, T.e_address)}</div>`;
   const lines = inv.lines.slice(0, 12).map((l) => `<tr><td>${esc(l["BT-153"])}</td><td${attr("BT-129")}>${esc(l["BT-129"])}</td>
-      <td${attr("BT-146")}>${show("BT-146", l["BT-146"])}</td><td${attr("BT-152")}>${esc(l["BT-152"])} %</td><td${attr("BT-131")}>${show("BT-131", l["BT-131"])}</td></tr>`).join("");
+      <td${attr("BT-146")}>${show("BT-146", l["BT-146"])}</td><td${attr("BT-152")}>${show("BT-152", l["BT-152"])}</td><td${attr("BT-131")}>${show("BT-131", l["BT-131"])}</td></tr>`).join("");
   const more = inv.lines.length > 12 ? `<tr><td colspan="5" class="more">${esc(fill(T.more_lines, { n: inv.lines.length - 12 }))}</td></tr>` : "";
   const total = (bt, strong) => (shown(bt) ? `<div${strong ? ' class="strong"' : ""}><span>${esc(label(bt))}</span>${field(bt, t[bt])}</div>` : "");
   const body = `<div class="invoice">
@@ -118,10 +122,21 @@ export function errorCard(g, n, inv, pages, { own = false, first = true } = {}) 
   let observed = "";
   if (calc) {
     const gap = calc.gap.replace(/^-/, "");
+    const op = (s, i) => (s === "×" ? "×" : s === "-" ? "−" : i ? "+" : "");
+    const row = ([s, v, bt], i) => `<tr><td class="op">${op(s, i)}</td><td class="k">${esc(label(bt))}</td><td class="v">${show(bt, v)}</td></tr>`;
+    // more than six parts: each run of the same term (the lines) in one row that counts them
+    const runs = [];
+    for (const p of calc.parts) {
+      const last = runs[runs.length - 1];
+      if (last && last.part[0] === p[0] && last.part[2] === p[2]) last.n += 1;
+      else runs.push({ part: p, n: 1 });
+    }
     const rows = calc.parts.length > 6
-      ? `<tr><td></td><td class="k">${esc(fill(T.calc_lines, { n: calc.parts.length, what: label(calc.parts[0][2]) }))}</td><td></td></tr>`
-      : calc.parts.map(([s, v, bt], i) => `<tr><td class="op">${i ? (s === "-" ? "−" : "+") : s === "-" ? "−" : ""}</td><td class="k">${esc(label(bt))}</td><td class="v">${show(bt, v)}</td></tr>`).join("");
-    observed = `<table class="calc"><tbody>${rows}
+      ? runs.map(({ part, n }, i) => (n > 1 ? `<tr><td class="op">${op(part[0], i)}</td><td class="k">${esc(fill(T.calc_lines, { n, what: label(part[2]) }))}</td><td></td></tr>` : row(part, i))).join("")
+      : calc.parts.map(row).join("");
+    // a rule checked rate by rate says which rate
+    const of = calc.group ? `<p class="calc-of">${fill(esc(T.calc_group), { rate: show("BT-119", calc.group["BT-119"]) })}</p>` : "";
+    observed = `${of}<table class="calc"><tbody>${rows}
       <tr class="sum"><td class="op">=</td><td class="k">${esc(T.calc_expected)}</td><td class="v">${show(calc.result, calc.expected)}</td></tr>
       <tr class="stated"><td></td><td class="k">${esc(fill(T.calc_stated, { what: label(calc.result) }))}</td><td class="v">${show(calc.result, calc.stated)}</td></tr></tbody></table>
       ${/^0\.0*$/.test(gap) ? "" : `<p class="gap">${fill(esc(T.calc_gap), { gap: `<strong>${show(calc.result, gap)}</strong>` })}</p>`}`;

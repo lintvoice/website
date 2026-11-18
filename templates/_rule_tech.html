@@ -1,11 +1,11 @@
-<section class="tech tech-mark{{ ' wide' if wide }}" id="technical">
+<section class="tech tech-mark{{ ' tech-wide' if wide }}" id="technical">
   <h2>{{ r.sections.technical.heading }}</h2>
   <p class="tech-intro">{{ t.rule.tech_intro }}</p>
   <div class="tech-cols">
     <div>
       {{ r.sections.technical.html }}
       <div class="kv">
-        <div><span>{{ t.rule.fields }}</span><span class="mono">{{ m.business_terms | join(", ") }}</span></div>
+        {% if m.business_terms %}<div><span>{{ t.rule.fields }}</span><span class="mono">{{ m.business_terms | join(", ") }}</span></div>{% endif %}
         {% if m.paths.cii %}<div><span>CII</span><code>{{ m.paths.cii }}</code></div>{% endif %}
         {% if m.paths.ubl %}<div><span>UBL</span><code>{{ m.paths.ubl }}</code></div>{% endif %}
         <div><span>{{ t.rule.reported }}</span><span class="mono">{{ m.reported_ids | join(", ") }}</span></div>
