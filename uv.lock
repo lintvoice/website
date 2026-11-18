@@ -220,16 +220,16 @@ wheels = [
 
 [[package]]
 name = "lintvoice"
-version = "0.2.0"
+version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "lxml" },
     { name = "pypdf" },
     { name = "saxonche" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9c/7b/ae91e56547cc0a1a09572e17cf96cdf61e86d3264fc25c9096f05c7b3346/lintvoice-0.2.0.tar.gz", hash = "sha256:9054d44dc529505c8961c3e4d63ec5918fce6e2ada0f62fa179011fe76bd0fdc", size = 49580, upload-time = "2026-11-17T11:31:20.314Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/ce/ef7b8580efc22c8f6ec16cb2d1fc7c8fd163a6e894c4c8aad1504d4cda03/lintvoice-0.3.0.tar.gz", hash = "sha256:66f87492a8ce3746ba82662b51071ed23261af3836ca79d0964d8700c246c76b", size = 54188, upload-time = "2026-11-17T20:46:57.468Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f1/e5/2f3135c4af7b521d595219d768c68403e21fd821dcf035c70240973d6edd/lintvoice-0.2.0-py3-none-any.whl", hash = "sha256:fcdaf075d611206ab6165ee701e35bb63df2254eebf20af0a86c0aa891621eb0", size = 24707, upload-time = "2026-11-17T11:31:18.698Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/70/e8fe00686d6cd2eb39fece17bc867b62ba369f079108c9c1cda6cd18c230/lintvoice-0.3.0-py3-none-any.whl", hash = "sha256:0247353891da8e5e7a89fe5f313e38eabf6b5f174b03da104d934e6974d1adcc", size = 28581, upload-time = "2026-11-17T20:46:56.325Z" },
 ]
 
 [[package]]
@@ -256,7 +256,7 @@ parity = [
 requires-dist = [
     { name = "invoice-examples", specifier = "==0.3.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
-    { name = "lintvoice", specifier = "==0.2.0" },
+    { name = "lintvoice", specifier = "==0.3.0" },
     { name = "markdown-it-py", specifier = ">=4.2,<4.3" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]

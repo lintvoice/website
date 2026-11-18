@@ -14,7 +14,6 @@ The result is cached in .check-cache/ and rebuilt only when one of these version
 """
 
 import hashlib
-import html
 import io
 import json
 import posixpath
@@ -29,6 +28,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from lintvoice import rulepacks
+from lintvoice.rulecheck import contexts
 
 ROOT = Path(__file__).parent
 CACHE = ROOT / ".check-cache"
@@ -151,29 +151,6 @@ def _compile(rules, name, out):
     subprocess.run(command, cwd=ROOT, check=True, capture_output=True)  # noqa: S603 (our pinned tool and paths)
 
 
-TEMPLATE = re.compile(r"<xsl:template\b[^>]*>(.*?)</xsl:template>", re.S)
-FIRED = re.compile(r'<svrl:fired-rule\b[^>]*\bcontext="([^"]*)"')
-ASSERT_ID = re.compile(
-    r'<svrl:(?:failed-assert|successful-report)\b[^>]*\bid="([^"]+)"|<xsl:attribute name="id">\s*([^<]+?)\s*</xsl:attribute>'
-)
-
-
-def contexts(xslt):
-    """For one compiled Schematron file, the rule context of each assert id: the context the result names when that
-    rule fired (svrl:fired-rule). An assert whose context fired applies to the invoice; one whose context never
-    fired does not. The context is read as the result writes it: XML entities and doubled braces undone."""
-    found = {}
-    for template in TEMPLATE.finditer(xslt):
-        body = template.group(1)
-        fired = FIRED.search(body)
-        if not fired:
-            continue
-        context = html.unescape(fired.group(1)).replace("{{", "{").replace("}}", "}")
-        for a in ASSERT_ID.finditer(body):
-            found.setdefault(a.group(1) or a.group(2), set()).add(context)
-    return {rule: sorted(c) for rule, c in sorted(found.items())}
-
-
 def _manifest(xsd):
     """For each main schema, the files it includes or imports, transitively."""
 
@@ -241,7 +218,8 @@ def build(cache=CACHE):
         lines += [n["name"], f"  Source: {n['source']}", f"  Licence: {n['licence']}", f"  Served as: {n['files']}", ""]
     (staging / "NOTICES.txt").write_text("\n".join(lines), encoding="utf-8")
 
-    # for each compiled rule file, the rule context of each assert: what tells a rule that applies from one that does not
+    # for each compiled rule file, the rule context of each assert (read by lintvoice, as for `lintvoice check --rule`):
+    # what tells a rule that applies from one that does not
     rule_contexts = {name: contexts((rules / path).read_text(encoding="utf-8")) for name, path in STYLESHEETS.items()}
     (staging / "contexts.json").write_text(json.dumps(rule_contexts, ensure_ascii=False), encoding="utf-8")
     # where each business term is read and the totals computations: the command-line tool's own data
