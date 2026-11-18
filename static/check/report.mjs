@@ -131,7 +131,9 @@ export function errorCard(g, n, inv, pages, { own = false, first = true } = {}) 
       if (last && last.part[0] === p[0] && last.part[2] === p[2]) last.n += 1;
       else runs.push({ part: p, n: 1 });
     }
-    const rows = calc.parts.length > 6
+    const rows = !calc.parts.length
+      ? `<tr><td></td><td class="k">${esc(T.calc_nothing)}</td><td></td></tr>` // no line, allowance or charge at all
+      : calc.parts.length > 6
       ? runs.map(({ part, n }, i) => (n > 1 ? `<tr><td class="op">${op(part[0], i)}</td><td class="k">${esc(fill(T.calc_lines, { n, what: label(part[2]) }))}</td><td></td></tr>` : row(part, i))).join("")
       : calc.parts.map(row).join("");
     // a rule checked rate by rate says which rate
