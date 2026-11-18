@@ -1,2 +1,3 @@
-{% if rule.diff %}<div class="panel callout-files"><h2>{{ t.rule.examples_title }}</h2><div class="body"><p>{{ t.rule.files_intro }}</p>{% include "_rule_files.html" %}</div></div>{% endif %}
+{% if rule.diff %}<div class="panel callout-files"><h2>{{ t.rule.examples_title }}</h2><div class="body"><p>{{ t.rule.files_intro }}</p>{% include "_rule_files.html" %}</div></div>
+{% elif m.examples.none %}{# no example file: the page says why, where the files would be #}<div class="panel callout-files"><h2>{{ t.rule.examples_title }}</h2><div class="body"><p>{{ m.examples.none[t.lang] }}</p><p class="more"><a href="#technical">{{ t.rule.no_example_more }}</a></p></div></div>{% endif %}
 <div class="panel"><h2>{{ r.sections.related.heading }}</h2><div class="body">{{ r.sections.related.html }}</div></div>

@@ -211,6 +211,7 @@ files_intro = "The same invoice twice: once failing this rule, once valid. Publi
 before = "Fails the rule"
 after = "Passes"
 gallery = "All the example invoices"
+no_example_more = "More in the technical details"
 tech_intro = "If you are interested in the technical side: the data the rule checks in the invoice file."
 fields = "Fields (EN 16931)"
 reported = "Reported as"
