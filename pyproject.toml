@@ -5,10 +5,10 @@ description = "The lintvoice.com website: a static site built from templates, te
 requires-python = ">=3.13"
 dependencies = [
     "jinja2>=3.1.6",
-    "invoice-examples==0.3.0",  # the gallery is generated at this exact version
+    "invoice-examples==0.4.0",  # the gallery is generated at this exact version
     "markdown-it-py>=4.2,<4.3",
     "pyyaml>=6.0.3",
-    "lintvoice==0.3.0",  # the check page runs the rule files of this exact version
+    "lintvoice==0.4.0",  # the check page runs the rule files of this exact version
 ]
 
 [dependency-groups]
