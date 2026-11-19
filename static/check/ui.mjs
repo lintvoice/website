@@ -2,7 +2,7 @@
 // engine.mjs, then show the analysis next to a preview of the invoice: what was detected, and for each error the
 // values the invoice holds, why they fail, and how to fix them, without leaving the page.
 import { check } from "./engine.mjs";
-import { errorCard, esc, families, fill, note, preview, profile, rulePages, setCurrency, setup, termsOf } from "./report.mjs";
+import { errorCard, esc, families, fill, marksOf, note, preview, profile, rulePages, setCurrency, setup } from "./report.mjs";
 
 const T = JSON.parse(document.getElementById("check-texts").textContent);
 const lang = document.documentElement.lang;
@@ -30,12 +30,7 @@ function render(name, r, pages) {
   const errors = r.findings.filter((g) => g.severity === "error");
   const warnings = r.findings.filter((g) => g.severity !== "error");
   // each finding gets a number, shown on its card and next to the invoice fields it is about
-  const marks = new Map();
-  [...errors, ...warnings].forEach((g, i) => {
-    const calc = g.computation;
-    const terms = calc ? [calc.result, ...calc.parts.map(([, , bt]) => bt)] : termsOf(g, pages);
-    for (const bt of terms) marks.set(bt, [...(marks.get(bt) || []), i + 1]);
-  });
+  const marks = marksOf([...errors, ...warnings], pages);
   // the count of errors as the title, then what the check applied, then one card per error
   const n = r.summary.rules_failed;
   const title = n === 0

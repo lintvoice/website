@@ -247,10 +247,17 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .inv-lines td{padding:var(--sp-1);border-bottom:var(--bw-hair) solid var(--line)}
 .inv-lines th:nth-child(n+2),.inv-lines td:nth-child(n+2){text-align:right}
 .inv-lines td:nth-child(n+2){white-space:nowrap}
-.inv-lines td:first-child{overflow-wrap:anywhere}
+.inv-lines td:first-child{overflow-wrap:anywhere;white-space:normal;hyphens:auto}
+.inv-lines .unit,.inv-lines .cat{display:block;white-space:normal}
+.inv-lines tr.sub td{padding:0 var(--sp-1) var(--sp-1) var(--sp-4);border-bottom:none;text-align:left}
+.inv-vat caption{text-align:left;padding:0 0 var(--sp-1)}
+.inv-why th:last-child,.inv-why td:last-child{white-space:normal;text-align:left}
+.party+.party{margin-top:var(--sp-4)}
+.inv-others+.inv-totals{margin-top:var(--sp-3)}
 .inv-lines .more{text-align:center;color:var(--muted)}
 .inv-totals{margin-left:auto;width:65%}
 .inv-totals div{display:flex;justify-content:space-between;gap:var(--sp-3);padding:2px var(--sp-1)}
+.inv-totals div>:last-child{white-space:nowrap}
 .inv-totals .strong{font-weight:600;border-top:var(--bw-hair) solid var(--text)}
 .inv-others{margin:var(--sp-4) 0 0;padding-top:var(--sp-3);border-top:var(--bw-hair) solid var(--line);display:grid;gap:2px}
 .inv-others div{display:flex;justify-content:space-between;gap:var(--sp-3)}

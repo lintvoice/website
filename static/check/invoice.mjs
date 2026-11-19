@@ -5,10 +5,12 @@
 
 const NUMBER = /^-?\d+(\.\d+)?$/;
 
-// The elements at the end of a path of local names ("|" for alternatives, "[@attr=value]" as a filter).
+// The elements at the end of a path of local names ("|" for alternatives, "[@attr=value]" as a filter); a last step
+// "@name" gives that attribute's values instead.
 function find(el, path) {
   let nodes = [el];
   for (const step of path.split("/")) {
+    if (step.startsWith("@")) return nodes.filter((n) => n.hasAttribute(step.slice(1))).map((n) => n.getAttribute(step.slice(1)));
     const [names, condition = ""] = step.split("[@");
     const wanted = names.split("|");
     const [attr, value] = condition.replace("]", "").split("=");
@@ -17,32 +19,54 @@ function find(el, path) {
   return nodes;
 }
 
-const text = (nodes) => (nodes.length ? nodes[0].textContent.trim() : "");
+// What the first path that finds something finds: a term's path, or its list of paths.
+function first(el, paths) {
+  for (const path of typeof paths === "string" ? [paths] : paths) {
+    const found = find(el, path);
+    if (found.length) return found;
+  }
+  return [];
+}
 
-const termsOf = (node, spec, syntax) => Object.fromEntries(Object.entries(spec).map(([bt, paths]) => [bt, text(find(node, paths[syntax]))]));
+const text = (nodes) => (!nodes.length ? "" : (typeof nodes[0] === "string" ? nodes[0] : nodes[0].textContent).trim());
 
-// The invoice's values: header terms (an empty string when absent), the identifier schemes given, each line's terms,
-// the notes with their subject code, the VAT breakdown, and the document level allowances and charges. Same shape as
-// the "values" of lintvoice's JSON.
+// A group item's terms; a term with no path for this syntax is not read.
+const termsOf = (node, spec, syntax) =>
+  Object.fromEntries(Object.entries(spec).filter(([, paths]) => syntax in paths).map(([bt, paths]) => [bt, text(first(node, paths[syntax]))]));
+
+// The allowances and the charges under a node (the invoice, or a line), told apart by their charge indicator.
+function split(node, ac, allowanceTerms, chargeTerms, syntax) {
+  const allowances = [];
+  const charges = [];
+  for (const item of find(node, ac[syntax].path)) {
+    if (text(find(item, ac[syntax].charge)).toLowerCase() === "true") charges.push(termsOf(item, chargeTerms, syntax));
+    else allowances.push(termsOf(item, allowanceTerms, syntax));
+  }
+  return [allowances, charges];
+}
+
+// The invoice's values: header terms (an empty string when absent), the identifier schemes given, each line's terms
+// with its allowances, charges and item attributes, the notes with their subject code, the VAT breakdown, the document
+// level allowances and charges, and the additional supporting documents. Same shape as the "values" of lintvoice's JSON.
 export function read(xmlText, spec) {
   const root = new DOMParser().parseFromString(xmlText, "application/xml").documentElement;
   const syntax = root.localName === "CrossIndustryInvoice" ? "CII" : "UBL";
   const terms = {};
   const schemes = {};
   for (const [bt, paths] of Object.entries(spec.header)) {
-    const found = find(root, paths[syntax]);
+    if (!(syntax in paths)) continue;
+    const found = first(root, paths[syntax]);
     terms[bt] = text(found);
-    if (found[0]?.getAttribute("schemeID")) schemes[bt] = found[0].getAttribute("schemeID");
+    if (typeof found[0] === "object" && found[0].getAttribute("schemeID")) schemes[bt] = found[0].getAttribute("schemeID");
   }
-  const lines = find(root, spec.lines[syntax]).map((line) => termsOf(line, spec.line_terms, syntax));
+  const lines = find(root, spec.lines[syntax]).map((line) => {
+    const [allowances, charges] = split(line, spec.line_allowances_charges, spec.line_allowance_terms, spec.line_charge_terms, syntax);
+    const attributes = find(line, spec.line_attributes[syntax]).map((a) => termsOf(a, spec.line_attribute_terms, syntax));
+    return { ...termsOf(line, spec.line_terms, syntax), allowances, charges, attributes };
+  });
   const breakdown = find(root, spec.vat_breakdown[syntax]).map((tax) => termsOf(tax, spec.vat_breakdown_terms, syntax));
-  const allowances = [];
-  const charges = [];
-  const ac = spec.allowances_charges[syntax];
-  for (const node of find(root, ac.path)) {
-    if (text(find(node, ac.charge)).toLowerCase() === "true") charges.push(termsOf(node, spec.charge_terms, syntax));
-    else allowances.push(termsOf(node, spec.allowance_terms, syntax));
-  }
+  const [allowances, charges] = split(root, spec.allowances_charges, spec.allowance_terms, spec.charge_terms, syntax);
+  const documents = find(root, spec.documents[syntax]).map((d) => termsOf(d, spec.document_terms, syntax));
   const n = spec.notes[syntax];
   const notes = find(root, n.path).map((note) => {
     if (syntax === "CII") return { code: text(find(note, n.code)), text: text(find(note, n.text)) };
@@ -50,7 +74,7 @@ export function read(xmlText, spec) {
     const m = all.match(new RegExp(`${n.code_in_text}([\\s\\S]*)$`));
     return m ? { code: m[1], text: m[2].trim() } : { code: "", text: all };
   });
-  return { syntax, terms, schemes, lines, notes, vat_breakdown: breakdown, allowances, charges };
+  return { syntax, terms, schemes, lines, notes, vat_breakdown: breakdown, allowances, charges, documents };
 }
 
 // Exact decimals: each amount as an integer of 10^-places, places being the most decimals any amount carries (two

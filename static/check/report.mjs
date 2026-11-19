@@ -44,8 +44,9 @@ function familyOf(id) {
 }
 
 const label = (bt) => T.terms[bt] || bt;
-const isAmount = (bt) => /^BT-(92|99|1(0[6-9]|1[0-7]|31|46))$/.test(bt);
-const isDate = (bt) => ["BT-2", "BT-7", "BT-9", "BT-26"].includes(bt);
+const AMOUNTS = [92, 93, 99, 100, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 131, 136, 137, 141, 142, 146, 147, 148];
+const isAmount = (bt) => AMOUNTS.includes(Number(bt.slice(3)));
+const isDate = (bt) => ["BT-2", "BT-7", "BT-9", "BT-26", "BT-72", "BT-73", "BT-74", "BT-134", "BT-135"].includes(bt);
 const isRate = (bt) => ["BT-96", "BT-103", "BT-119", "BT-152"].includes(bt);
 // A rate with its unit, as written (the format itself may be the error), with the page's decimal sign: "5,5 %".
 const rate = (v) => (/^-?\d+(\.\d+)?$/.test(v) ? `${lang === "fr" ? v.replace(".", ",") : v}\u00a0%` : v);
@@ -57,49 +58,183 @@ export function show(bt, v) {
   return esc(v);
 }
 
-// The business terms an error is about: the one its id names (BR-FR-01_BT-25), else the rule page's and the ones
-// its message names.
+// The business terms an error is about: the ones its id names (BR-FR-01_BT-25; BR-FR-CO-10_BT-60-1 names BT-60), when
+// these texts know them; else the rule page's and the ones its messages name (BR-FR-CO-04_BT-4: BT-4 is no business
+// term, its message names BT-3, BT-25 and BT-26).
 export function termsOf(g, pages) {
-  const named = g.rule.match(/BT-\d+/g);
-  if (named) return named;
+  const named = (g.rule.match(/BT-\d+/g) || []).filter((bt) => bt in T.terms);
+  if (named.length) return [...new Set(named)];
   const set = new Set(pages[pageOf(g.rule)]?.terms || []);
   for (const m of g.messages) for (const bt of m.message.match(/BT-\d+/g) || []) set.add(bt);
   return [...set];
 }
 
+// An error about an identifier's scheme (BR-FR-CO-10: a scheme missing or repeated; BR-FR-32: an identifier declared
+// with scheme 0002): the identifier is shown with its scheme.
+const aboutScheme = (g) => g.messages.some((m) => /schemeID|\bBT-\d+-1\b/.test(m.message));
+
+// The note subject code an error is about (BR-FR-05_BT-22_PMD, or "(code PMD)" in its message), if any.
+const noteCode = (g) => (g.rule.match(/_BT-2[12]_([A-Z0-9]+)$/) || g.messages.map((m) => m.message.match(/\(code ([A-Z0-9]+)\)/)).find(Boolean) || [])[1];
+
+// The parties that may be absent from an invoice: a term of an absent party is not shown, there is nothing to point at.
+const PARTIES = [["BT-59", "BT-60", "BT-61"], ["BT-70", "BT-71"]];
+const partyAbsent = (inv, bt) => PARTIES.some((p) => p.includes(bt) && p.every((x) => !inv.terms[x]));
+
+// Every value of a term in the invoice, wherever it is: the header, each line with its allowances, charges and item
+// attributes, the VAT breakdown, the document level allowances and charges, the supporting documents. BT-18 is the
+// identifier of a document of type 130, BT-xx-1 the scheme of BT-xx. Empty when the invoice has no place for it.
+export function valuesOf(inv, bt) {
+  const scheme = bt.match(/^(BT-\d+)-1$/);
+  if (scheme && scheme[1] in inv.terms) return [inv.schemes[scheme[1]] || ""];
+  if (bt in inv.terms) return partyAbsent(inv, bt) ? [] : [inv.terms[bt]];
+  const docs = inv.documents || [];
+  const objects = docs.filter((d) => d.type === "130");
+  if (bt === "BT-18") return objects.map((d) => d["BT-122"]);
+  const rows = [
+    ...inv.lines.flatMap((l) => [l, ...(l.allowances || []), ...(l.charges || []), ...(l.attributes || [])]),
+    ...(inv.vat_breakdown || []), ...(inv.allowances || []), ...(inv.charges || []), ...(bt === "BT-18-1" ? objects : docs),
+  ];
+  return rows.filter((r) => bt in r).map((r) => r[bt]);
+}
+
+// Each finding's number (errors first, then warnings, as the cards are numbered) next to what it is about: its terms
+// (a computation's result and parts), "BT-xx-1" when it is about BT-xx's scheme, and for the notes "note-missing:PMD"
+// (a missing note), "note-code:PMT" (a repeated note) or "notes" (the notes as a whole).
+export function marksOf(list, pages) {
+  const marks = new Map();
+  const add = (key, n) => marks.set(key, [...(marks.get(key) || []), n]);
+  list.forEach((g, i) => {
+    const calc = g.computation;
+    const terms = calc ? [calc.result, ...calc.parts.map(([, , bt]) => bt)] : termsOf(g, pages);
+    for (const bt of terms) add(bt, i + 1);
+    if (!calc && aboutScheme(g)) for (const bt of terms) add(`${bt}-1`, i + 1);
+    if (terms.includes("BT-21") || terms.includes("BT-22")) {
+      const code = noteCode(g);
+      add(!code ? "notes" : terms.includes("BT-22") ? `note-missing:${code}` : `note-code:${code}`, i + 1);
+    }
+  });
+  return marks;
+}
+
 // What an identifier is: a SIREN or SIRET when the invoice says so (scheme 0002, 0009) or, without a scheme, when the
 // party is in France; a company number or an identifier otherwise.
 export function idLabel(inv, bt) {
-  const country = inv.terms[["BT-30", "BT-29"].includes(bt) ? "BT-40" : "BT-55"];
+  const country = inv.terms[{ "BT-29": "BT-40", "BT-30": "BT-40", "BT-46": "BT-55", "BT-47": "BT-55" }[bt]];
   const scheme = inv.schemes[bt];
-  const siren = ["BT-30", "BT-47"].includes(bt);
+  const siren = ["BT-30", "BT-47", "BT-61"].includes(bt);
   if (scheme ? scheme === (siren ? "0002" : "0009") : country === "FR" || !inv.terms[bt]) return siren ? "SIREN" : "SIRET";
   return siren ? T.legal_id : T.party_id;
 }
 
-// --- the invoice preview, laid out like our example invoices, with the fields in error marked
+// An identifier's scheme, as the preview and the error card show it: "scheme 0009", "no scheme".
+const schemeOf = (inv, bt) => esc(inv.schemes[bt] ? fill(T.scheme, { scheme: inv.schemes[bt] }) : T.no_scheme);
+
+// A note, as "code — text"; a missing note says so.
+const cut = (s) => (s.length > 90 ? `${s.slice(0, 90)}…` : s);
+const noteLine = (code, text) => `${code ? `<span class="code">${esc(code)}</span> — ` : ""}${text === null ? `<em class="absent">${esc(T.note_missing)}</em>` : esc(cut(text))}`;
+
+// --- the invoice preview, laid out like our example invoices, with the fields in error marked. What an invoice
+// without errors does not show (the payee, the notes, the VAT breakdown…) appears only when an error points at it,
+// whole, with only the faulty items marked.
 export function preview(inv, marks) {
   const t = inv.terms;
   const laid = new Set(); // the terms this preview lays out; the other marked ones are listed under it
-  const attr = (bt) => (laid.add(bt), marks.has(bt) ? ` class="bad" data-mark="${marks.get(bt).join(",")}"` : "");
-  const field = (bt, v) => `<span${attr(bt)}>${show(bt, v)}</span>`;
+  const numbers = (bts) => [...new Set(bts.flatMap((bt) => marks.get(bt) || []))].sort((a, b) => a - b);
+  // a field's class and mark: the numbers of the findings about any of its terms
+  const cattr = (cls, ...bts) => {
+    for (const bt of bts) laid.add(bt);
+    const n = numbers(bts);
+    const c = [cls, n.length ? "bad" : ""].filter(Boolean).join(" ");
+    return `${c ? ` class="${c}"` : ""}${n.length ? ` data-mark="${n.join(",")}"` : ""}`;
+  };
+  const attr = (...bts) => cattr("", ...bts);
+  const field = (bt, v, ...also) => `<span${attr(bt, ...also)}>${show(bt, v)}</span>`;
+  const marked = (...bts) => bts.some((bt) => marks.has(bt));
   const shown = (bt) => t[bt] || marks.has(bt);
-  const line = (bt, k) => (shown(bt) ? `<p class="ids"><span class="k">${esc(k)}</span> ${field(bt, t[bt])}</p>` : "");
+  const kv = (bt, v) => `<span class="k">${esc(label(bt))}</span> ${field(bt, v)}`;
+  // an identifier, with its scheme when an error is about it
+  const id = (bt) => `<span${attr(bt, `${bt}-1`)}>${show(bt, t[bt])}${marks.has(`${bt}-1`) && t[bt] ? ` · ${schemeOf(inv, bt)}` : ""}</span>`;
+  const line = (bt, k) => (bt && shown(bt) ? `<p class="ids"><span class="k">${esc(k)}</span> ${id(bt)}</p>` : "");
   const party = (who, name, siren, siret, vat, address) => `<div class="party"><p class="who">${esc(who)}</p>
       <p class="name">${field(name, t[name])}</p>
       ${line(siren, idLabel(inv, siren))}${line(siret, idLabel(inv, siret))}${line(vat, T.vat_number)}${line(address, T.e_address)}</div>`;
-  const lines = inv.lines.slice(0, 12).map((l) => `<tr><td>${esc(l["BT-153"])}</td><td${attr("BT-129")}>${esc(l["BT-129"])}</td>
-      <td${attr("BT-146")}>${show("BT-146", l["BT-146"])}</td><td${attr("BT-152")}>${show("BT-152", l["BT-152"])}</td><td${attr("BT-131")}>${show("BT-131", l["BT-131"])}</td></tr>`).join("");
+  // the payee and the deliver-to party, when an error points at them and the invoice has them
+  const other = (who, terms, name, siren, siret) => {
+    if (!marked(...terms, ...terms.map((bt) => `${bt}-1`))) return "";
+    if (terms.every((bt) => !t[bt])) return (terms.forEach((bt) => laid.add(bt)), "");
+    return `\n    ${party(who, name, siren, siret)}`;
+  };
+  const doc = t["BT-3"] ? `${esc(T.doc_types[t["BT-3"]] || label("BT-3"))} (${esc(t["BT-3"])})` : show("BT-3", "");
+  const title = marked("BT-3") ? `<span${attr("BT-3")}>${doc}</span>` : esc(T.doc_types[t["BT-3"]] || T.doc_types["380"]);
+  const delivery = marked("BT-72") ? `<br>${esc(T.delivery)} ${field("BT-72", t["BT-72"])}` : "";
+  const period = marked("BT-73", "BT-74") ? `<br>${esc(T.period)} ${field("BT-73", t["BT-73"])} – ${field("BT-74", t["BT-74"])}` : "";
+  // the supporting documents: an invoiced object (type 130) with its scheme, any other with its description
+  let refs = "";
+  if (marked("BT-18", "BT-18-1", "BT-122", "BT-123")) {
+    const docs = (inv.documents || []).map((d) => (d.type === "130"
+      ? `<div><dt>${esc(T.invoiced_object)}${d["BT-18-1"] || marked("BT-18-1") ? ` (${field("BT-18-1", d["BT-18-1"])})` : ""}</dt><dd>${field("BT-18", d["BT-122"], "BT-122")}</dd></div>`
+      : `<div><dt>${esc(T.attachment)}</dt><dd>${field("BT-122", d["BT-122"])}${d["BT-123"] || marked("BT-123") ? ` · ${field("BT-123", d["BT-123"])}` : ""}</dd></div>`));
+    refs = `\n    <dl class="inv-others"><p class="who">${esc(T.references)}</p>${docs.join("") || `<div><dt></dt><dd>${field("BT-122", "", "BT-18", "BT-18-1", "BT-123")}</dd></div>`}</dl>`;
+  }
+  // a group item's other details (base, rate, reason…): each one the invoice gives or an error points at
+  const details = (item, bts) => bts.filter((bt) => item[bt] || marked(bt)).map((bt) => ` · ${kv(bt, item[bt])}`).join("");
+  // under a line, each detail an error points at: its period, item attributes, price details, allowances and charges
+  // a line's own detail shows on the lines that give it, or on every line when none does (its absence is the point)
+  const here = (l, ...bts) => marked(...bts) && (bts.some((bt) => l[bt]) || !inv.lines.some((x) => bts.some((bt) => x[bt])));
+  const subs = (l) => {
+    const rows = [];
+    if (here(l, "BT-134", "BT-135")) rows.push(`${esc(T.period)} ${field("BT-134", l["BT-134"])} – ${field("BT-135", l["BT-135"])}`);
+    if (marked("BT-160", "BT-161")) for (const a of l.attributes || []) rows.push(`${field("BT-160", a["BT-160"])} : ${field("BT-161", a["BT-161"])}`);
+    for (const bt of ["BT-148", "BT-147", "BT-149"]) if (here(l, bt)) rows.push(kv(bt, l[bt]));
+    if (marked("BT-136", "BT-137", "BT-139", "BT-140")) for (const a of l.allowances || []) rows.push(`${kv("BT-136", a["BT-136"])}${details(a, ["BT-137", "BT-139", "BT-140"])}`);
+    if (marked("BT-141", "BT-142", "BT-144", "BT-145")) for (const c of l.charges || []) rows.push(`${kv("BT-141", c["BT-141"])}${details(c, ["BT-142", "BT-144", "BT-145"])}`);
+    return rows.map((r) => `<tr class="sub"><td colspan="5">${r}</td></tr>`).join("");
+  };
+  const unit = (l) => (marked("BT-130") ? `<span${cattr("unit", "BT-130")}>${show("BT-130", l["BT-130"])}</span>` : "");
+  const category = (l) => (marked("BT-151") ? `<span${cattr("cat", "BT-151")}>${show("BT-151", l["BT-151"])}</span>` : "");
+  const lines = inv.lines.slice(0, 12).map((l) => `<tr><td>${esc(l["BT-153"])}</td><td${attr("BT-129")}>${esc(l["BT-129"])}${unit(l)}</td>
+      <td${attr("BT-146")}>${show("BT-146", l["BT-146"])}</td><td${attr("BT-152")}>${category(l)}${show("BT-152", l["BT-152"])}</td><td${attr("BT-131")}>${show("BT-131", l["BT-131"])}</td></tr>${subs(l)}`).join("");
   const more = inv.lines.length > 12 ? `<tr><td colspan="5" class="more">${esc(fill(T.more_lines, { n: inv.lines.length - 12 }))}</td></tr>` : "";
+  // the document level allowances and charges, above the totals
+  const AC = [["BT-92", "BT-93", "BT-96", "BT-95", "BT-97", "BT-98"], ["BT-99", "BT-100", "BT-103", "BT-102", "BT-104", "BT-105"]];
+  let ac = "";
+  if (marked(...AC.flat())) {
+    const row = (x, bt) => `<div><dt>${esc(label(bt))}</dt><dd>${field(bt, x[bt])}</dd></div>`;
+    const items = [[inv.allowances || [], AC[0]], [inv.charges || [], AC[1]]].flatMap(([list, [amount, ...rest]]) =>
+      list.map((x) => [amount, ...rest.filter((bt) => x[bt] || marked(bt))].map((bt) => row(x, bt)).join("")));
+    for (const bt of AC.flat()) laid.add(bt);
+    ac = `<dl class="inv-others"><p class="who">${esc(T.allowances_charges)}</p>${items.join("")}</dl>`;
+  }
   const total = (bt, strong) => (shown(bt) ? `<div${strong ? ' class="strong"' : ""}><span>${esc(label(bt))}</span>${field(bt, t[bt])}</div>` : "");
+  // the VAT breakdown, rate by rate
+  let vat = "";
+  if (marked("BT-116", "BT-117", "BT-118", "BT-119", "BT-120", "BT-121")) {
+    // the exemption reason and its code; one "no value" for both when the invoice gives neither
+    const why = (b) => (!b["BT-120"] && !b["BT-121"]
+      ? (marked("BT-120", "BT-121") ? field("BT-120", "", "BT-121") : "")
+      : `${b["BT-120"] ? field("BT-120", b["BT-120"]) : ""}${b["BT-121"] ? `${b["BT-120"] ? " " : ""}(${field("BT-121", b["BT-121"])})` : ""}`);
+    // the exemption reason's column only when a rate gives one or an error is about it
+    const reasons = (inv.vat_breakdown || []).some((b) => b["BT-120"] || b["BT-121"]) || marked("BT-120", "BT-121");
+    const cols = T.vat_cols.split(" · ").slice(0, reasons ? 5 : 4);
+    const rows = (inv.vat_breakdown || []).map((b) => `<tr><td${attr("BT-118")}>${show("BT-118", b["BT-118"])}</td><td${attr("BT-119")}>${show("BT-119", b["BT-119"])}</td><td${attr("BT-116")}>${show("BT-116", b["BT-116"])}</td><td${attr("BT-117")}>${show("BT-117", b["BT-117"])}</td>${reasons ? `<td>${why(b)}</td>` : ""}</tr>`);
+    vat = `\n    <table class="inv-lines inv-vat${reasons ? " inv-why" : ""}"><caption>${esc(T.vat_breakdown)}</caption><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`;
+  }
+  // the notes, at the bottom: a missing note says so, a repeated one is marked, else the block as a whole
+  let notes = "";
+  const keys = [...marks.keys()];
+  const missing = keys.filter((k) => k.startsWith("note-missing:")).map((k) => k.slice(13));
+  if (marks.has("notes") || missing.length || keys.some((k) => k.startsWith("note-code:"))) {
+    const rows = [...inv.notes.map((x) => `<li${attr(`note-code:${x.code}`)}>${noteLine(x.code, x.text)}</li>`), ...missing.map((c) => `<li${attr(`note-missing:${c}`)}>${noteLine(c, null)}</li>`)];
+    notes = `\n    <div class="inv-notes"><p${cattr("who", "notes")}>${esc(T.notes_label)}</p><ul>${rows.join("") || `<li><em class="absent">${esc(T.no_notes)}</em></li>`}</ul></div>`;
+  }
   const body = `<div class="invoice">
     <div class="inv-top">${party(T.seller, "BT-27", "BT-30", "BT-29", "BT-31", "BT-34")}
-      <div class="inv-title"><p class="doc">${esc(T.doc_types[t["BT-3"]] || T.doc_types["380"])}</p><p class="num">${field("BT-1", t["BT-1"])}</p>
-        <p class="dates">${esc(label("BT-2"))} ${field("BT-2", t["BT-2"])}${shown("BT-9") ? `<br>${esc(label("BT-9"))} ${field("BT-9", t["BT-9"])}` : ""}</p></div></div>
-    ${party(T.buyer, "BT-44", "BT-47", "BT-46", "BT-48", "BT-49")}
+      <div class="inv-title"><p class="doc">${title}</p><p class="num">${field("BT-1", t["BT-1"])}</p>
+        <p class="dates">${esc(label("BT-2"))} ${field("BT-2", t["BT-2"])}${shown("BT-9") ? `<br>${esc(label("BT-9"))} ${field("BT-9", t["BT-9"])}` : ""}${delivery}${period}</p></div></div>
+    ${party(T.buyer, "BT-44", "BT-47", "BT-46", "BT-48", "BT-49")}${other(T.deliver_to, ["BT-70", "BT-71"], "BT-70", null, "BT-71")}${other(T.payee, ["BT-59", "BT-60", "BT-61"], "BT-59", "BT-61", "BT-60")}${refs}
     <table class="inv-lines"><thead><tr><th>${esc(T.col_item)}</th><th>${esc(T.col_qty)}</th><th>${esc(T.col_price)}</th><th>${esc(T.col_vat)}</th><th>${esc(T.col_net)}</th></tr></thead><tbody>${lines}${more}</tbody></table>
-    <div class="inv-totals">${total("BT-106")}${total("BT-107")}${total("BT-108")}${total("BT-109")}${total("BT-110")}${total("BT-112", true)}${total("BT-113")}${total("BT-114")}${total("BT-115", true)}</div>`;
-  for (const bt of ["BT-129", "BT-146", "BT-152", "BT-131", "BT-153"]) if (inv.lines.length) laid.add(bt);
+    ${ac}<div class="inv-totals">${total("BT-106")}${total("BT-107")}${total("BT-108")}${total("BT-109")}${total("BT-110")}${total("BT-112", true)}${total("BT-113")}${total("BT-114")}${total("BT-115", true)}</div>${vat}${notes}`;
+  for (const bt of ["BT-129", "BT-146", "BT-152", "BT-131", "BT-153", "BT-130", "BT-151"]) if (inv.lines.length) laid.add(bt);
   const others = [...marks.keys()].filter((bt) => !laid.has(bt) && bt in t);
   return `${body}${others.length ? `<dl class="inv-others"><p class="who">${esc(T.other_terms)}</p>${others.map((bt) => `<div><dt>${esc(label(bt))}</dt><dd>${field(bt, t[bt])}</dd></div>`).join("")}</dl>` : ""}
   </div>`;
@@ -143,13 +278,19 @@ export function errorCard(g, n, inv, pages, { own = false, first = true } = {}) 
       <tr class="stated"><td></td><td class="k">${esc(fill(T.calc_stated, { what: label(calc.result) }))}</td><td class="v">${show(calc.result, calc.stated)}</td></tr></tbody></table>
       ${/^0\.0*$/.test(gap) ? "" : `<p class="gap">${fill(esc(T.calc_gap), { gap: `<strong>${show(calc.result, gap)}</strong>` })}</p>`}`;
   } else {
-    const has = (bt) => bt in inv.terms || inv.lines.some((l) => bt in l);
-    const value = (bt) => (bt in inv.terms ? show(bt, inv.terms[bt]) : inv.lines.map((l) => show(bt, l[bt])).join(" · "));
+    // the same values as the preview's: every value of each term, an identifier with its scheme when the error is
+    // about it, an invoiced object with its scheme
+    const scheme = aboutScheme(g);
+    const value = (bt) => {
+      if (bt === "BT-18") return (inv.documents || []).filter((d) => d.type === "130").map((d) => `${show(bt, d["BT-122"])}${d["BT-18-1"] ? ` (${esc(d["BT-18-1"])})` : ""}`).join(" · ");
+      const shownAs = valuesOf(inv, bt).map((v) => show(bt, v)).join(" · ");
+      return scheme && inv.terms[bt] ? `${shownAs} · ${schemeOf(inv, bt)}` : shownAs;
+    };
     const all = termsOf(g, pages);
-    const rows = all.filter(has).map((bt) => `<div><dt>${esc(label(bt))}</dt><dd>${value(bt)}</dd></div>`);
+    const rows = all.filter((bt) => valuesOf(inv, bt).length).map((bt) => `<div><dt>${esc(label(bt))}</dt><dd>${value(bt)}</dd></div>`);
     if (all.includes("BT-21") || all.includes("BT-22")) {
-      const cut = (s) => (s.length > 90 ? `${s.slice(0, 90)}…` : s);
-      const notes = inv.notes.map((x) => `${x.code ? `<span class="code">${esc(x.code)}</span> ` : ""}${esc(cut(x.text))}`);
+      const code = all.includes("BT-22") && noteCode(g);
+      const notes = [...inv.notes.map((x) => noteLine(x.code, x.text)), ...(code ? [noteLine(code, null)] : [])];
       rows.push(`<div><dt>${esc(T.notes_label)}</dt><dd>${notes.length ? notes.join("<br>") : `<em class="absent">${esc(T.no_notes)}</em>`}</dd></div>`);
     }
     if (rows.length) observed = `<dl class="observed">${rows.join("")}</dl>`;

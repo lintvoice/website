@@ -73,20 +73,10 @@ class Page(HTMLParser):
 
 
 @pytest.fixture(scope="session")
-def dist(tmp_path_factory):
-    return build.build(tmp_path_factory.mktemp("site") / "dist")
-
-
-@pytest.fixture(scope="session")
 def dist_rules(tmp_path_factory):
     """The site with its rule pages, from the pinned rules commit (fetched once, then reused), without the check page."""
     rules_dir = build.fetch_rules(build.load()[0]["rules_source"])
     return build.build(tmp_path_factory.mktemp("site-rules") / "dist", rules_dir=rules_dir)
-
-
-@pytest.fixture(scope="session")
-def texts():
-    return build.load()[1]
 
 
 def _page(dist, path):
