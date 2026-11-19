@@ -11,7 +11,7 @@
 {% block cta %}{% if checkable %}<a class="cta" href="#rule-check">{{ t.rule.check.cta }}</a>{% else %}{{ super() }}{% endif %}{% endblock %}
 {% block rights %}{{ t.rule.rights | links }}{% endblock %}
 {% block body %}
-<div class="band compact" id="band">{% include "_rule_head.html" %}
+<div class="band compact tint" id="band">{% include "_rule_head.html" %}
   <p class="status-line">{% include "_rule_severity.html" %}{% if links.rules is defined and m.topic in topic_icons %}<a class="subject" href="{{ links.rules }}?{{ t.rules.ui.params.topic }}={{ m.topic }}#rules-all">{{ icon(topic_icons[m.topic]) }}{{ t.rules.topics[m.topic] }}</a>{% endif %}{% if s.status %}<span>{{ t.rule.in_force }} {{ s.status }}</span>{% endif %}</p>
 </div>
 <div class="grid content-first">

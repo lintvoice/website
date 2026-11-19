@@ -114,9 +114,10 @@ pre.diff .gap{display:block;color:var(--muted)}
 /* the top bar stays at the top of every page; its background and bottom line run the full window width */
 .topbar{position:sticky;top:0;z-index:10;padding-top:var(--sp-3);padding-bottom:var(--sp-3);
   border-image:linear-gradient(to top,var(--line) 1px,var(--bg) 1px) fill 0/0/0 100vmax}
-/* rule pages: once the header band scrolls away, a short version (id, title, "in short") hangs under the top bar */
+/* rule pages: once the header band scrolls away, a short version (id, title, "in short") hangs under the top bar, on
+   the same kraft as the header band */
 .mini{display:none;position:absolute;left:0;right:0;top:100%;padding:var(--sp-2) 0 var(--sp-3);
-  border-image:linear-gradient(to top,var(--line) 1px,var(--bg) 1px) fill 0/0/0 100vmax}
+  border-image:linear-gradient(to top,var(--line) 1px,var(--band) 1px) fill 0/0/0 100vmax}
 .past-band .mini{display:block}
 .mini p{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mini-title{font-weight:600}

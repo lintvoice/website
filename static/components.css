@@ -132,8 +132,10 @@ blockquote.source{margin:0}
 .total-rule.wide{width:100%;height:calc(2 * var(--rule-wide-w) + var(--rule-wide-gap));margin:0}
 .total-rule.wide::before,.total-rule.wide::after{height:var(--rule-wide-w)}
 
-/* ---------- the header band, plain: on the paper, no box (the title, its double rule, the brief, the status line) */
+/* ---------- the header band, plain: on the paper, no box (the title, its double rule, the brief, the status line).
+   .band.tint puts it on kraft, edge to edge, so the page's identity stands apart from its content (the rule pages) */
 .band{background:none;border:0;border-radius:0;padding:var(--sp-8) 0 var(--sp-4);margin:0 0 var(--sp-6)}
+.band.tint{padding-bottom:var(--sp-6);margin-bottom:var(--sp-8)}
 
 /* ---------- type: a landing page's title; the lead under it */
 .display{font-size:var(--fs-display);line-height:1.1;letter-spacing:-.012em}
