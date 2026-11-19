@@ -1,3 +1,5 @@
+<a href="https://lintvoice.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://lintvoice.com/static/logo/lintvoice-wordmark-dark.svg"><img src="https://lintvoice.com/static/logo/lintvoice-wordmark-light.svg" alt="lintvoice" width="160"></picture></a>
+
 # lintvoice.com
 
 The website of [lintvoice](https://github.com/lintvoice/lintvoice), which checks e-invoices against official rules and standards. A static site, in English and French:
