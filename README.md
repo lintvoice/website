@@ -36,7 +36,7 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 
 | Path | What |
 | --- | --- |
-| `build.py` | The whole build: pages, examples, zip, sitemap |
+| `build.py` | The whole build: pages, examples, zip, sitemap (each rule page dated by the day its text last changed, the date it shows) |
 | `checkassets.py`, `package.json` | The check page's files, built at each deployment: the rule files of the pinned lintvoice version compiled for the browser (xslt3, Node), the schemas, SaxonJS, pdf.js and xmllint-wasm, with their licences (`/static/check/NOTICES.txt`) |
 | `rulepages.py` | The rule pages, read from the [lintvoice/invoice-rules](https://github.com/lintvoice/invoice-rules) repository at the commit pinned in `site.toml` |
 | `templates/` | Jinja templates, code only (no prose) |

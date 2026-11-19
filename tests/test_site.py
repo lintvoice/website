@@ -6,8 +6,10 @@ import json
 import re
 import sys
 import zipfile
+from datetime import date, timedelta
 from html.parser import HTMLParser
 from pathlib import Path
+from xml.etree import ElementTree
 
 import pytest
 
@@ -70,6 +72,13 @@ class Page(HTMLParser):
 @pytest.fixture(scope="session")
 def dist(tmp_path_factory):
     return build.build(tmp_path_factory.mktemp("site") / "dist")
+
+
+@pytest.fixture(scope="session")
+def dist_rules(tmp_path_factory):
+    """The site with its rule pages, from the pinned rules commit (fetched once, then reused), without the check page."""
+    rules_dir = build.fetch_rules(build.load()[0]["rules_source"])
+    return build.build(tmp_path_factory.mktemp("site-rules") / "dist", rules_dir=rules_dir)
 
 
 @pytest.fixture(scope="session")
@@ -172,6 +181,28 @@ def test_sitemap_and_robots(dist):
     for _, _, path in ALL:
         assert f"<loc>https://lintvoice.com{path}</loc>" in sitemap
     assert "Sitemap: https://lintvoice.com/sitemap.xml" in (dist / "robots.txt").read_text()
+
+
+def test_sitemap_dates_each_rule_page_by_the_date_it_shows(dist_rules, texts):
+    """Search engines trust a lastmod that matches the page: a rule page carries the date its text last changed,
+    the one it shows, the same in both languages. The other pages carry none."""
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    dates = {}
+    for url in ElementTree.parse(dist_rules / "sitemap.xml").getroot().findall("s:url", ns):  # noqa: S314 (our build)
+        path = url.findtext("s:loc", namespaces=ns).removeprefix("https://lintvoice.com")
+        lastmods = [e.text for e in url.findall("s:lastmod", ns)]
+        rule = re.fullmatch(r"(?:/rules|/fr/regles)/([^/]+)/", path)
+        if not rule:
+            assert lastmods == [], path
+            continue
+        assert len(lastmods) == 1, path
+        day = date.fromisoformat(lastmods[0])
+        assert day <= date.today() + timedelta(days=1), path  # a day's margin for time zones
+        lang = "fr" if path.startswith("/fr/") else "en"
+        html = (dist_rules / path.lstrip("/") / "index.html").read_text(encoding="utf-8")
+        assert f'<p class="updated">{texts[lang]["rule"]["updated_line"]} {day}</p>' in html, path
+        dates.setdefault(rule[1], []).append(day)
+    assert dates and all(len(days) == 2 and days[0] == days[1] for days in dates.values())
 
 
 def test_strict_build_refuses_a_legal_notice_with_gaps(tmp_path):

@@ -300,7 +300,10 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
             other_texts=fr,
         ),
     )
-    all_paths = list(pages.values()) + [{lang: rulepages.href(r["id"], lang) for lang in LANGS} for r in rules]
+    # a rule page is dated by the day its text last changed, the date it shows; the other pages carry no date
+    all_paths = [(paths, None) for paths in pages.values()] + [
+        ({lang: rulepages.href(r["id"], lang) for lang in LANGS}, str(r["meta"]["updated"])) for r in rules
+    ]
     _write(out, "/sitemap.xml", _sitemap(site["base_url"], all_paths))
     _write(out, "/robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {site['base_url']}/sitemap.xml\n")
     return out
@@ -308,12 +311,13 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
 
 def _sitemap(base, all_paths):
     rows = []
-    for paths in all_paths:
+    for paths, updated in all_paths:
+        lastmod = f"<lastmod>{updated}</lastmod>" if updated else ""
         for lang in LANGS:
             alternates = "".join(
                 f'<xhtml:link rel="alternate" hreflang="{code}" href="{base}{href}"/>' for code, href in paths.items()
             )
-            rows.append(f"<url><loc>{base}{paths[lang]}</loc>{alternates}</url>")
+            rows.append(f"<url><loc>{base}{paths[lang]}</loc>{lastmod}{alternates}</url>")
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
