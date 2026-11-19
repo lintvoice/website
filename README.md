@@ -43,7 +43,7 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 | `content/en.toml`, `content/fr.toml` | Every text of the site, one file per language |
 | `site.toml` | Base URL, rule set versions, the pinned rules commit, legal notice |
 | `wrangler.jsonc` | Cloudflare Workers: where the built site is, the 404 page, and lintvoice.com as its only address |
-| `static/` | Styles (`tokens.css`, `components.css`, `site.css`), the IBM Plex fonts, the logo, 15 Carbon icons (`@carbon/icons` 11.92.0, IBM, Apache-2.0, inlined in the pages at build, `static/icons/`), and the pictures of the example invoice on the home page and the rules index |
+| `static/` | Styles (`tokens.css`, `components.css`, `site.css`), the IBM Plex fonts, the logo, the share cards (`static/social/`: the image a link to the site shows in a chat or a feed, one per language, named in each page's Open Graph tags), 15 Carbon icons (`@carbon/icons` 11.92.0, IBM, Apache-2.0, inlined in the pages at build, `static/icons/`), and the pictures of the example invoice on the home page and the rules index |
 | `tests/` | Checks on the built site |
 | `tools/parity.py` | The check page against the lintvoice command-line tool: the same findings on every file of its set (official examples, the gallery's invoices, crafted and hostile files), in Chromium, WebKit and Firefox; run in CI |
 | `tools/example_pictures.py` | The pictures of the example invoice on the home page and the rules index, from the example's PDF; run again when the example changes |
@@ -55,4 +55,4 @@ Cloudflare Workers builds and deploys this repo on every push to `main`, through
 
 ## Licence
 
-The code is under the MIT licence. The rule pages' text comes from lintvoice/invoice-rules, under CC BY-SA 4.0. The site's own texts (`content/`) and the logo (`static/logo/`) are © AllGood Services SAS, all rights reserved; "lintvoice" is a trademark filed by AllGood Services SAS. The fonts are under the SIL Open Font License 1.1. The icons are IBM's Carbon icons, under the Apache License 2.0 (`static/icons/`). Details in [LICENSE](LICENSE).
+The code is under the MIT licence. The rule pages' text comes from lintvoice/invoice-rules, under CC BY-SA 4.0. The site's own texts (`content/`) the logo (`static/logo/`) and the share cards (`static/social/`) are © AllGood Services SAS, all rights reserved; "lintvoice" is a trademark filed by AllGood Services SAS. The fonts are under the SIL Open Font License 1.1. The icons are IBM's Carbon icons, under the Apache License 2.0 (`static/icons/`). Details in [LICENSE](LICENSE).

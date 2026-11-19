@@ -34,6 +34,7 @@ class Page(HTMLParser):
         super().__init__()
         self.lang, self.title, self.description, self.canonical = None, "", None, None
         self.alternates, self.refs, self.text, self.ids = {}, [], [], set()
+        self.og = {}
         self._in = []
         self.feed(html)
 
@@ -45,6 +46,8 @@ class Page(HTMLParser):
             self.lang = a.get("lang")
         elif tag == "meta" and a.get("name") == "description":
             self.description = a.get("content")
+        elif tag == "meta" and a.get("property", "").startswith("og:"):
+            self.og[a["property"]] = a["content"]
         elif tag == "link" and a.get("rel") == "canonical":
             self.canonical = a["href"]
         elif tag == "link" and a.get("rel") == "alternate":
@@ -203,6 +206,29 @@ def test_sitemap_dates_each_rule_page_by_the_date_it_shows(dist_rules, texts):
         assert f'<p class="updated">{texts[lang]["rule"]["updated_line"]} {day}</p>' in html, path
         dates.setdefault(rule[1], []).append(day)
     assert dates and all(len(days) == 2 and days[0] == days[1] for days in dates.values())
+
+
+def test_every_page_carries_its_share_card(dist_rules, texts):
+    """A link pasted into a chat or a feed shows the page's own title and description, and the share card of its
+    language: 1200x630, the size LinkedIn asks for. Every page of the sitemap, the rule pages included."""
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    urls = [u.findtext("s:loc", namespaces=ns) for u in ElementTree.parse(dist_rules / "sitemap.xml").getroot()]  # noqa: S314
+    assert urls
+    for url in urls:
+        path = url.removeprefix("https://lintvoice.com")
+        p = _page(dist_rules, path)
+        image = f"https://lintvoice.com/static/social/og-{p.lang}.png"
+        assert p.og["og:url"] == p.canonical == url, path
+        assert p.og["og:title"] == p.title.strip(), path
+        assert p.og["og:description"] == p.description, path
+        assert p.og["og:image"] == image, path
+        assert p.og["og:image:alt"] == texts[p.lang]["share_image_alt"], path
+        assert p.og["og:locale"] == texts[p.lang]["locale"], path
+        assert (p.og["og:type"], p.og["og:site_name"]) == ("website", "lintvoice"), path
+        png = (dist_rules / image.removeprefix("https://lintvoice.com/")).read_bytes()
+        width, height = int.from_bytes(png[16:20], "big"), int.from_bytes(png[20:24], "big")  # the PNG header
+        assert png[:8] == b"\x89PNG\r\n\x1a\n" and (width, height) == (1200, 630), image
+        assert (p.og["og:image:width"], p.og["og:image:height"]) == (str(width), str(height)), path
 
 
 def test_strict_build_refuses_a_legal_notice_with_gaps(tmp_path):

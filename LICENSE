@@ -3,7 +3,8 @@ lintvoice.com website
 This repository holds code under the MIT licence (below) and material that is not under it.
 
 Not under the MIT licence:
-- content/ (the texts of the site) and static/logo/ (the lintvoice logo):
+- content/ (the texts of the site), static/logo/ (the lintvoice logo) and static/social/ (the image a shared
+  link to the site shows, made of the logo and the site's texts):
   Copyright (c) 2026 AllGood Services SAS. All rights reserved. "lintvoice" is a trademark filed by
   AllGood Services SAS.
 - static/fonts/: IBM Plex, under the SIL Open Font License 1.1 (static/fonts/OFL-IBM-Plex-Sans.txt and

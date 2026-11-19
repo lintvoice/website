@@ -10,6 +10,7 @@ nav_label = "Principal"
 nav_examples = "Exemples de factures"
 cta_check = "Vérifier une facture"
 menu_label = "Menu"
+share_image_alt = "lintvoice : d'un code d'erreur à une facture corrigée. Vérifiez, comprenez, corrigez."  # the share card's alt text (Open Graph): what the image shows
 file_prefix = "facture-exemple"  # downloaded file names: facture-exemple-valide.pdf, facture-exemple-BR-CO-15.pdf
 file_valid = "valide"
 file_annotated = "annotee"
