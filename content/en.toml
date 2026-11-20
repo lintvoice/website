@@ -10,6 +10,7 @@ nav_label = "Main"
 nav_examples = "Example invoices"
 cta_check = "Check an invoice"
 menu_label = "Menu"
+skip_link = "Skip to content"
 share_image_alt = "lintvoice: from an error code to a fixed invoice. Check, understand, fix."  # the share card's alt text (Open Graph): what the image shows
 file_prefix = "example-invoice"  # downloaded file names: example-invoice-valid.pdf, example-invoice-BR-CO-15.pdf
 file_valid = "valid"

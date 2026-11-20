@@ -59,7 +59,8 @@ tr:target td{background:color-mix(in srgb,var(--accent) 8%,var(--bg))}
 .sev{display:inline-flex;align-items:center;gap:var(--sp-2)}
 .tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:1.1rem;height:1.1rem;border-radius:50%;
   border:var(--bw-hair) solid var(--muted);color:var(--muted);font:italic 600 var(--fs-xs)/1 var(--font-text);cursor:help}
-.tip:hover,.tip:focus{color:var(--text);border-color:var(--text);outline:none}
+.tip:hover,.tip:focus-visible{color:var(--text);border-color:var(--text)}
+.tip:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .tip-text{display:none;position:absolute;right:-.5rem;top:calc(100% + 8px);z-index:2;width:min(16rem,70vw);
   padding:var(--sp-2) var(--sp-3);background:var(--bg);color:var(--text);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);
   font:normal 400 var(--fs-sm)/1.45 var(--font-text);text-align:left;white-space:normal}
@@ -125,6 +126,10 @@ pre.diff .gap{display:block;color:var(--muted)}
 .mini-brief{font-size:var(--fs-sm);color:var(--muted)}
 .mini-brief strong{color:var(--text);font-weight:600}
 html{scroll-padding-top:9rem}
+/* a keyboard visitor's first stop on every page: a link straight to the content, shown only while it has the focus */
+.skip{position:absolute;left:var(--sp-4);top:var(--sp-2);z-index:20;padding:var(--sp-2) var(--sp-4);background:var(--bg);color:var(--text);
+  border:2px solid var(--accent);border-radius:var(--r-md);font-size:var(--fs-sm);transform:translateY(-200%)}
+.skip:focus{transform:none}
 .updated{color:var(--muted);font-size:var(--fs-sm);margin:var(--sp-4) 0 0}
 @media (max-width:640px){.mini p{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}}
 
@@ -435,7 +440,7 @@ a.rule-card .idm{font-size:var(--fs-sm);color:var(--bg);background:var(--accent)
 a.rule-card .t{display:block;font-size:var(--fs-lead);font-weight:600;line-height:var(--lh-tight);margin:var(--sp-3) 0 var(--sp-2)}
 a.rule-card .b{display:block;color:var(--muted)}
 a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decoration:underline}
-@media (prefers-reduced-motion:reduce){a.rule-card{transition:none}}
+@media (prefers-reduced-motion:reduce){a.rule-card,.drop,.subject-grid a{transition:none}}
 /* the one main action of a page */
 .btn.large{font-size:var(--fs-base);padding:var(--sp-3) var(--sp-5)}
 /* a quiet one-field search: a label, then the field; Enter searches */

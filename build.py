@@ -121,7 +121,34 @@ def _static(out):
         shutil.copyfile(logo / src, out / dst)
 
 
+# French puts a space before ? ! : ; » € % and after «. An ordinary space lets the line break there, so a "?" starts a
+# line or a "«" ends one: on French pages it becomes a no-break space, in the text only (never inside a tag, code, a
+# script, a style or the title, which share cards repeat).
+FR_SKIP = re.compile(r"<(script|style|pre|code|textarea|title)\b.*?</\1>|<[^>]+>", re.S | re.I)
+FR_SPACE = re.compile(r" (?=[?!:;»€%])|(?<=«) ")
+
+
+def french_spaces(html):
+    parts, pos = [], 0
+    for m in FR_SKIP.finditer(html):
+        parts += [FR_SPACE.sub("\u00a0", html[pos : m.start()]), m.group(0)]
+        pos = m.end()
+    parts.append(FR_SPACE.sub("\u00a0", html[pos:]))
+    return "".join(parts)
+
+
+def _fr_strings(value):
+    """The check's texts, which the page writes itself: the same no-break spaces."""
+    if isinstance(value, dict):
+        return {k: _fr_strings(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_fr_strings(v) for v in value]
+    return FR_SPACE.sub("\u00a0", value) if isinstance(value, str) else value
+
+
 def _write(out, path, html):
+    if html.lstrip().lower().startswith("<!doctype html>") and '<html lang="fr"' in html[:200]:
+        html = french_spaces(html)
     target = out / path.lstrip("/") / "index.html" if path.endswith("/") else out / path.lstrip("/")
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(html, encoding="utf-8")
@@ -199,8 +226,10 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
             json.dumps(subjects, ensure_ascii=False, sort_keys=True), encoding="utf-8"
         )
         for lang in LANGS:  # the check's texts, which a rule page loads only when it checks a file
+            ui = texts[lang]["check"]["ui"]
             (out / "static" / "check" / f"texts.{lang}.json").write_text(
-                json.dumps(texts[lang]["check"]["ui"], ensure_ascii=False, sort_keys=True), encoding="utf-8"
+                json.dumps(_fr_strings(ui) if lang == "fr" else ui, ensure_ascii=False, sort_keys=True),
+                encoding="utf-8",
             )
     manifest = _examples(out)
     env = Environment(
