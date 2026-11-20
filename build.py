@@ -10,6 +10,7 @@ Pages come from templates/ and the texts in content/{en,fr}.toml. The examples g
 invoice-examples generator at the version this project pins, so the files served are the ones its tests check.
 The rule pages come from the lintvoice/invoice-rules repository at the commit pinned in site.toml, fetched with git.
 The check page runs the rule files of the lintvoice version this project pins, compiled for the browser (checkassets.py).
+The guides come from guides/, one folder each (guides.py).
 """
 
 import argparse
@@ -24,6 +25,7 @@ import zipfile
 from pathlib import Path
 
 import checkassets
+import guides
 import rulepages
 from invoice_examples import cli as examples_cli
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
@@ -283,6 +285,31 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
                 other={"lang": other, "href": paths[other]},
             )
             _write(out, paths[lang], html)
+    known = {path for paths in pages.values() for path in paths.values()}
+    known |= {rulepages.href(r["id"], lang) for r in rules for lang in LANGS}
+    for guide in guides.load():
+        paths = guide["meta"]["paths"]
+        for lang in LANGS:
+            t, other = texts[lang], next(code for code in LANGS if code != lang)
+            g = guide["pages"][lang]
+            html = env.get_template("guide.html").render(
+                **common,
+                t=t,
+                p={"description": guide["meta"]["description"][lang]},
+                guide={
+                    "title": g["title"],
+                    "brief": guides.inline(g["brief"]),
+                    "body": guides.html(g["body"], known),
+                    "checked": guide["meta"]["checked"],
+                },
+                path=paths[lang],
+                alternates=paths,
+                canonical=True,
+                page_title=f"{g['title']} · lintvoice",
+                links={name: pages[name][lang] for name in pages},
+                other={"lang": other, "href": paths[other]},
+            )
+            _write(out, paths[lang], html)
     en, fr = texts["en"], texts["fr"]
     _write(
         out,
@@ -300,10 +327,13 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
             other_texts=fr,
         ),
     )
-    # a rule page is dated by the day its text last changed, the date it shows; the other pages carry no date
-    all_paths = [(paths, None) for paths in pages.values()] + [
-        ({lang: rulepages.href(r["id"], lang) for lang in LANGS}, str(r["meta"]["updated"])) for r in rules
-    ]
+    # a rule page is dated by the day its text last changed, a guide by the day its facts were checked, the dates
+    # they show; the other pages carry no date
+    all_paths = (
+        [(paths, None) for paths in pages.values()]
+        + [({lang: rulepages.href(r["id"], lang) for lang in LANGS}, str(r["meta"]["updated"])) for r in rules]
+        + [(g["meta"]["paths"], str(g["meta"]["checked"])) for g in guides.load()]
+    )
     _write(out, "/sitemap.xml", _sitemap(site["base_url"], all_paths))
     _write(out, "/robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {site['base_url']}/sitemap.xml\n")
     return out

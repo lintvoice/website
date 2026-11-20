@@ -486,3 +486,8 @@ a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decora
 .card .share{display:inline;margin:0}
 .card .share .copied{display:block;color:var(--muted);font-size:var(--fs-sm)}
 .card .share .link{font-size:var(--fs-sm)}
+
+/* ---------- guides: one situation explained from start to finish ---------- */
+.guide h2{margin-top:var(--sp-12)}
+.guide .table-wrap{margin:0 0 var(--sp-4)}
+.guide th,.guide td{vertical-align:top}

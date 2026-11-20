@@ -501,3 +501,6 @@ doctype = "Ce fichier est refusé par sécurité, car il déclare un DOCTYPE, ce
 not-invoice = "Ce fichier XML n'est pas une facture CII ou UBL."
 too-large = "Cette facture compte {lines} lignes. Au-delà de {max} lignes, une facture est trop volumineuse pour être vérifiée dans le navigateur."
 attachment-too-large = "Le fichier joint à ce PDF est trop volumineux pour être vérifié dans le navigateur."
+
+[guide]
+checked_line = "Faits vérifiés le"

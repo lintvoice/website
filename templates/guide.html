@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="band">
+  <h1>{{ guide.title }}</h1>
+  <span class="total-rule" aria-hidden="true"></span>
+  <p class="brief">{{ guide.brief }}</p>
+  <p class="updated">{{ t.guide.checked_line }} {{ guide.checked }}</p>
+</div>
+<article class="prose guide">
+{{ guide.body }}
+</article>
+{% endblock %}

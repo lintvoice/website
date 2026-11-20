@@ -17,6 +17,7 @@ ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 import build  # noqa: E402 (after the sys.path insert)
 import checkassets  # noqa: E402
+import guides  # noqa: E402
 
 EXTERNAL = (
     "https://github.com/",
@@ -25,8 +26,11 @@ EXTERNAL = (
     "https://www.cloudflare.com/",
     "https://creativecommons.org/",
     "https://openfontlicense.org/",
+    "https://portail.chorus-pro.gouv.fr/",  # AIFE's documents, the sources of a guide
+    "https://facturation.chorus-pro.gouv.fr/",  # the French e-invoicing directory
 )
 FORBIDDEN = re.compile(r"certif|complian|conform|\bfake|fixture", re.I)  # we help check; we never certify
+QUOTED_CODES = ("FACT_NON_CONFORME",)  # Chorus Pro's reason codes, quoted on a guide as they arrive: not our wording
 
 
 class Page(HTMLParser):
@@ -84,7 +88,9 @@ def _page(dist, path):
     return Page(file.read_text(encoding="utf-8"))
 
 
-ALL = [(page, lang, path) for page, paths in build.PAGES.items() for lang, path in paths.items()]
+ALL = [(page, lang, path) for page, paths in build.PAGES.items() for lang, path in paths.items()] + [
+    (f"guide-{g['key']}", lang, path) for g in guides.load() for lang, path in g["meta"]["paths"].items()
+]
 
 
 @pytest.mark.parametrize("page,lang,path", ALL, ids=[f"{page}-{lang}" for page, lang, _ in ALL])
@@ -160,6 +166,8 @@ def test_gallery_lists_every_example_with_its_files(dist):
 def test_wording_never_claims_certification(dist, texts):
     for _page_name, lang, path in ALL:
         text = " ".join(_page(dist, path).text).replace(texts[lang]["footer_disclaimer"], "")
+        for code in QUOTED_CODES:
+            text = text.replace(code, "")
         found = FORBIDDEN.findall(text)
         assert not found, f"{path}: {found}"
 
@@ -178,23 +186,26 @@ def test_sitemap_and_robots(dist):
 
 def test_sitemap_dates_each_rule_page_by_the_date_it_shows(dist_rules, texts):
     """Search engines trust a lastmod that matches the page: a rule page carries the date its text last changed,
-    the one it shows, the same in both languages. The other pages carry none."""
+    a guide the date its facts were checked, the one it shows, the same in both languages. The other pages carry
+    none."""
     ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     dates = {}
     for url in ElementTree.parse(dist_rules / "sitemap.xml").getroot().findall("s:url", ns):  # noqa: S314 (our build)
         path = url.findtext("s:loc", namespaces=ns).removeprefix("https://lintvoice.com")
         lastmods = [e.text for e in url.findall("s:lastmod", ns)]
-        rule = re.fullmatch(r"(?:/rules|/fr/regles)/([^/]+)/", path)
+        rule = re.fullmatch(r"(?:/rules|/fr/regles|/guides|/fr/guides)/([^/]+)/", path)
         if not rule:
             assert lastmods == [], path
             continue
         assert len(lastmods) == 1, path
         day = date.fromisoformat(lastmods[0])
         assert day <= date.today() + timedelta(days=1), path  # a day's margin for time zones
-        lang = "fr" if path.startswith("/fr/") else "en"
+        t = texts["fr" if path.startswith("/fr/") else "en"]
         html = (dist_rules / path.lstrip("/") / "index.html").read_text(encoding="utf-8")
-        assert f'<p class="updated">{texts[lang]["rule"]["updated_line"]} {day}</p>' in html, path
-        dates.setdefault(rule[1], []).append(day)
+        updated = t["guide"]["checked_line"] if "/guides/" in path else t["rule"]["updated_line"]
+        assert f'<p class="updated">{updated} {day}</p>' in html, path
+        guide = {path: g["key"] for g in guides.load() for path in g["meta"]["paths"].values()}.get(path)
+        dates.setdefault(("guide", guide) if guide else ("rule", rule[1]), []).append(day)
     assert dates and all(len(days) == 2 and days[0] == days[1] for days in dates.values())
 
 
