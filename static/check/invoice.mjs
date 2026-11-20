@@ -142,21 +142,31 @@ function compute(c, values, item = null) {
   return calc;
 }
 
+// How far an item's stated amount is from its expected amount, as its rule measures it: without the signs when the rule
+// compares absolute values ("absolute": BR-CO-17 and BR-S-09 accept a VAT amount whose sign differs from its base's,
+// so a breakdown with only its sign flipped passes them). On a common scale, beyond any amount's decimals.
+function deviation(calc, c) {
+  let [stated, expected] = [exact(calc.stated), exact(calc.expected)];
+  if (c.absolute) [stated, expected] = [[absolute(stated[0]), stated[1]], [absolute(expected[0]), expected[1]]];
+  return absolute(align(add(stated, negate(expected)), 40));
+}
+
 // The computation a totals or VAT rule makes, with the invoice's values: parts [sign, value, BT], expected, stated and
-// the gap (stated - expected); for a rule checked per VAT breakdown, the breakdown with the largest gap (the one that
-// fails), as group. null when the rule has none or a value is not a number. Same shape as lintvoice's JSON.
+// the gap (stated - expected); for a rule checked per VAT breakdown, the breakdown furthest from its expected amount as
+// the rule measures it (the one the rule rejects), as group. null when the rule has none or a value is not a number.
+// Same shape as lintvoice's JSON.
 export function computation(rule, values, spec) {
   const c = spec.computations[rule];
   if (!c) return null;
   if (!c.each) return compute(c, values);
   const items = (values[c.each] || []).filter((item) => Object.entries(c.where || {}).every(([bt, v]) => same(item[bt], v)));
   let best = null;
-  let bestGap = -1n;
+  let bestDeviation = -1n;
   for (const item of items) {
     const calc = compute(c, values, item);
     if (!calc) continue;
-    const g = absolute(align(exact(calc.gap), 40)); // a common scale, beyond any amount's decimals
-    if (g > bestGap) [best, bestGap] = [calc, g];
+    const d = deviation(calc, c);
+    if (d > bestDeviation) [best, bestDeviation] = [calc, d];
   }
   return best;
 }

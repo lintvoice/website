@@ -97,6 +97,16 @@ def corpus(folder):
     (folder / "crafted-doctype.xml").write_text(doctype, encoding="utf-8")
     (folder / "crafted-not-an-invoice.xml").write_text("<note><to>x</to></note>", encoding="utf-8")
     (folder / "crafted-broken.xml").write_text(valid[: len(valid) // 2], encoding="utf-8")
+    # Two VAT breakdowns: the 25 % one 1.50 too high (BR-CO-17 and BR-S-09 reject it), the 12 % one with only its sign
+    # flipped (both rules compare amounts without their sign, so they accept it). The explanation must show the 25 %
+    # breakdown, on the page as in lintvoice.
+    two_rates = (rules / "cii" / "examples" / "CII_example4.xml").read_text(encoding="utf-8")
+    for old, new in (("375", "376.50"), ("300", "-300")):
+        tag = "<ram:CalculatedAmount>{}</ram:CalculatedAmount>"
+        if two_rates.count(tag.format(old)) != 1:
+            raise SystemExit(f"CII_example4.xml has changed: not one VAT amount of {old}")
+        two_rates = two_rates.replace(tag.format(old), tag.format(new))
+    (folder / "crafted-vat-sign-flipped.xml").write_text(two_rates, encoding="utf-8")
 
     head, rest = valid.split("?>", 1)
     laughs = (
