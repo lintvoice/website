@@ -3,6 +3,6 @@ paths:
   en: /guides/chorus-pro-rejected-refused-invoice-approved-platform/
   fr: /fr/guides/facture-rejetee-refusee-chorus-pro-plateforme-agreee/
 description:
-  en: "Rejected (213) or refused (210): who said no, what the reason code means, and what to do when Chorus Pro returns an invoice sent through an approved platform."
+  en: "An invoice to a French public buyer comes back from Chorus Pro, rejected (213) or refused (210): who said no, what the reason code means, and what to do."
   fr: "Rejetée (213) ou refusée (210) : qui a dit non, ce que veut dire le code motif, et quoi faire quand Chorus Pro renvoie une facture passée par une plateforme agréée."
 checked: 2026-11-20  # the day the facts below were last checked against AIFE's documents
