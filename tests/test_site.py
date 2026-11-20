@@ -28,6 +28,7 @@ EXTERNAL = (
     "https://openfontlicense.org/",
     "https://portail.chorus-pro.gouv.fr/",  # AIFE's documents, the sources of a guide
     "https://facturation.chorus-pro.gouv.fr/",  # the French e-invoicing directory
+    "https://www.boutique.afnor.org/",  # AFNOR's page for a French standard, a source of a guide
 )
 FORBIDDEN = re.compile(r"certif|complian|conform|\bfake|fixture", re.I)  # we help check; we never certify
 QUOTED_CODES = ("FACT_NON_CONFORME",)  # Chorus Pro's reason codes, quoted on a guide as they arrive: not our wording
