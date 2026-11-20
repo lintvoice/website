@@ -520,6 +520,7 @@ examples_text = "Une facture Factur-X valide, et {n} variantes qui échouent cha
 examples_link = "Les exemples de factures"
 examples_proof = "XML et PDF lisible, dans le domaine public (CC0)."
 examples_zip = "Tout télécharger (zip)"
+guide_link = "Lire le guide"
 annotated_head = "Apprenez à lire une facture électronique"
 annotated_text = "La facture d'exemple valide, annotée : chaque donnée porte son numéro dans la norme européenne, le même que dans les messages d'erreur et dans nos pages de règles. BT-1 est le numéro de facture, BT-112 le total TTC."
 annotated_link = "La facture annotée (PDF)"

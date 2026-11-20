@@ -520,6 +520,7 @@ examples_text = "One valid Factur-X invoice, and {n} variants that each fail one
 examples_link = "The example invoices"
 examples_proof = "XML and a readable PDF, in the public domain (CC0)."
 examples_zip = "Download all (zip)"
+guide_link = "Read the guide"
 annotated_head = "Learn to read an e-invoice"
 annotated_text = "The valid example invoice, annotated: each piece of data carries its number in the European standard, the same as in error messages and on our rule pages. BT-1 is the invoice number, BT-112 the total with VAT."
 annotated_link = "The annotated invoice (PDF)"

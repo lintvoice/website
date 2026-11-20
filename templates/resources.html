@@ -10,6 +10,8 @@
 <section class="section" aria-label="{{ p.h1 }}">
   <ul class="subject-grid res-grid">
     <li><a href="{{ links.examples }}">{{ icon("edit") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="n">{{ p.examples_link }} →</span></a></li>
+    {% for g in guides %}<li><a href="{{ g.meta.paths[t.lang] }}">{{ icon("book") }}<span class="name">{{ g.pages[t.lang].title }}</span><span class="line">{{ g.meta.description[t.lang] }}</span><span class="n">{{ p.guide_link }} →</span></a></li>
+    {% endfor %}
     {% if manifest.get('annotated') %}<li><a href="{{ files_href }}{{ manifest.annotated.pdf }}" download="{{ t.file_prefix }}-{{ t.file_annotated }}.pdf">{{ icon("data--structured") }}<span class="name">{{ p.annotated_head }}</span><span class="line">{{ p.annotated_text }}</span><span class="n">{{ p.annotated_link }} ↓</span></a></li>{% endif %}
     <li><a href="{{ links.glossary }}">{{ icon("list--bulleted") }}<span class="name">{{ p.glossary_head }}</span><span class="line">{{ p.glossary_text }}</span><span class="n">{{ p.glossary_link }} →</span></a></li>
     <li><a href="{{ links.home }}#quick-start">{{ icon("terminal") }}<span class="name">{{ p.dev_head }}</span><span class="line">{{ p.dev_text }}</span><span class="n">{{ p.dev_link }} →</span></a></li>

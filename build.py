@@ -262,6 +262,7 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
         "files_href": FILES_HREF,
         "zip_href": ZIP_HREF,
         "rules": rules,
+        "guides": guides.load(),
     }
     if rules:
         rs = site["rule_sets"]
