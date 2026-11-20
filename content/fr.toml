@@ -574,6 +574,20 @@ mail_subject = "Tarifs lintvoice"
 price_button = "Nous écrire"
 price_after = "Nous lisons chaque message et y répondons, et votre adresse ne sert qu'à cela. Vos messages nous disent quoi construire en premier. Vous pouvez aussi ouvrir une discussion sur [GitHub](https://github.com/lintvoice)."
 
+# The paper note beside the claim (the page's picture): what lintvoice costs today, each line at zero.
+[pricing.note]
+title = "Votre note"
+lines = [
+    "Vérifier une facture dans votre navigateur",
+    "{explained} règles expliquées, avec leur correction",
+    "Les factures d'exemple, à reprendre telles quelles",
+    "L'outil en ligne de commande, pour vos logiciels",
+]
+zero = "0,00 €"
+total = "Total"
+foot = "Votre facture n'a jamais quitté votre ordinateur."
+caption = "Ce que lintvoice vous coûte aujourd'hui."
+
 [[pricing.blocks]]
 key = "verifier"
 head = "Vérifier ne coûte rien."
@@ -592,7 +606,9 @@ text = [
 [[pricing.blocks]]
 key = "payant"
 head = "Seul ce qui tourne sur nos serveurs pourrait devenir payant."
-sub = "Un tel service, hébergé en Europe, nous coûte à faire fonctionner. Trois idées, aucune n'existe encore. « Ça m'intéresse » ouvre un e-mail avec l'idée en objet."
+sub = "Un tel service, hébergé en Europe, nous coûte à faire fonctionner. Aucun n'existe encore."
+ideas_head = "Trois services possibles. Lequel vous servirait ?"
+ideas_sub = "« Ça m'intéresse » ouvre un e-mail avec l'idée en objet."
 
 [[pricing.blocks.items]]
 what = "Être prévenu quand les règles changent"
