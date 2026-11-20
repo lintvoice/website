@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
-{# A pricing page with no price until there is one (decided 2026-11-18): what is free and why, what the tool does not do
-   yet, what could become paid and why, and an open question to the visitor. #}
+{# A pricing page with no price until there is one: its title says why the tool is free, three pillars follow (checking
+   costs nothing, what is published stays free, what could be paid runs on our servers), then what the tool does not do
+   yet, and one question to the visitor. A block holds paragraphs (text), a list (items), or both. #}
 {% set ix = rules_index if rules_index is defined else none %}
 {% set counts = dict(explained=ix.explained if ix else "", total=ix.total if ix else "", max_lines=300) %}
 <div class="band">
@@ -13,11 +14,12 @@
 <section class="section{% if loop.index is even %} tint{% endif %}" id="{{ block.key }}" aria-labelledby="{{ block.key }}-title">
   <h2 id="{{ block.key }}-title">{{ block.head }}</h2>
   {% if block.get('sub') %}<p class="sub">{{ block.sub | fill(counts) }}</p>{% endif %}
-  <ul class="offer">
+  {% for para in block.get('text', []) %}<p>{{ para | fill(counts) }}</p>{% endfor %}
+  {% if block.get('items') %}<ul class="offer">
   {% for item in block["items"] %}
     <li><strong>{{ item.what | fill(counts) }}</strong>{% if item.get('why') %}<span class="why">{{ item.why | fill(counts) }}</span>{% endif %}{% if item.get('ask') %}<span class="why"><a href="mailto:hello@lintvoice.com?subject={{ item.ask | urlencode }}">{{ p.ask_link }}</a></span>{% endif %}</li>
   {% endfor %}
-  </ul>
+  </ul>{% endif %}
 </section>
 {% endfor %}
 <section class="section" id="price" aria-labelledby="price-title">

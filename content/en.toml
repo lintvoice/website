@@ -561,41 +561,58 @@ contact_line = "A question, a comment, an idea? Write to"
 contact_after = "We'll be glad to hear from you."
 
 [pricing]
-title = "Pricing: what is free, and what could become paid"
-description = "What lintvoice offers for free and why, what it does not do yet, and the paid services we are considering, with no price for now. Tell us what would help you."
-h1 = "Pricing"
-brief = "What is free and why, what lintvoice does not do yet, and what could become paid. There is no price yet: tell us what would help you."
-ask_link = "I'd be interested"
-price_head = "The price: unknown at this stage"
+title = "Pricing: why lintvoice is free, and what could become paid"
+description = "The check runs on your computer: it is free, with no account. What could one day become paid, and why. Tell us what would help you."
+h1 = "Your computer does the work. That's why it's free."
+brief = "No account, no credit card. Here's why, and what could one day become paid."
+ask_link = "I'm interested"
+price_head = "What would you pay?"
 price = [
-    "We don't know yet what these services would cost, or which of them will exist. To decide, we need to know what would help you, and at what price.",
-    "One message is enough: what you would need, for how many invoices, and what you would be ready to pay.",
+    "We have no price, and we won't make one up. Tell us what you would need, for how many invoices, and what you would be ready to pay.",
 ]
 mail_subject = "lintvoice pricing"
 price_button = "Write to us"
 price_after = "Your messages help us make lintvoice more useful. You can also open a discussion on [GitHub](https://github.com/lintvoice)."
 
 [[pricing.blocks]]
-key = "gratuit"
-head = "Free, and why"
-sub = "Everything that runs on your computer, and everything we publish."
+key = "verifier"
+head = "Checking costs nothing."
+text = [
+    "Your invoice is checked in your browser, or in your terminal with the command-line tool. It never goes through our servers: checking it costs us nothing, and costs you nothing.",
+    "The check page's code is public: [read it on GitHub](https://github.com/lintvoice/website).",
+]
+
+[[pricing.blocks]]
+key = "publie"
+head = "What we publish stays free."
+text = [
+    "The rule texts are under CC BY-SA 4.0, the example invoices in the public domain (CC0), lintvoice's code under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE). Once a version is published under these licences, it stays so: reuse it, copy it, change it.",
+]
+
+[[pricing.blocks]]
+key = "payant"
+head = "Paid one day? Only what runs on our servers."
+sub = "A service on our servers, in Europe, costs us to run. Three ideas, none of which exists yet:"
 
 [[pricing.blocks.items]]
-what = "Checking an invoice on this site, with no account"
-why = "The check runs in your browser, so your invoice is sent nowhere and costs us nothing to check."
+what = "Being told when the rules change"
+why = "The European rules have changed twice a year since 2024; the French ones went through five versions in two months in 2026. We would run your test invoices against each new version, and tell you what no longer passes, and why."
+ask = "Interest: rule change alerts"
 
 [[pricing.blocks.items]]
-what = "The rule pages and the example invoices"
-why = "The rule texts are under CC BY-SA 4.0 and the example invoices in the public domain (CC0). What is published under these licences stays free to reuse."
+what = "Checking with nothing to install, through an API"
+why = "For software that cannot run the command-line tool, and invoices too large for the browser. Your invoices would go through our servers, with a written commitment on what we do with them."
+ask = "Interest: checking API"
 
 [[pricing.blocks.items]]
-what = "The lintvoice command-line tool"
-why = "It checks your invoices offline and in your continuous integration. Its code is open source under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE), and code published under it stays free."
+what = "A workspace for accounting firms"
+why = "All your clients' invoices at once, one report per client, and checks beyond the official rules: does this company ID, this VAT number exist? They query public registers, so they can't run in your browser alone."
+ask = "Interest: accounting firm workspace"
 
 [[pricing.blocks]]
 key = "pas-encore"
 head = "What lintvoice does not do yet"
-sub = "So you know what to expect."
+sub = "Better to know before."
 
 [[pricing.blocks.items]]
 what = "A page for every rule"
@@ -616,26 +633,6 @@ why = "Beyond that, the check would be too slow in a web page. The command-line 
 [[pricing.blocks.items]]
 what = "Knowing whether a SIREN exists, or whether your client will receive the invoice"
 why = "The official rules check the form of the data, not whether it is real. Only your client's platform knows whether the invoice reaches it."
-
-[[pricing.blocks]]
-key = "payant"
-head = "What could become paid, and why"
-sub = "Services that would run on our servers, in Europe, and cost us to run. None exists today."
-
-[[pricing.blocks.items]]
-what = "Being told when the rules change"
-why = "The European standard's rules have had a new version twice a year since 2024, and the French rules went through five versions in two months in 2026. We would check your test invoices against each new version as soon as it is published, and tell you what no longer passes, and why."
-ask = "Interest: rule change alerts"
-
-[[pricing.blocks.items]]
-what = "Checking with nothing to install, through an API"
-why = "For software that cannot run the command-line tool, and for invoices too large for the browser. Your invoices would then go through our servers, with a written commitment on what we do with them."
-ask = "Interest: checking API"
-
-[[pricing.blocks.items]]
-what = "A workspace for accounting firms"
-why = "Checking many clients' invoices at once, with a report per client and checks that go beyond the official rules, such as whether a SIREN or a VAT number exists. These checks query public registers, so they cannot run in your browser alone."
-ask = "Interest: accounting firm workspace"
 
 [glossary]
 title = "E-invoicing glossary: Factur-X, Peppol, approved platform, SIREN…"

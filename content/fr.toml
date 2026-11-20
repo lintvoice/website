@@ -561,41 +561,58 @@ contact_line = "Une question, une remarque, une idée ? Écrivez-nous à"
 contact_after = "Nous serons heureux d'échanger avec vous."
 
 [pricing]
-title = "Tarifs : ce qui est gratuit, et ce qui pourrait devenir payant"
-description = "Ce que lintvoice offre gratuitement et pourquoi, ce qu'il ne fait pas encore, et les services payants que nous envisageons, sans prix pour l'instant. Dites-nous ce qui vous serait utile."
-h1 = "Tarifs"
-brief = "Ce qui est gratuit et pourquoi, ce que lintvoice ne fait pas encore, et ce qui pourrait devenir payant. Il n'y a pas encore de prix : dites-nous ce qui vous serait utile."
-ask_link = "Ça m'intéresserait"
-price_head = "Le prix : inconnu à ce stade"
+title = "Tarifs : pourquoi lintvoice est gratuit, et ce qui pourrait devenir payant"
+description = "La vérification tourne sur votre ordinateur : elle est gratuite, sans compte. Ce qui pourrait devenir payant un jour, et pourquoi. Dites-nous ce qui vous serait utile."
+h1 = "Votre ordinateur fait le travail. C'est pour ça que c'est gratuit."
+brief = "Sans compte ni carte bancaire. Voici pourquoi, et ce qui pourrait un jour devenir payant."
+ask_link = "Ça m'intéresse"
+price_head = "Combien paieriez-vous ?"
 price = [
-    "Nous ne savons pas encore ce que ces services coûteraient, ni lesquels verront le jour. Pour en décider, nous avons besoin de savoir ce qui vous serait utile, et à quel prix.",
-    "Un message suffit : ce dont vous auriez besoin, pour combien de factures, et ce que vous seriez prêt à payer.",
+    "Nous n'avons pas de prix, et nous ne voulons pas en inventer un. Dites-nous ce dont vous auriez besoin, pour combien de factures, et ce que vous seriez prêt à payer.",
 ]
 mail_subject = "Tarifs lintvoice"
 price_button = "Nous écrire"
 price_after = "Vos messages nous aident à rendre lintvoice plus utile. Vous pouvez aussi ouvrir une discussion sur [GitHub](https://github.com/lintvoice)."
 
 [[pricing.blocks]]
-key = "gratuit"
-head = "Gratuit, et pourquoi"
-sub = "Tout ce qui tourne sur votre ordinateur, et tout ce que nous publions."
+key = "verifier"
+head = "Vérifier ne coûte rien."
+text = [
+    "Votre facture est vérifiée dans votre navigateur, ou dans votre terminal avec l'outil en ligne de commande. Elle ne passe jamais par nos serveurs : la vérifier ne nous coûte rien, et ne vous coûte rien.",
+    "Le code de la page de vérification est public : [lisez-le sur GitHub](https://github.com/lintvoice/website).",
+]
+
+[[pricing.blocks]]
+key = "publie"
+head = "Ce que nous publions reste libre."
+text = [
+    "Les textes des règles sont sous licence CC BY-SA 4.0, les factures d'exemple dans le domaine public (CC0), le code de lintvoice sous [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE). Une version publiée sous ces licences le reste : reprenez-la, copiez-la, modifiez-la.",
+]
+
+[[pricing.blocks]]
+key = "payant"
+head = "Payant un jour ? Seulement ce qui tourne chez nous."
+sub = "Un service sur nos serveurs, en Europe, nous coûte à faire fonctionner. Trois idées, aucune n'existe encore :"
 
 [[pricing.blocks.items]]
-what = "Vérifier une facture sur ce site, sans compte"
-why = "La vérification se fait dans votre navigateur, donc votre facture n'est envoyée nulle part et ne nous coûte rien à vérifier."
+what = "Être prévenu quand les règles changent"
+why = "Les règles européennes changent deux fois par an depuis 2024 ; les françaises ont connu cinq versions en deux mois en 2026. Nous passerions vos factures de test sur chaque nouvelle version, et vous dirions ce qui ne passe plus, et pourquoi."
+ask = "Intérêt : alertes de changement de règles"
 
 [[pricing.blocks.items]]
-what = "Les pages de règles et les factures d'exemple"
-why = "Les textes des règles sont sous licence CC BY-SA 4.0 et les factures d'exemple dans le domaine public (CC0). Ce qui est publié sous ces licences reste libre de réutilisation."
+what = "Vérifier sans rien installer, par une API"
+why = "Pour les logiciels qui ne peuvent pas lancer l'outil en ligne de commande, et les factures trop grandes pour le navigateur. Vos factures passeraient par nos serveurs, avec un engagement écrit sur ce que nous en faisons."
+ask = "Intérêt : API de vérification"
 
 [[pricing.blocks.items]]
-what = "L'outil en ligne de commande lintvoice"
-why = "Il vérifie vos factures hors ligne et dans votre intégration continue. Son code est open source sous [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE), et le code publié sous cette licence reste libre."
+what = "Un espace pour les cabinets comptables"
+why = "Les factures de tous vos clients en une fois, un rapport par client, et des vérifications au-delà des règles officielles : ce SIREN, ce numéro de TVA existent-ils ? Elles interrogent des registres publics, donc pas depuis votre seul navigateur."
+ask = "Intérêt : espace cabinet comptable"
 
 [[pricing.blocks]]
 key = "pas-encore"
 head = "Ce que lintvoice ne fait pas encore"
-sub = "Pour que vous sachiez à quoi vous attendre."
+sub = "Mieux vaut le savoir avant."
 
 [[pricing.blocks.items]]
 what = "Une page pour chaque règle"
@@ -616,26 +633,6 @@ why = "Au-delà, la vérification serait trop lente dans une page web. L'outil e
 [[pricing.blocks.items]]
 what = "Savoir si un SIREN existe, ou si votre client recevra la facture"
 why = "Les règles officielles vérifient la forme des données, pas leur réalité. Seule la plateforme de votre client sait si la facture lui parvient."
-
-[[pricing.blocks]]
-key = "payant"
-head = "Ce qui pourrait devenir payant, et pourquoi"
-sub = "Des services qui tourneraient sur nos serveurs, en Europe, et nous coûteraient à faire fonctionner. Aucun n'existe aujourd'hui."
-
-[[pricing.blocks.items]]
-what = "Être prévenu quand les règles changent"
-why = "Les règles de la norme européenne ont une nouvelle version deux fois par an depuis 2024, et les règles françaises ont connu cinq versions en deux mois en 2026. Nous vérifierions vos factures de test sur chaque nouvelle version dès sa publication, et vous dirions ce qui ne passe plus, et pourquoi."
-ask = "Intérêt : alertes de changement de règles"
-
-[[pricing.blocks.items]]
-what = "Vérifier sans rien installer, par une API"
-why = "Pour les logiciels qui ne peuvent pas lancer l'outil en ligne de commande, et pour les factures trop grandes pour le navigateur. Vos factures passeraient alors par nos serveurs, avec un engagement écrit sur ce que nous en faisons."
-ask = "Intérêt : API de vérification"
-
-[[pricing.blocks.items]]
-what = "Un espace pour les cabinets comptables"
-why = "Vérifier en une fois les factures de nombreux clients, avec un rapport par client et des vérifications qui vont au-delà des règles officielles, comme l'existence d'un SIREN ou d'un numéro de TVA. Ces vérifications interrogent des registres publics, donc elles ne peuvent pas se faire dans votre navigateur seul."
-ask = "Intérêt : espace cabinet comptable"
 
 [glossary]
 title = "Glossaire de la facture électronique : Factur-X, Peppol, plateforme agréée, SIREN…"
