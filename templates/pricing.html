@@ -1,30 +1,70 @@
 {% extends "base.html" %}
 {% block body %}
-{# A pricing page with no price until there is one: its title says why the tool is free, three pillars follow (checking
-   costs nothing, what is published stays free, what could be paid runs on our servers), then what the tool does not do
-   yet, and one question to the visitor. A block holds paragraphs (text), a list (items), or both. #}
+{# A pricing page with no price until there is one. Its title says why the tool is free; beside it, the page's picture:
+   a paper note where everything lintvoice does today costs nothing, totalled with the logo's double rule. Then the
+   pillars side by side, each with its pictogram (checking costs nothing, what is published stays free, what could be
+   paid runs on our servers); the possible paid services as cards, one action each; what the tool does not do yet; one
+   question to the visitor. A block holds paragraphs (text), a list (items), or both. #}
 {% set ix = rules_index if rules_index is defined else none %}
 {% set counts = dict(explained=ix.explained if ix else "", total=ix.total if ix else "", max_lines=300) %}
-<div class="band">
-  <h1>{{ p.h1 }}</h1>
-  <span class="total-rule" aria-hidden="true"></span>
-  <p class="brief">{{ p.brief }}</p>
+{# the drawing of each pillar, by the block's key; the services' drawings follow the order of their texts #}
+{% set pillar_pictos = {"verifier": "free", "publie": "open", "payant": "servers"} %}
+{% set service_pictos = ["alerts", "api", "firm"] %}
+{% set n = p.note %}
+<div class="band tint claim">
+  <div>
+    <h1>{{ p.h1 }}</h1>
+    <span class="total-rule" aria-hidden="true"></span>
+    <p class="brief">{{ p.brief }}</p>
+  </div>
+  <figure class="bill-note">
+    <div class="sheet">
+      <p class="sheet-head"><img src="/static/logo/lintvoice-wordmark-light.svg" alt="lintvoice" width="88" height="20"><span>{{ n.title }}</span></p>
+      <ul>
+      {% for line in n.lines %}<li><span>{{ line | fill(counts) }}</span><span class="leader" aria-hidden="true"></span><span class="n">{{ n.zero }}</span></li>
+      {% endfor %}
+      </ul>
+      <p class="sheet-total"><span>{{ n.total }}</span><span class="n">{{ n.zero }}</span></p>
+      <span class="total-rule" aria-hidden="true"></span>
+      <p class="sheet-foot">{{ n.foot }}</p>
+    </div>
+    <figcaption>{{ n.caption }}</figcaption>
+  </figure>
 </div>
-{% for block in p.blocks %}
-<section class="section{% if loop.index is even %} tint{% endif %}" id="{{ block.key }}" aria-labelledby="{{ block.key }}-title">
+<div class="section pillar-row">
+{% for block in p.blocks if block.key in pillar_pictos %}
+  <section id="{{ block.key }}" aria-labelledby="{{ block.key }}-title">
+    {{ picto(pillar_pictos[block.key]) }}
+    <h2 id="{{ block.key }}-title">{{ block.head }}</h2>
+    {% if block.get('sub') %}<p>{{ block.sub | fill(counts) }}</p>{% endif %}
+    {% for para in block.get('text', []) %}<p>{{ para | fill(counts) }}</p>{% endfor %}
+  </section>
+{% endfor %}
+</div>
+{% for block in p.blocks if block.get('ideas_head') %}
+<section class="section tint" id="{{ block.key }}-services" aria-labelledby="{{ block.key }}-services-title">
+  <h2 id="{{ block.key }}-services-title">{{ block.ideas_head }}</h2>
+  {% if block.get('ideas_sub') %}<p class="sub">{{ block.ideas_sub | fill(counts) }}</p>{% endif %}
+  <ul class="offer-cards">
+  {% for item in block["items"] %}
+    <li>{% if loop.index0 < service_pictos | length %}{{ picto(service_pictos[loop.index0]) }}{% endif %}<h3>{{ item.what | fill(counts) }}</h3>{% if item.get('why') %}<p>{{ item.why | fill(counts) }}</p>{% endif %}{% if item.get('ask') %}<a href="mailto:hello@lintvoice.com?subject={{ item.ask | urlencode }}">{{ p.ask_link }}</a>{% endif %}</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+{% for block in p.blocks if block.key not in pillar_pictos %}
+<section class="section" id="{{ block.key }}" aria-labelledby="{{ block.key }}-title">
   <h2 id="{{ block.key }}-title">{{ block.head }}</h2>
   {% if block.get('sub') %}<p class="sub">{{ block.sub | fill(counts) }}</p>{% endif %}
   {% for para in block.get('text', []) %}<p>{{ para | fill(counts) }}</p>{% endfor %}
-  {% if block.get('ideas_head') %}<h3>{{ block.ideas_head }}</h3>{% endif %}
-  {% if block.get('ideas_sub') %}<p class="sub">{{ block.ideas_sub | fill(counts) }}</p>{% endif %}
-  {% if block.get('items') %}<ul class="offer">
+  {% if block.get('items') %}<ul class="offer cols">
   {% for item in block["items"] %}
-    <li><strong>{{ item.what | fill(counts) }}</strong>{% if item.get('why') %}<span class="why">{{ item.why | fill(counts) }}</span>{% endif %}{% if item.get('ask') %}<span class="why"><a href="mailto:hello@lintvoice.com?subject={{ item.ask | urlencode }}">{{ p.ask_link }}</a></span>{% endif %}</li>
+    <li><strong>{{ item.what | fill(counts) }}</strong>{% if item.get('why') %}<span class="why">{{ item.why | fill(counts) }}</span>{% endif %}</li>
   {% endfor %}
   </ul>{% endif %}
 </section>
 {% endfor %}
-<section class="section" id="price" aria-labelledby="price-title">
+<section class="section tint price" id="price" aria-labelledby="price-title">
   <h2 id="price-title">{{ p.price_head }}</h2>
   {% for para in p.price %}<p>{{ para | links }}</p>{% endfor %}
   <p><a class="btn primary" href="mailto:hello@lintvoice.com?subject={{ p.mail_subject | urlencode }}">{{ p.price_button }}</a></p>

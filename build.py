@@ -69,6 +69,17 @@ def icon(name):
     return Markup(svg.replace("<svg ", f"<svg {attrs} ", 1))  # noqa: S704 (our own files)
 
 
+PICTOGRAMS = ROOT / "static" / "pictograms"
+
+
+def picto(name):
+    """A pictogram (a large drawing for a pillar, an offer or a page) inlined in the page: its parts carry classes that
+    site.css colours with the theme's variables, and it says nothing to screen readers, its words being next to it."""
+    svg = (PICTOGRAMS / f"{name}.svg").read_text(encoding="utf-8").strip()
+    attrs = 'class="pg" width="64" height="64" aria-hidden="true" focusable="false"'
+    return Markup(svg.replace("<svg ", f"<svg {attrs} ", 1))  # noqa: S704 (our own files)
+
+
 PLACEHOLDER = re.compile(r"\{(\w+)\}")
 
 
@@ -246,6 +257,7 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     env.filters["links"] = links
     env.filters["fill"] = fill
     env.globals["icon"] = icon
+    env.globals["picto"] = picto
     env.globals["topic_icons"] = rulepages.TOPIC_ICONS
     # the home page's picture of the example invoice (tools/example_pictures.py)
     sizes = ROOT / "static" / "home" / "sizes.json"
