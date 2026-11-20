@@ -572,36 +572,36 @@ price = [
 ]
 mail_subject = "Tarifs lintvoice"
 price_button = "Nous écrire"
-price_after = "Vos messages nous aident à rendre lintvoice plus utile. Vous pouvez aussi ouvrir une discussion sur [GitHub](https://github.com/lintvoice)."
+price_after = "Nous lisons chaque message et y répondons, et votre adresse ne sert qu'à cela. Vos messages nous disent quoi construire en premier. Vous pouvez aussi ouvrir une discussion sur [GitHub](https://github.com/lintvoice)."
 
 [[pricing.blocks]]
 key = "verifier"
 head = "Vérifier ne coûte rien."
 text = [
-    "Votre facture est vérifiée dans votre navigateur, ou dans votre terminal avec l'outil en ligne de commande. Elle ne passe jamais par nos serveurs : la vérifier ne nous coûte rien, et ne vous coûte rien.",
+    "Votre facture est vérifiée dans votre navigateur, ou dans votre terminal avec l'outil en ligne de commande. Elle ne passe jamais par nos serveurs, donc la vérifier ne nous coûte rien, et ne vous coûte rien.",
     "Le code de la page de vérification est public : [lisez-le sur GitHub](https://github.com/lintvoice/website).",
 ]
 
 [[pricing.blocks]]
 key = "publie"
-head = "Ce que nous publions reste libre."
+head = "Ce que nous publions, vous pouvez le garder."
 text = [
-    "Les textes des règles sont sous licence CC BY-SA 4.0, les factures d'exemple dans le domaine public (CC0), le code de lintvoice sous [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE). Une version publiée sous ces licences le reste : reprenez-la, copiez-la, modifiez-la.",
+    "Une fois qu'une page de règle, une facture d'exemple ou une version de lintvoice est publiée, vous pouvez la reprendre et l'adapter, même si nous changeons d'avis un jour. Leurs licences le permettent : CC BY-SA 4.0 pour les textes des règles, domaine public (CC0) pour les factures d'exemple, [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) pour le code.",
 ]
 
 [[pricing.blocks]]
 key = "payant"
-head = "Payant un jour ? Seulement ce qui tourne chez nous."
-sub = "Un service sur nos serveurs, en Europe, nous coûte à faire fonctionner. Trois idées, aucune n'existe encore :"
+head = "Seul ce qui tourne sur nos serveurs pourrait devenir payant."
+sub = "Un tel service, hébergé en Europe, nous coûte à faire fonctionner. Trois idées, aucune n'existe encore. « Ça m'intéresse » ouvre un e-mail avec l'idée en objet."
 
 [[pricing.blocks.items]]
 what = "Être prévenu quand les règles changent"
-why = "Les règles européennes changent deux fois par an depuis 2024 ; les françaises ont connu cinq versions en deux mois en 2026. Nous passerions vos factures de test sur chaque nouvelle version, et vous dirions ce qui ne passe plus, et pourquoi."
+why = "Les règles européennes changent [deux fois par an depuis 2024](https://github.com/ConnectingEurope/eInvoicing-EN16931/releases) ; les françaises ont connu [cinq versions en deux mois en 2026](https://github.com/fnfempe/France_RFE/releases). Nous passerions vos factures de test sur chaque nouvelle version, et vous dirions ce qui ne passe plus, et pourquoi."
 ask = "Intérêt : alertes de changement de règles"
 
 [[pricing.blocks.items]]
 what = "Vérifier sans rien installer, par une API"
-why = "Pour les logiciels qui ne peuvent pas lancer l'outil en ligne de commande, et les factures trop grandes pour le navigateur. Vos factures passeraient par nos serveurs, avec un engagement écrit sur ce que nous en faisons."
+why = "Pour les logiciels qui ne peuvent pas lancer l'outil en ligne de commande, et les factures de plus de {max_lines} lignes, trop longues pour le navigateur. Vos factures passeraient par nos serveurs, avec un engagement écrit sur ce que nous en faisons."
 ask = "Intérêt : API de vérification"
 
 [[pricing.blocks.items]]

@@ -572,36 +572,36 @@ price = [
 ]
 mail_subject = "lintvoice pricing"
 price_button = "Write to us"
-price_after = "Your messages help us make lintvoice more useful. You can also open a discussion on [GitHub](https://github.com/lintvoice)."
+price_after = "We read and answer every message, and use your address for nothing else. Your messages tell us what to build first. You can also open a discussion on [GitHub](https://github.com/lintvoice)."
 
 [[pricing.blocks]]
 key = "verifier"
 head = "Checking costs nothing."
 text = [
-    "Your invoice is checked in your browser, or in your terminal with the command-line tool. It never goes through our servers: checking it costs us nothing, and costs you nothing.",
+    "Your invoice is checked in your browser, or in your terminal with the command-line tool. It never goes through our servers, so checking it costs us nothing, and costs you nothing.",
     "The check page's code is public: [read it on GitHub](https://github.com/lintvoice/website).",
 ]
 
 [[pricing.blocks]]
 key = "publie"
-head = "What we publish stays free."
+head = "What we publish, you can keep."
 text = [
-    "The rule texts are under CC BY-SA 4.0, the example invoices in the public domain (CC0), lintvoice's code under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE). Once a version is published under these licences, it stays so: reuse it, copy it, change it.",
+    "Once a rule page, an example invoice or a version of lintvoice is published, you can reuse it and adapt it, even if we change our minds one day. Their licences allow it: CC BY-SA 4.0 for the rule texts, public domain (CC0) for the example invoices, the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) for the code.",
 ]
 
 [[pricing.blocks]]
 key = "payant"
-head = "Paid one day? Only what runs on our servers."
-sub = "A service on our servers, in Europe, costs us to run. Three ideas, none of which exists yet:"
+head = "Only what runs on our servers could become paid."
+sub = "Such a service, hosted in Europe, costs us to run. Three ideas, none of which exists yet. “I'm interested” opens an email with the idea as its subject."
 
 [[pricing.blocks.items]]
 what = "Being told when the rules change"
-why = "The European rules have changed twice a year since 2024; the French ones went through five versions in two months in 2026. We would run your test invoices against each new version, and tell you what no longer passes, and why."
+why = "The European rules have changed [twice a year since 2024](https://github.com/ConnectingEurope/eInvoicing-EN16931/releases); the French ones went through [five versions in two months in 2026](https://github.com/fnfempe/France_RFE/releases). We would run your test invoices against each new version, and tell you what no longer passes, and why."
 ask = "Interest: rule change alerts"
 
 [[pricing.blocks.items]]
 what = "Checking with nothing to install, through an API"
-why = "For software that cannot run the command-line tool, and invoices too large for the browser. Your invoices would go through our servers, with a written commitment on what we do with them."
+why = "For software that cannot run the command-line tool, and invoices of more than {max_lines} lines, too long for the browser. Your invoices would go through our servers, with a written commitment on what we do with them."
 ask = "Interest: checking API"
 
 [[pricing.blocks.items]]
@@ -631,7 +631,7 @@ what = "Invoices of more than {max_lines} lines, in the browser"
 why = "Beyond that, the check would be too slow in a web page. The command-line tool has no such limit."
 
 [[pricing.blocks.items]]
-what = "Knowing whether a SIREN exists, or whether your client will receive the invoice"
+what = "Knowing whether a company ID exists, or whether your client will receive the invoice"
 why = "The official rules check the form of the data, not whether it is real. Only your client's platform knows whether the invoice reaches it."
 
 [glossary]
