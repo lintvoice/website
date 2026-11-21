@@ -74,7 +74,7 @@ PICTOGRAMS = ROOT / "static" / "pictograms"
 
 def picto(name):
     """A pictogram (a large drawing for a pillar, an offer or a page) inlined in the page: its parts carry classes that
-    site.css colours with the theme's variables, and it says nothing to screen readers, its words being next to it."""
+    components.css colours with the theme's variables, and it says nothing to screen readers, its words being next to it."""
     svg = (PICTOGRAMS / f"{name}.svg").read_text(encoding="utf-8").strip()
     attrs = 'class="pg" width="64" height="64" aria-hidden="true" focusable="false"'
     return Markup(svg.replace("<svg ", f"<svg {attrs} ", 1))  # noqa: S704 (our own files)

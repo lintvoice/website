@@ -211,3 +211,71 @@ a.btn{display:inline-block;text-decoration:none}
 
 /* ---------- technical content inside a content page: the blue-black top mark, nothing louder */
 .tech-mark{border-top:var(--bw-mark) solid var(--navy-mark)}
+
+/* ================================================================ pages that make a claim
+   A page whose title is a claim opens on kraft with its document beside it: paper in both themes, made of the
+   page's own facts. Pictograms stand for its ideas: pillars side by side, offers as cards. */
+
+/* ---------- a page whose title is a claim (every page but the rule pages, the rules index and the check page): the
+   title large, the double rule and the brief under it, the page's document beside it (below it on a phone) */
+.band.claim{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:var(--sp-12);align-items:center;padding:var(--sp-16) 0;margin-bottom:0}
+.band.claim h1{font-size:var(--fs-claim);line-height:1.05;letter-spacing:-.02em;max-width:20ch;margin:0 0 var(--sp-5)}
+.band.claim .total-rule{margin-bottom:var(--sp-5)}
+.band.claim .brief{font-size:var(--fs-lead);line-height:1.5;color:var(--muted);max-width:44ch}
+
+/* ---------- the page's document: a sheet of paper shown as a picture, captioned. .sheet keeps the light theme's
+   colours in both themes, its paper dimmed a little in the dark one (tokens.css); figure.doc tilts it (--tilt, 3° at
+   most) on a desktop and lays it flat on a phone. Never a stamp, a « payé » or an approval sign. */
+.sheet{color-scheme:light;color:var(--text);background:var(--bg)}
+figure.doc{margin:0;display:flex;flex-direction:column;align-items:center;gap:var(--sp-4)}
+figure.doc figcaption{font-size:var(--fs-sm);color:var(--muted)}
+.doc .sheet{width:100%;max-width:460px;border:var(--bw-hair) solid var(--line);border-radius:var(--r-sm);box-shadow:var(--shadow-2);padding:var(--sp-6) var(--sp-8) var(--sp-5);transform:rotate(var(--tilt,-1.6deg));font-size:var(--fs-sm)}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 var(--sp-3);padding-bottom:var(--sp-3);border-bottom:var(--bw-hair) solid var(--line)}
+.sheet-head img{display:block}
+.sheet-head span{font:600 var(--fs-xs) var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sheet-foot{margin:var(--sp-4) 0 0;color:var(--muted);font-size:var(--fs-xs)}
+
+/* ---------- pictograms: large drawings (48 to 96 px) for an idea (a pillar, an offer, a resource, a group of words),
+   inlined as SVG on a 64 grid. Their parts carry these classes, coloured with the tokens, so one file works in light,
+   dark and on the blue-black: ink strokes, paper and manila fills, one detail in the accent colour, a manila shadow
+   offset to the bottom right. The inlining code adds class="pg" and aria-hidden="true" to the <svg>; the words next
+   to a pictogram carry its meaning. */
+.pg{display:block;width:64px;height:64px;overflow:visible;flex:none}
+.pg *{stroke-linecap:round;stroke-linejoin:round}
+.pg .ink{stroke:var(--text);stroke-width:2;fill:none}
+.pg .thin{stroke-width:1.5}
+.pg .fat{stroke-width:4}
+.pg .paper{fill:var(--bg)}
+.pg .tile{fill:var(--tile)}
+.pg .sh{fill:var(--tile);stroke:none}
+.pg .acc{fill:var(--accent)}
+.pg .acc-s{stroke:var(--accent);stroke-width:2.5;fill:none}
+.pg .acc-s.thin{stroke-width:1.5}
+.pg .acc-s.fat{stroke-width:4}
+.pg .cut{stroke:var(--bg);stroke-width:2}
+.pg .cut.thin{stroke-width:1.6;fill:none}
+.pg .lens{fill:var(--tile);fill-opacity:.6}
+.pg .dot{fill:var(--text)}
+.pg .hole{fill:var(--bg)}
+.pg .dash{stroke-dasharray:.1 5;stroke-width:2.5}
+
+/* ---------- pillars side by side, each under its pictogram (80 px) */
+.pillar-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-12)}
+.pillar-row .pg{width:80px;height:80px;margin-bottom:var(--sp-4)}
+.pillar-row h2{font-size:var(--fs-xl);line-height:var(--lh-tight);margin:0 0 var(--sp-3)}
+.pillar-row p{margin:0 0 var(--sp-3)}
+
+/* ---------- offers as cards: a pictogram (56 px), a title, what it does, one action at the foot under a hairline */
+.offer-cards{list-style:none;padding:0;margin:var(--sp-8) 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-5)}
+.offer-cards li{display:flex;flex-direction:column;background:var(--bg);border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1);padding:var(--sp-6)}
+.offer-cards .pg{width:56px;height:56px;margin-bottom:var(--sp-4)}
+.offer-cards h3{font-size:var(--fs-lg);margin:0 0 var(--sp-2)}
+.offer-cards p{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-4);flex:1}
+.offer-cards li>a:last-child{font-size:var(--fs-sm);font-weight:600;border-top:var(--bw-hair) solid var(--line);padding-top:var(--sp-3)}
+
+@media (max-width:820px){
+  .band.claim{grid-template-columns:minmax(0,1fr);gap:var(--sp-8);padding:var(--sp-12) 0}
+  .doc .sheet{transform:none}
+  .pillar-row,.offer-cards{grid-template-columns:minmax(0,1fr)}
+  .pillar-row{gap:var(--sp-8)}
+}

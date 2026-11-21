@@ -516,77 +516,18 @@ a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decora
 .res-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:56rem}
 @media (max-width:640px){.res-grid{grid-template-columns:1fr}}
 
-/* ---------- pictograms: large drawings (48 to 96 px) for a pillar, an offer or a page, inlined from static/pictograms/
-   on a 64 grid. Their parts carry classes coloured with the theme's variables, so they follow light, dark and the
-   navy sections: ink strokes, paper and manila fills, one detail in the accent colour, a manila shadow offset to the
-   bottom right. Icons (static/icons/) stay small, next to words; a pictogram stands for an idea. */
-.pg{display:block;width:64px;height:64px;overflow:visible;flex:none}
-.pg *{stroke-linecap:round;stroke-linejoin:round}
-.pg .ink{stroke:var(--text);stroke-width:2;fill:none}
-.pg .thin{stroke-width:1.5}
-.pg .fat{stroke-width:4}
-.pg .paper{fill:var(--bg)}
-.pg .tile{fill:var(--tile)}
-.pg .sh{fill:var(--tile);stroke:none}
-.pg .acc{fill:var(--accent)}
-.pg .acc-s{stroke:var(--accent);stroke-width:2.5;fill:none}
-.pg .acc-s.thin{stroke-width:1.5}
-.pg .acc-s.fat{stroke-width:4}
-.pg .cut{stroke:var(--bg);stroke-width:2}
-.pg .cut.thin{stroke-width:1.6;fill:none}
-.pg .lens{fill:var(--tile);fill-opacity:.6}
-.pg .dot{fill:var(--text)}
-.pg .hole{fill:var(--bg)}
-
-/* ---------- a page whose title is a claim: the title large, beside it the page's picture (below it on a phone) */
-.band.claim{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:var(--sp-12);align-items:center;padding:var(--sp-16) 0;margin-bottom:0}
-.band.claim h1{font-size:clamp(2.25rem,1.2rem + 3vw,3.5rem);line-height:1.05;letter-spacing:-.02em;max-width:20ch;margin:0 0 var(--sp-5)}
-.band.claim .total-rule{margin-bottom:var(--sp-5)}
-.band.claim .brief{font-size:var(--fs-lead);line-height:1.5;color:var(--muted);max-width:44ch}
-
-/* ---------- a sheet of paper shown as a picture: it keeps paper and ink in both themes, the paper dimmed a little in
-   the dark one (the light theme's values from tokens.css; the dark paper is the home page's) */
-.sheet{--bg:#F9F5EE;--text:#171614;--muted:#5A574F;--line:#CBC7BD;--accent:#5C4632;--tile:#E8D9BA;color-scheme:light;color:var(--text);background:var(--bg)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .sheet{--bg:#E8E2D6;--line:#CCC4B4;--muted:#58544C}}
-:root[data-theme=dark] .sheet{--bg:#E8E2D6;--line:#CCC4B4;--muted:#58544C}
-
-/* the pricing page's picture: a note where each thing lintvoice does today costs nothing, totalled with the double
-   rule; a caption says what it is, and it carries no stamp or approval sign */
-.bill-note{margin:0;display:flex;flex-direction:column;align-items:center;gap:var(--sp-4)}
-.bill-note figcaption{font-size:var(--fs-sm);color:var(--muted)}
-.bill-note .sheet{width:100%;max-width:460px;border:var(--bw-hair) solid var(--line);border-radius:var(--r-sm);box-shadow:var(--shadow-2);padding:var(--sp-6) var(--sp-8) var(--sp-5);transform:rotate(-1.6deg);font-size:var(--fs-sm)}
-.sheet-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 var(--sp-3);padding-bottom:var(--sp-3);border-bottom:var(--bw-hair) solid var(--line)}
-.sheet-head img{display:block}
-.sheet-head span{font:600 var(--fs-xs) var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+/* ---------- the pricing page's picture (a figure.doc, components.css): a note where each thing lintvoice does today
+   costs nothing, a dotted leader to its amount, totalled with the double rule; it carries no stamp or approval sign */
 .bill-note ul{list-style:none;padding:0;margin:0}
 .bill-note li{display:flex;align-items:baseline;gap:var(--sp-2);padding:var(--sp-1) 0}
 .bill-note .leader{flex:1;min-width:var(--sp-4);border-bottom:var(--bw-hair) dotted var(--line);transform:translateY(-4px)}
 .bill-note .n{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 .sheet-total{display:flex;justify-content:space-between;font-weight:600;font-size:var(--fs-lg);margin:var(--sp-4) 0 0;padding-top:var(--sp-3);border-top:var(--bw-hair) solid var(--line)}
 .bill-note .total-rule{margin:var(--sp-2) 0 0 auto;width:120px}
-.sheet-foot{margin:var(--sp-4) 0 0;color:var(--muted);font-size:var(--fs-xs)}
 
-/* ---------- pillars side by side, each under its pictogram */
-.pillar-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-12)}
-.pillar-row .pg{width:80px;height:80px;margin-bottom:var(--sp-4)}
-.pillar-row h2{font-size:var(--fs-xl);line-height:var(--lh-tight);margin:0 0 var(--sp-3)}
-.pillar-row p{margin:0 0 var(--sp-3)}
-
-/* ---------- offers as cards: a pictogram, a title, what it does, one action at the foot under a hairline */
-.offer-cards{list-style:none;padding:0;margin:var(--sp-8) 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-5)}
-.offer-cards li{display:flex;flex-direction:column;background:var(--bg);border:var(--bw-hair) solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1);padding:var(--sp-6)}
-.offer-cards .pg{width:56px;height:56px;margin-bottom:var(--sp-4)}
-.offer-cards h3{font-size:var(--fs-lg);margin:0 0 var(--sp-2)}
-.offer-cards p{font-size:var(--fs-sm);color:var(--muted);margin:0 0 var(--sp-4);flex:1}
-.offer-cards li>a:last-child{font-size:var(--fs-sm);font-weight:600;border-top:var(--bw-hair) solid var(--line);padding-top:var(--sp-3)}
+/* ---------- what lintvoice does not do yet, in two columns; the closing question larger */
 .offer.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--sp-12);max-width:none;margin-top:var(--sp-8)}
 .offer.cols li,.offer.cols li:first-child{border-top:var(--bw-hair) solid var(--line);padding:var(--sp-4) 0 var(--sp-5)}
 .price h2{font-size:var(--fs-display)}
 .price .btn{font-size:var(--fs-base);padding:var(--sp-3) var(--sp-6)}
-
-@media (max-width:820px){
-  .band.claim{grid-template-columns:minmax(0,1fr);gap:var(--sp-8);padding:var(--sp-12) 0}
-  .bill-note .sheet{transform:none}
-  .pillar-row,.offer-cards,.offer.cols{grid-template-columns:minmax(0,1fr)}
-  .pillar-row{gap:var(--sp-8)}
-}
+@media (max-width:820px){.offer.cols{grid-template-columns:minmax(0,1fr)}}
