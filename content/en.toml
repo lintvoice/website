@@ -561,7 +561,7 @@ why_head = "Why lintvoice exists"
 why = [
     "E-invoicing between businesses is becoming mandatory, in France as in Germany. In France, invoices go through approved platforms that check them against official rules. An invoice that fails one of them can be rejected with a code like BR-FR-10. For the person who sent it, that code says neither what is wrong nor how to fix it.",
     "lintvoice explains the rules in plain words, starting with the French ones, shows them on an example invoice and says how to fix the error. You can check your invoice before sending it, in your browser. Developers who produce these invoices run the same rules offline, in their continuous integration, and test their software with the same example invoices.",
-    "lintvoice starts with France and the European standard. Germany and the Peppol network (Belgium, then the United Kingdom) come next.",
+    "lintvoice starts with the European standard and France. Germany and the Peppol network (Belgium, then the United Kingdom) come next.",
 ]
 open_head = "Open and verifiable"
 open = [

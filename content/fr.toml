@@ -561,7 +561,7 @@ why_head = "Pourquoi lintvoice existe"
 why = [
     "La facture électronique devient obligatoire entre entreprises, en France comme en Allemagne. En France, les factures passent par des plateformes agréées qui les vérifient selon des règles officielles. Une facture qui échoue à l'une d'elles peut être rejetée avec un code comme BR-FR-10. Pour la personne qui facture, ce code ne dit pas ce qui ne va pas, ni comment le corriger.",
     "lintvoice explique les règles en mots simples, en commençant par les règles françaises, les montre sur une facture d'exemple et dit comment corriger. Vous pouvez vérifier votre facture avant de l'envoyer, dans votre navigateur. Les développeurs qui produisent ces factures appliquent les mêmes règles hors ligne, dans leur intégration continue, et testent leurs logiciels avec les mêmes factures d'exemple.",
-    "lintvoice commence par la France et la norme européenne. L'Allemagne et le réseau Peppol (la Belgique, puis le Royaume-Uni) sont les prochaines étapes.",
+    "lintvoice commence par la norme européenne et la France. L'Allemagne et le réseau Peppol (la Belgique, puis le Royaume-Uni) sont les prochaines étapes.",
 ]
 open_head = "Ouvert et vérifiable"
 open = [
