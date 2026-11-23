@@ -45,7 +45,7 @@ layers.closing_lead = "Printing it is not enough:"
 layers.closing = "each statement must be in the data, with its code."
 values_title = "lintvoice takes you from an error code to a fixed invoice"
 values = [
-    { head = "Check", question = "“Will my invoice pass the rules?”", text = "You know before you send it, by dropping it here. The check runs the official European and French rules, in your browser.", link = "Check an invoice", page = "check", proof = "EN 16931 {en16931}, Factur-X {facturx} and BR-FR {brfr} rules, as published." },
+    { head = "Check", question = "“Will my invoice pass the rules?”", text = "You know before you send it, by dropping it on the check page. The check runs the official European and French rules, in your browser.", link = "Check an invoice", page = "check", proof = "EN 16931 {en16931}, Factur-X {facturx} and BR-FR {brfr} rules, as published." },
     { head = "Understand", question = "“BR-FR-10, what does it mean?”", text = "You understand what is wrong in your invoice, in plain words, with its own values and the reason the rule exists.", link = "See the invoicing rules", page = "rules", proof = "{explained} of {total} rules explained, in English and French. The others follow, family by family." },
     { head = "Fix", question = "“What do I change, and who has to do it?”", text = "You know what to change in your software, or what to ask its publisher, with an example invoice that shows the error.", link = "See the example invoices", page = "examples", proof = "{examples} example invoices, each failing a named rule, in the public domain." },
 ]
@@ -66,12 +66,12 @@ formats_next_label = "Next steps"
 formats_now = ["EN 16931, Europe", "Factur-X / ZUGFeRD", "CII", "UBL", "BR-FR, France"]
 formats_next = ["XRechnung, Germany", "Peppol"]
 builders_title = "Building invoicing software?"
-builders_text = "Catch an invalid invoice before it goes out, in one command, offline, in your continuous integration."
+builders_text = "Catch an invalid invoice before it goes out, with one command in your continuous integration. It runs offline."
 builders_code = """uvx lintvoice rules install
 uvx lintvoice check invoices/ --format json"""
 builders_facts = [
     "The European (EN 16931), Factur-X / ZUGFeRD and French rules, for CII, UBL and Factur-X / ZUGFeRD PDFs.",
-    "No JVM, no server, no account; exit codes and JSON output for CI.",
+    "No Java, no server, no account; exit codes and JSON output for CI.",
     "Complete example invoices, each failing a named rule, for your tests ([invoice-examples](https://github.com/lintvoice/invoice-examples)).",
     "When one of your users' invoices fails, a link that explains the rule to them, with the technical details for you.",
 ]
@@ -87,9 +87,9 @@ open_items = [
 
 [examples]
 title = "Example e-invoices, valid and invalid (Factur-X, CII)"
-description = "92 French Factur-X EN 16931 invoices to test your tools: one valid, and 91 invalid variants that each fail a named EN 16931 or BR-FR rule. XML and PDF, public domain."
+description = "{invoices} French Factur-X EN 16931 invoices to test your tools: one valid, and {examples} invalid variants that each fail a named EN 16931 or BR-FR rule. XML and PDF, public domain."
 h1 = "Example e-invoices, valid and invalid"
-brief = "92 French Factur-X invoices, EN 16931 profile: one valid, and 91 invalid variants that each fail a named rule. Use them to test an invoicing tool or a validator."
+brief = "{invoices} French Factur-X invoices, EN 16931 profile: one valid, and {examples} invalid variants that each fail a named rule. Use them to test an invoicing tool or a validator."
 about_title = "About these files"
 about_target = "Target"
 about_target_value = "France (fr)"

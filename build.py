@@ -272,10 +272,12 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
             "ids": {r["id"] for r in rules},
             "complete": bool(found),  # every rule of the official files is in the index, not only the explained ones
         }
+    # the counts a page's description or brief may carry come from the build, never typed into a text
+    counts = {"invoices": len(manifest["examples"]), "examples": len(common["invalid"])}
     for page, paths in pages.items():
         for lang in LANGS:
             t, other = texts[lang], next(code for code in LANGS if code != lang)
-            p = t[page]
+            p = {**t[page], **{key: fill(t[page][key], counts) for key in ("description", "brief") if key in t[page]}}
             html = env.get_template(f"{page}.html").render(
                 **common,
                 t=t,
