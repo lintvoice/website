@@ -593,14 +593,14 @@ contact_line = "Une question, une remarque, une idée ? Écrivez-nous à"
 contact_after = "Nous serons heureux d'échanger avec vous."
 
 [pricing]
-title = "Tarifs : pourquoi lintvoice est gratuit, et ce qui pourrait devenir payant"
-description = "La vérification tourne sur votre ordinateur : elle est gratuite, sans compte. Ce qui pourrait devenir payant un jour, et pourquoi. Dites-nous ce qui vous serait utile."
-h1 = "Votre ordinateur fait le travail. C'est pour ça que c'est gratuit."
-brief = "Sans compte ni carte bancaire. Voici pourquoi, et ce qui pourrait un jour devenir payant."
+title = "Tarifs : ce qui est gratuit, ce qui pourrait devenir payant, et pourquoi"
+description = "Vérifier une facture selon les règles officielles est gratuit et sans compte, sur votre ordinateur. Ce qui pourrait devenir payant, à quel prix, et pourquoi. Dites-nous ce qui vous serait utile."
+h1 = "Votre ordinateur vérifie selon les règles officielles. C'est gratuit."
+brief = "Sans compte ni carte bancaire. Plus bas : ce qui pourrait devenir payant, et pourquoi."
 ask_link = "Ça m'intéresse"
 price_head = "Combien paieriez-vous ?"
 price = [
-    "Nous n'avons pas de prix, et nous ne voulons pas en inventer un. Dites-nous ce dont vous auriez besoin, pour combien de factures, et ce que vous seriez prêt à payer.",
+    "Seule la comparaison a déjà un prix, pour sa bêta. Pour les autres services, nous ne voulons pas en inventer : dites-nous ce dont vous auriez besoin, pour combien de factures, et ce que vous seriez prêt à payer.",
 ]
 mail_subject = "Tarifs lintvoice"
 price_button = "Nous écrire"
@@ -622,7 +622,7 @@ caption = "Ce que lintvoice vous coûte aujourd'hui."
 
 [[pricing.blocks]]
 key = "verifier"
-head = "Vérifier ne coûte rien."
+head = "Vérifier selon les règles officielles ne coûte rien."
 text = [
     "Votre facture est vérifiée dans votre navigateur, ou dans votre terminal avec l'outil en ligne de commande. Elle ne passe jamais par nos serveurs, donc la vérifier ne nous coûte rien, et ne vous coûte rien.",
     "Le code de la page de vérification est public : [lisez-le sur GitHub](https://github.com/lintvoice/website).",
@@ -637,10 +637,15 @@ text = [
 
 [[pricing.blocks]]
 key = "payant"
-head = "Seul ce qui tourne sur nos serveurs pourrait devenir payant."
-sub = "Un tel service, hébergé en Europe, nous coûte à faire fonctionner. Aucun n'existe encore."
-ideas_head = "Trois services possibles. Lequel vous servirait ?"
+head = "Ce qui va au-delà des règles officielles pourrait devenir payant."
+sub = "Le construire et le tenir à jour demande du travail. Certains de ces services tourneraient aussi sur nos serveurs, hébergés en Europe. Aucun n'existe encore."
+ideas_head = "Quatre services possibles. Lequel vous servirait ?"
 ideas_sub = "« Ça m'intéresse » ouvre un e-mail avec l'idée en objet."
+
+[[pricing.blocks.items]]
+what = "Comparer le PDF d'une Factur-X avec son XML"
+why = "Votre client lit le PDF, son logiciel traite le XML. Les règles officielles vérifient le XML sans le comparer au PDF. Faite sur votre ordinateur, la comparaison signalerait chaque montant, date ou numéro qui diffère entre les deux. Prix de bêta : 10 € HT par mois et par entreprise, pour 100 factures."
+ask = "Intérêt : comparaison PDF et XML"
 
 [[pricing.blocks.items]]
 what = "Être prévenu quand les règles changent"

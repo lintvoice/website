@@ -593,14 +593,14 @@ contact_line = "A question, a comment, an idea? Write to"
 contact_after = "We'll be glad to hear from you."
 
 [pricing]
-title = "Pricing: why lintvoice is free, and what could become paid"
-description = "The check runs on your computer: it is free, with no account. What could one day become paid, and why. Tell us what would help you."
-h1 = "Your computer does the work. That's why it's free."
-brief = "No account, no credit card. Here's why, and what could one day become paid."
+title = "Pricing: what is free, what could become paid, and why"
+description = "Checking an invoice against the official rules is free, with no account, on your computer. What could become paid, at what price, and why. Tell us what would help you."
+h1 = "Your computer checks against the official rules. It's free."
+brief = "No account, no credit card. Below: what could become paid, and why."
 ask_link = "I'm interested"
 price_head = "What would you pay?"
 price = [
-    "We have no price, and we won't make one up. Tell us what you would need, for how many invoices, and what you would be ready to pay.",
+    "Only the comparison has a price yet, for its beta. For the other services, we won't make one up: tell us what you would need, for how many invoices, and what you would be ready to pay.",
 ]
 mail_subject = "lintvoice pricing"
 price_button = "Write to us"
@@ -622,7 +622,7 @@ caption = "What lintvoice costs you today."
 
 [[pricing.blocks]]
 key = "verifier"
-head = "Checking costs nothing."
+head = "Checking against the official rules costs nothing."
 text = [
     "Your invoice is checked in your browser, or in your terminal with the command-line tool. It never goes through our servers, so checking it costs us nothing, and costs you nothing.",
     "The check page's code is public: [read it on GitHub](https://github.com/lintvoice/website).",
@@ -637,10 +637,15 @@ text = [
 
 [[pricing.blocks]]
 key = "payant"
-head = "Only what runs on our servers could become paid."
-sub = "Such a service, hosted in Europe, costs us to run. None exists yet."
-ideas_head = "Three possible services. Which one would you use?"
+head = "What goes beyond the official rules could become paid."
+sub = "Building it and keeping it up to date takes work. Some of these services would also run on our servers, hosted in Europe. None exists yet."
+ideas_head = "Four possible services. Which one would you use?"
 ideas_sub = "“I'm interested” opens an email with the idea as its subject."
+
+[[pricing.blocks.items]]
+what = "Comparing a Factur-X or ZUGFeRD invoice's PDF with its XML"
+why = "Your customer reads the PDF; their software processes the XML. The official rules check the XML without comparing it with the PDF. Run on your computer, the comparison would flag every amount, date or number that differs between the two. Beta price: €10 a month per company, excl. VAT, for 100 invoices."
+ask = "Interest: PDF and XML comparison"
 
 [[pricing.blocks.items]]
 what = "Being told when the rules change"

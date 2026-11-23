@@ -3,13 +3,13 @@
 {# A pricing page with no price until there is one. Its title says why the tool is free; beside it, the page's picture:
    a paper note where everything lintvoice does today costs nothing, totalled with the logo's double rule. Then the
    pillars side by side, each with its pictogram (checking costs nothing, what is published stays free, what could be
-   paid runs on our servers); the possible paid services as cards, one action each; what the tool does not do yet; one
+   paid goes beyond the official rules); the possible paid services as cards, one action each, two by two when there are four; what the tool does not do yet; one
    question to the visitor. A block holds paragraphs (text), a list (items), or both. #}
 {% set ix = rules_index if rules_index is defined else none %}
 {% set counts = dict(explained=ix.explained if ix else "", total=ix.total if ix else "", max_lines=300) %}
 {# the drawing of each pillar, by the block's key; the services' drawings follow the order of their texts #}
 {% set pillar_pictos = {"verifier": "free", "publie": "open", "payant": "servers"} %}
-{% set service_pictos = ["alerts", "api", "firm"] %}
+{% set service_pictos = ["flow", "alerts", "api", "firm"] %}
 {% set n = p.note %}
 <div class="band tint claim">
   <div>
@@ -45,7 +45,7 @@
 <section class="section tint" id="{{ block.key }}-services" aria-labelledby="{{ block.key }}-services-title">
   <h2 id="{{ block.key }}-services-title">{{ block.ideas_head }}</h2>
   {% if block.get('ideas_sub') %}<p class="sub">{{ block.ideas_sub | fill(counts) }}</p>{% endif %}
-  <ul class="offer-cards">
+  <ul class="offer-cards{% if block['items'] | length == 4 %} two-cols{% endif %}">
   {% for item in block["items"] %}
     <li>{% if loop.index0 < service_pictos | length %}{{ picto(service_pictos[loop.index0]) }}{% endif %}<h3>{{ item.what | fill(counts) }}</h3>{% if item.get('why') %}<p>{{ item.why | fill(counts) }}</p>{% endif %}{% if item.get('ask') %}<a href="mailto:hello@lintvoice.com?subject={{ item.ask | urlencode }}">{{ p.ask_link }}</a>{% endif %}</li>
   {% endfor %}

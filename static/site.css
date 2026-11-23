@@ -694,3 +694,7 @@ a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decora
 .menu-panel hr{width:100%;margin:var(--sp-1) 0;border:0;border-top:var(--bw-hair) solid var(--line)}
 .menu-panel .tools-list a{padding:var(--sp-2) var(--sp-4)}
 @media (max-width:767px){.menu-panel{width:min(22rem,calc(100vw - 2 * var(--sp-4)))}}
+
+/* the pricing page's possible services: four cards two by two rather than three and one; one column on a phone */
+.offer-cards.two-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:820px){.offer-cards.two-cols{grid-template-columns:minmax(0,1fr)}}
