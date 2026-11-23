@@ -89,28 +89,36 @@ def load(rules_dir):
     return rules
 
 
-def example_file(meta):
-    """The failing example's path inside the target's folder (invalid/<name>.xml), or None."""
-    invalid = (meta.get("examples") or {}).get("invalid")
-    return invalid.split("/", 2)[2] if invalid else None
+# Which example target a page shows, by the page's language: the French invoice on the French page, the European
+# one (EN 16931, no national rule) on the English page, each falling back on the other (invoice-rules FORMAT.md).
+TARGETS = {"fr": ("fr", "en16931"), "en": ("en16931", "fr")}
 
 
-def example_valid(meta):
-    """The passing counterpart's path inside the target's folder: valid.xml, or the same invoice without the
-    mistake (fixed/<name>.xml) when the failing example first adds something to the invoice."""
-    valid = (meta.get("examples") or {}).get("valid") or "examples/fr/valid.xml"
-    return valid.split("/", 2)[2]
-
-
-def example_diff(examples_dir, meta, context=2):
-    """The change that makes the example invoice fail the rule, read from the two generated files: lines removed
-    from the failing file (del) and added by the fix (add), with a little context. None when there is no example."""
-    name = example_file(meta)
-    failing = Path(examples_dir) / name if name else None
-    if not failing or not failing.is_file():
+def example(meta, lang):
+    """The example a page shows: its target and its two files inside the target's folder, the failing one
+    (invalid/<name>.xml) and the passing counterpart (valid.xml, or fixed/<name>.xml when the failing example first
+    adds something to the invoice). None when the rule has no example."""
+    targets = (meta.get("examples") or {}).get("targets") or {}
+    target = next((t for t in TARGETS[lang] if t in targets), None)
+    if target is None:
         return None
-    before = failing.read_text(encoding="utf-8").splitlines()
-    after = (Path(examples_dir) / example_valid(meta)).read_text(encoding="utf-8").splitlines()
+    files = targets[target]
+    return {
+        "target": target,
+        "invalid": files["invalid"].split("/", 2)[2],
+        "valid": files["valid"].split("/", 2)[2],
+    }
+
+
+def example_diff(examples_dir, chosen, context=2):
+    """The change that makes the example invoice fail the rule, read from the two generated files of its target
+    (examples_dir/<target>/): lines removed from the failing file (del) and added by the fix (add), with a little
+    context. None when there is no example."""
+    folder = Path(examples_dir) / chosen["target"] if chosen else None
+    if not folder or not (folder / chosen["invalid"]).is_file():
+        return None
+    before = (folder / chosen["invalid"]).read_text(encoding="utf-8").splitlines()
+    after = (folder / chosen["valid"]).read_text(encoding="utf-8").splitlines()
     lines = []
     for line in difflib.unified_diff(before, after, n=context, lineterm=""):
         if line.startswith(("---", "+++")):
@@ -179,7 +187,7 @@ def index(rules, found, versions):
                 "brief": m.get("brief", {}),
                 "topic": m["topic"],
                 "origin": origin(r["id"]),
-                "example": bool((m.get("examples") or {}).get("invalid")),
+                "example": bool((m.get("examples") or {}).get("targets")),
                 "href": {lang: href(r["id"], lang) for lang in PATHS},
                 "words": {lang: " ".join(m["search"][lang][1:]) for lang in PATHS},
                 "bt": m.get("business_terms", []),

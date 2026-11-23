@@ -116,7 +116,7 @@ box.addEventListener("dragover", (e) => { e.preventDefault(); box.classList.add(
 box.addEventListener("dragleave", (e) => { if (!box.contains(e.relatedTarget)) box.classList.remove("over"); });
 box.addEventListener("drop", (e) => { e.preventDefault(); box.classList.remove("over"); fromFile(e.dataTransfer.files[0]); });
 box.querySelector("[data-example]")?.addEventListener("click", async () => {
-  const bytes = new Uint8Array(await (await fetch(`/examples/fr/${D.example}`)).arrayBuffer());
+  const bytes = new Uint8Array(await (await fetch(D.example)).arrayBuffer());
   await run(D.example_name, bytes);
 });
 out.addEventListener("click", (e) => {

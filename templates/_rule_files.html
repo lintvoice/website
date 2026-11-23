@@ -2,6 +2,6 @@
 <div class="files-box">
   <div class="file-row"><span class="chip err">{{ t.rule.before }}</span><p class="links"><a href="{{ files_href }}{{ rule.example }}" download="{{ t.file_prefix }}-{{ rule.example.split("/")[-1][:-4] }}.xml">XML</a> · <a href="{{ files_href }}{{ rule.example[:-4] }}.pdf" download="{{ t.file_prefix }}-{{ rule.example.split("/")[-1][:-4] }}.pdf">PDF Factur-X</a></p></div>
   <div class="file-row"><span class="chip ok">{{ t.rule.after }}</span><p class="links">{% set ok_name = t.file_valid if rule.valid == "valid.xml" else rule.valid.split("/")[-1][:-4] ~ "-" ~ t.file_fixed %}<a href="{{ files_href }}{{ rule.valid }}" download="{{ t.file_prefix }}-{{ ok_name }}.xml">XML</a> · <a href="{{ files_href }}{{ rule.valid[:-4] }}.pdf" download="{{ t.file_prefix }}-{{ ok_name }}.pdf">PDF Factur-X</a></p></div>
-  <p class="more"><a href="{{ links.examples }}#{{ rule.example.split("/")[-1][:-4] }}">{{ t.rule.gallery }}</a></p>
+  <p class="more"><a href="{{ links.examples }}{% if rule.in_gallery %}#{{ rule.example.split("/")[-1][:-4] }}{% endif %}">{{ t.rule.gallery }}</a></p>
 </div>
 {% endif %}

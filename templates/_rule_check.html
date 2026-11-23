@@ -8,4 +8,4 @@
     <div class="rule-check-result" aria-live="polite"></div>
   </div>
 </section>
-<script type="application/json" id="rule-check-data">{{ dict(id=rule.id, ids=rule.check.ids, contexts=rule.check.contexts, example=(rule.example | replace(".xml", ".pdf")) if rule.example else "", example_name=t.file_prefix ~ "-" ~ rule.id ~ ".pdf", texts=t.rule.check, check=links.check, base=base_url) | tojson }}</script>
+<script type="application/json" id="rule-check-data">{{ dict(id=rule.id, ids=rule.check.ids, contexts=rule.check.contexts, example=(files_href ~ rule.example | replace(".xml", ".pdf")) if rule.example else "", example_name=t.file_prefix ~ "-" ~ rule.id ~ ".pdf", texts=t.rule.check, check=links.check, base=base_url) | tojson }}</script>

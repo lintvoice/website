@@ -130,10 +130,12 @@ def _prepare(out):
 
 
 def _examples(out):
-    """Generate the examples into out/examples/fr/, zip them, and return the manifest."""
+    """Generate the examples into out/examples/<target>/, zip the French ones (the gallery's), and return their
+    manifest. The European ones (en16931) serve the English rule pages."""
     with open(os.devnull, "w") as quiet:
-        if examples_cli.main(["generate", "--target", "fr", "--out", str(out / "examples")], out=quiet) != 0:
-            raise SystemExit("build: invoice-examples failed")
+        for target in ("fr", "en16931"):
+            if examples_cli.main(["generate", "--target", target, "--out", str(out / "examples")], out=quiet) != 0:
+                raise SystemExit(f"build: invoice-examples failed ({target})")
     folder = out / "examples" / "fr"
     with zipfile.ZipFile(out / ZIP_HREF.lstrip("/"), "w") as z:
         for path in sorted(p for p in folder.rglob("*") if p.is_file()):
@@ -373,15 +375,18 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
             )
             _write(out, paths[lang], html)
     for rule in rules:
-        rule["diff"] = rulepages.example_diff(out / "examples" / "fr", rule["meta"])
-        rule["example"] = rulepages.example_file(rule["meta"])
-        rule["valid"] = rulepages.example_valid(rule["meta"])
         paths = {lang: rulepages.href(rule["id"], lang) for lang in LANGS}
         for lang in LANGS:
             t, other = texts[lang], next(code for code in LANGS if code != lang)
             r = rule["pages"][lang]
+            # the example of the page's language (rulepages.TARGETS); the gallery holds the French ones only
+            chosen = rulepages.example(rule["meta"], lang)
+            rule["diff"] = rulepages.example_diff(out / "examples", chosen)
+            rule["example"] = chosen["invalid"] if chosen else None
+            rule["valid"] = chosen["valid"] if chosen else None
+            rule["in_gallery"] = bool(chosen) and chosen["target"] == "fr"
             html = env.get_template("rule.html").render(
-                **common,
+                **{**common, "files_href": f"/examples/{chosen['target']}/" if chosen else FILES_HREF},
                 t=t,
                 p={"description": rule["meta"]["brief"][lang]},
                 rule=rule,

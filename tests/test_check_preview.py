@@ -32,33 +32,51 @@ def rules():
 
 @pytest.fixture(scope="session")
 def previews(dist, rules, texts, tmp_path_factory):
-    """Each example of the gallery's French target, checked by lintvoice and shown by report.mjs, by file name."""
+    """Each example the site serves, checked by lintvoice and shown by report.mjs: the French target's (the gallery's)
+    in French, by file name; the European target's (the English rule pages') in English, by en16931/<file name>."""
     tmp = tmp_path_factory.mktemp("preview")
     packs = checkassets.CACHE / "rules"
     for pack in rulepacks.PACKS.values():
         rulepacks.install(pack, packs)
-    folder = dist / "examples" / "fr"
-    examples = [folder / "valid.xml", *sorted((folder / "invalid").glob("*.xml"))]
-    command = [sys.executable, "-m", "lintvoice", "check", "--format", "json", "--rules-dir", str(packs), *examples]
-    check = subprocess.run(command, capture_output=True, text=True, check=False)
-    (tmp / "check.json").write_text(check.stdout, encoding="utf-8")
-    (tmp / "texts.json").write_text(json.dumps(texts["fr"]["check"]["ui"]), encoding="utf-8")
     pages = {r["id"]: {"terms": r["meta"].get("business_terms", [])} for r in rules}
     (tmp / "pages.json").write_text(json.dumps(pages), encoding="utf-8")
-    args = [tmp / "texts.json", tmp / "pages.json", tmp / "check.json", "fr"]
-    out = subprocess.run(["node", ROOT / "tests" / "preview.mjs", *args], capture_output=True, text=True, check=True)
-    return {Path(f["path"]).stem: f for f in json.loads(out.stdout)}
+    found = {}
+    for target, lang, prefix in (("fr", "fr", ""), ("en16931", "en", "en16931/")):
+        folder = dist / "examples" / target
+        examples = [folder / "valid.xml", *sorted((folder / "invalid").glob("*.xml"))]
+        command = [sys.executable, "-m", "lintvoice", "check", "--format", "json", "--rules-dir", str(packs), *examples]
+        check = subprocess.run(command, capture_output=True, text=True, check=False)
+        (tmp / f"check-{target}.json").write_text(check.stdout, encoding="utf-8")
+        (tmp / f"texts-{lang}.json").write_text(json.dumps(texts[lang]["check"]["ui"]), encoding="utf-8")
+        args = [tmp / f"texts-{lang}.json", tmp / "pages.json", tmp / f"check-{target}.json", lang]
+        command = ["node", ROOT / "tests" / "preview.mjs", *args]
+        out = subprocess.run(command, capture_output=True, text=True, check=True)
+        found |= {prefix + Path(f["path"]).stem: f for f in json.loads(out.stdout)}
+    return found
 
 
 def test_every_failing_example_marks_one_of_its_errors_in_the_preview(previews):
     failing = {name: f for name, f in previews.items() if f["findings"]}
-    blind = sorted(name for name, f in failing.items() if not any(g["marked"] for g in f["findings"]))
+    # an example whose errors name only data the check does not read (BR-DEC-15: BT-111) cannot mark them
+    unread = {
+        name
+        for name, f in failing.items()
+        if all(g["terms"] and set(g["terms"]) <= set(NOT_READ) for g in f["findings"])
+    }
+    blind = sorted(
+        name for name, f in failing.items() if name not in unread and not any(g["marked"] for g in f["findings"])
+    )
+    assert unread <= {"en16931/BR-DEC-15"}, unread
     assert not blind, f"{len(blind)} of {len(failing)} failing examples mark no error in the preview: {blind}"
-    # an error goes unmarked only when it names no data (a syntax rule)
+    # an error goes unmarked only when it names no data (a syntax rule), or only data the check does not read
     unmarked = [
-        (name, g["rule"]) for name, f in failing.items() for g in f["findings"] if not g["marked"] and g["terms"]
+        (name, g["rule"])
+        for name, f in failing.items()
+        for g in f["findings"]
+        if not g["marked"] and set(g["terms"]) - set(NOT_READ)
     ]
     assert not unmarked, unmarked
+    assert "en16931/BR-CO-15" in failing and "BR-CO-15" in failing, "both targets are previewed"
 
 
 def test_a_missing_note_is_named_in_the_preview(previews, texts):
