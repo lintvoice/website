@@ -513,8 +513,11 @@ checked_line = "Faits vérifiés le"
 [resources]
 title = "Ressources : factures d'exemple, facture annotée, glossaire"
 description = "Des factures électroniques d'exemple à télécharger, une facture annotée pour apprendre à lire ses données, et un glossaire de la facture électronique en français et en anglais."
-h1 = "Ressources"
-brief = "Pour voir une erreur sur une facture, apprendre à lire une facture électronique et comprendre ses mots."
+h1 = "Une erreur se comprend mieux sur une facture."
+brief = "Des factures d'exemple qui montrent chacune une erreur, une facture annotée pour apprendre à lire les données, et un glossaire pour les mots."
+cards_label = "Ressources"
+# The page's picture: three documents on a desk, made from the example invoice's data.
+desk_caption = "Le SIREN du vendeur manque : la facture d'exemple échoue à BR-FR-10, la facture annotée montre où il va, le glossaire dit ce que c'est."
 examples_head = "Voyez l'erreur sur une facture"
 examples_text = "Une facture Factur-X valide, et {n} variantes qui échouent chacune à une règle nommée. Pour comprendre une erreur, ou pour tester un logiciel de facturation ou un validateur."
 examples_link = "Les exemples de factures"
@@ -535,8 +538,25 @@ dev_link = "Démarrer en une commande"
 [about]
 title = "À propos de lintvoice"
 description = "Pourquoi lintvoice existe, ce qu'il fait, ce qui est ouvert, et qui l'édite."
-h1 = "À propos de lintvoice"
-brief = "lintvoice explique les règles officielles de la facture électronique en mots simples, pour que chacun puisse corriger sa facture."
+h1 = "Les règles de la facture électronique, en clair."
+brief = "Pour corriger une facture vous-même, ou la vérifier dans votre logiciel avant qu'elle ne parte."
+# The page's picture: lintvoice's file card, a label and its value on each row.
+card_label = "Fiche"
+card_rows = [
+    ["Vérifie", "les factures, selon les règles officielles"],
+    ["Explique", "les erreurs, sur des factures d'exemple"],
+    ["Commence par", "la norme européenne et la France"],
+    ["Ensuite", "l'Allemagne, puis le réseau Peppol"],
+    ["Code", "public, licence MIT"],
+    ["Pages de règles", "CC BY-SA 4.0"],
+    ["Factures d'exemple", "domaine public (CC0)"],
+    ["Édité par", "AllGood Services SAS, en France"],
+]
+card_caption = "lintvoice en une fiche."
+# Beside the why: the code a platform returns, then the rule page that explains it.
+code_label = "Le code que vous recevez"
+page_label = "La page qui l'explique"
+page_caption = "La page de la règle, telle qu'elle est en ligne."
 why_head = "Pourquoi lintvoice existe"
 why = [
     "La facture électronique devient obligatoire entre entreprises, en France comme en Allemagne. En France, les factures passent par des plateformes agréées qui les vérifient selon des règles officielles. Une facture qui échoue à l'une d'elles peut être rejetée avec un code comme BR-FR-10. Pour la personne qui facture, ce code ne dit pas ce qui ne va pas, ni comment le corriger.",
@@ -653,8 +673,13 @@ why = "Les règles officielles vérifient la forme des données, pas leur réali
 [glossary]
 title = "Glossaire de la facture électronique : Factur-X, Peppol, plateforme agréée, SIREN…"
 description = "Les mots de la facture électronique expliqués simplement, en français et en anglais, avec leur source officielle et les règles qui les vérifient."
-h1 = "Glossaire"
-brief = "Les mots de la facture électronique, expliqués simplement. Chacun avec son nom anglais, sa source officielle et les règles qui le vérifient."
+h1 = "Comprenez la facture électronique, mot par mot."
+brief = "Chaque mot expliqué simplement, avec son nom anglais, sa source officielle et les règles qui le vérifient."
+groups_label = "Les groupes du glossaire"
+count_one = "{n} mot"
+count_many = "{n} mots"
+# The page's picture: one entry of the glossary, as an index card.
+card_caption = "Une fiche du glossaire : le mot, son nom anglais, les règles qui le vérifient et sa source."
 rules_label = "Règles :"
 source_label = "Source :"
 foot = "Ce glossaire cite des sources publiques : impots.gouv.fr, service-public.fr, le FNFE-MPE, Peppol et la Commission européenne. Une erreur, un mot qui manque ? Écrivez-nous."

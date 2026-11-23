@@ -513,8 +513,11 @@ checked_line = "Facts checked on"
 [resources]
 title = "Resources: example invoices, an annotated invoice, a glossary"
 description = "Example e-invoices to download, an annotated invoice to learn to read its data, and a glossary of e-invoicing words in English and French."
-h1 = "Resources"
-brief = "To see an error on an invoice, learn to read an e-invoice and understand its words."
+h1 = "An error is easier to understand on an invoice."
+brief = "Example invoices that each show one error, an annotated invoice to learn to read the data, and a glossary for the words."
+cards_label = "Resources"
+# The page's picture: three documents on a desk, made from the example invoice's data.
+desk_caption = "The seller's SIREN (the French company number) is missing: the example invoice fails BR-FR-10, the annotated invoice shows where it goes, the glossary says what it is."
 examples_head = "See the error on an invoice"
 examples_text = "One valid Factur-X invoice, and {n} variants that each fail one named rule. To understand an error, or to test invoicing software or a validator."
 examples_link = "The example invoices"
@@ -535,8 +538,25 @@ dev_link = "Start in one command"
 [about]
 title = "About lintvoice"
 description = "Why lintvoice exists, what it does, what is open, and who publishes it."
-h1 = "About lintvoice"
-brief = "lintvoice explains the official e-invoicing rules in plain words, so anyone can fix their invoice."
+h1 = "E-invoicing rules, in plain words."
+brief = "To fix an invoice yourself, or to check it in your software before it goes out."
+# The page's picture: lintvoice's file card, a label and its value on each row.
+card_label = "Fact sheet"
+card_rows = [
+    ["Checks", "invoices, against the official rules"],
+    ["Explains", "errors, on example invoices"],
+    ["Starts with", "the European standard and France"],
+    ["Next", "Germany, then the Peppol network"],
+    ["Code", "public, MIT licence"],
+    ["Rule pages", "CC BY-SA 4.0"],
+    ["Example invoices", "public domain (CC0)"],
+    ["Published by", "AllGood Services SAS, France"],
+]
+card_caption = "lintvoice on one card."
+# Beside the why: the code a platform returns, then the rule page that explains it.
+code_label = "The code you get"
+page_label = "The page that explains it"
+page_caption = "The rule page, as it is online."
 why_head = "Why lintvoice exists"
 why = [
     "E-invoicing between businesses is becoming mandatory, in France as in Germany. In France, invoices go through approved platforms that check them against official rules. An invoice that fails one of them can be rejected with a code like BR-FR-10. For the person who sent it, that code says neither what is wrong nor how to fix it.",
@@ -653,8 +673,13 @@ why = "The official rules check the form of the data, not whether it is real. On
 [glossary]
 title = "E-invoicing glossary: Factur-X, Peppol, approved platform, SIREN…"
 description = "The words of e-invoicing explained simply, in English and French, with their official source and the rules that check them."
-h1 = "Glossary"
-brief = "The words of e-invoicing, explained simply. Each with its French name, its official source and the rules that check it."
+h1 = "Understand e-invoicing, word by word."
+brief = "Each word explained simply, with its French name, its official source and the rules that check it."
+groups_label = "The glossary's groups"
+count_one = "{n} word"
+count_many = "{n} words"
+# The page's picture: one entry of the glossary, as an index card.
+card_caption = "A glossary entry: the word, its French name, the rules that check it and its source."
 rules_label = "Rules:"
 source_label = "Source:"
 foot = "This glossary cites public sources: impots.gouv.fr, service-public.fr, FNFE-MPE, Peppol and the European Commission. A mistake, a missing word? Write to us."

@@ -7,7 +7,7 @@
   <span class="total-rule" aria-hidden="true"></span>
   <p class="brief">{{ p.brief }}</p>
 </div>
-<section class="section" aria-label="{{ p.h1 }}">
+<section class="section" aria-label="{{ p.cards_label }}">
   <ul class="subject-grid res-grid">
     <li><a href="{{ links.examples }}">{{ icon("edit") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="n">{{ p.examples_link }} →</span></a></li>
     {% for g in guides %}<li><a href="{{ g.meta.paths[t.lang] }}">{{ icon("book") }}<span class="name">{{ g.pages[t.lang].title }}</span><span class="line">{{ g.meta.description[t.lang] }}</span><span class="n">{{ p.guide_link }} →</span></a></li>
