@@ -213,6 +213,19 @@ def test_glossary_cards_count_each_groups_words(dist, texts):
             assert group["key"] in page.ids and ("link", f"{path}#{group['key']}") in page.refs
 
 
+def test_the_examples_page_counts_what_the_build_generates(dist):
+    """The counts come from the manifest, so they follow each new examples release without a text edit."""
+    manifest = json.loads((dist / "examples/fr/manifest.json").read_text(encoding="utf-8"))
+    total = len(manifest["examples"])
+    invalid = sum(e["status"] == "invalid" for e in manifest["examples"])
+    for path in ("/examples/", "/fr/exemples/"):
+        p = _page(dist, path)
+        text = " ".join(" ".join(p.text).split())
+        for said in (p.description, text):
+            assert f"{total} " in said and f" {invalid} " in said
+            assert "{" not in said, "a placeholder left unfilled"
+
+
 def test_wording_never_claims_certification(dist, texts):
     for _page_name, lang, path in ALL:
         text = " ".join(_page(dist, path).text).replace(texts[lang]["footer_disclaimer"], "")
