@@ -123,7 +123,7 @@ valid_text = "Passe EN 16931, les règles du profil Factur-X EN 16931 et BR-FR."
 invalid_title = "Factures invalides"
 invalid_chip = "invalide"
 cols = ["Exemple", "Ce qui ne va pas", "Règles en échec", "Fichiers"]
-pdf_note = "Chaque PDF montre une page lisible, tirée de son XML et marquée SPÉCIMEN, et contient ce XML sous le nom factur-x.xml. Sur un exemple invalide, la page nomme la règle en échec et montre en rouge les valeurs qui diffèrent de la facture valide. Ces PDF ne sont pas PDF/A-3 : ils servent à tester l'extraction du XML et les règles XML."
+pdf_note = "Chaque PDF montre une page lisible, tirée de son XML et marquée SPÉCIMEN, et contient ce XML sous le nom factur-x.xml. Sur un exemple invalide, la page nomme la règle en échec et montre son erreur en rouge : les valeurs qui diffèrent de la facture valide ou, quand l'erreur n'est que dans les données électroniques, un encadré qui la détaille. Ces PDF ne sont pas PDF/A-3 : ils servent à tester l'extraction du XML et les règles XML."
 
 [legal]
 title = "Mentions légales"

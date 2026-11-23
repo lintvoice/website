@@ -123,7 +123,7 @@ valid_text = "Passes EN 16931, the Factur-X EN 16931 profile rules and BR-FR."
 invalid_title = "Invalid invoices"
 invalid_chip = "invalid"
 cols = ["Example", "What is wrong", "Rules that fail", "Files"]
-pdf_note = "Each PDF shows a readable page, drawn from its XML and marked SPECIMEN, and carries that XML as factur-x.xml. On an invalid example, the page names the rule it fails and shows in red the values that differ from the valid invoice. These PDFs are not PDF/A-3: they are for testing XML extraction and the XML rules."
+pdf_note = "Each PDF shows a readable page, drawn from its XML and marked SPECIMEN, and carries that XML as factur-x.xml. On an invalid example, the page names the rule it fails and shows its mistake in red: the values that differ from the valid invoice or, when the mistake is in the electronic data only, a box that lists it. These PDFs are not PDF/A-3: they are for testing XML extraction and the XML rules."
 
 [legal]
 title = "Legal notice"
