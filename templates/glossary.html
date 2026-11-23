@@ -1,25 +1,49 @@
 {% extends "base.html" %}
 {% block body %}
 {# One page, grouped by subject; each term has an anchor shared by both languages (/glossary/#peppol, /fr/glossaire/#peppol),
-   so a rule page, a post or an assistant can point at one word. A rule without a page shows as text. #}
+   so a rule page, a post or an assistant can point at one word. A rule without a page shows as text.
+   The title is a claim; beside it, the page's picture: one entry as an index card (the SIREN entry, which the page
+   holds further down, so screen readers skip the card and read the caption). Then the groups as cards, each with its
+   pictogram and its number of words; each group's terms in two columns on a desktop. #}
 {% set ids = rules_index.ids if rules_index is defined else [] %}
-<div class="band">
-  <h1>{{ icon("list--bulleted") }}{{ p.h1 }}</h1>
-  <span class="total-rule" aria-hidden="true"></span>
-  <p class="brief">{{ p.brief }}</p>
-  <ul class="jump">{% for g in p.groups %}<li><a href="{{ path }}#{{ g.key }}">{{ g.name }}</a></li>{% endfor %}</ul>
+{% set terms = p.get('terms', []) %}
+{# the drawing of each group, by its key #}
+{% set group_pictos = {"formats": "formats", "reforme": "flow", "identifiants": "id", "regles": "understand", "tva": "vat", "public": "public", "allemagne": "map"} %}
+{% set card = terms | selectattr("id", "equalto", "siren") | first %}
+<div class="band tint claim">
+  <div>
+    <h1>{{ p.h1 }}</h1>
+    <span class="total-rule" aria-hidden="true"></span>
+    <p class="brief">{{ p.brief }}</p>
+  </div>
+  <figure class="doc index-fig">
+    <div class="sheet index-card" aria-hidden="true">
+      <p class="ic-head"><strong>{{ card.name }}</strong><span lang="{{ other.lang }}">{{ card.other }}</span></p>
+      <p>{{ card.text }}</p>
+      <p class="ic-meta" translate="no">{{ p.rules_label }} {% for r in card.rules %}<span class="nw">{{ r }}</span>{% if not loop.last %}, {% endif %}{% endfor %}<br>{{ p.source_label }} {{ card.source_name }}</p>
+    </div>
+    <figcaption>{{ p.card_caption }}</figcaption>
+  </figure>
 </div>
+<section class="section" aria-label="{{ p.groups_label }}">
+  <ul class="group-cards">
+  {% for g in p.groups %}{% set n = terms | selectattr("group", "equalto", g.key) | list | length %}
+    <li><a href="{{ path }}#{{ g.key }}">{% if g.key in group_pictos %}{{ picto(group_pictos[g.key]) }}{% endif %}<span><span class="name">{{ g.name }}</span><span class="count">{{ (p.count_one if n == 1 else p.count_many) | replace("{n}", n | string) }}</span></span></a></li>
+  {% endfor %}
+  </ul>
+</section>
 {% for g in p.groups %}
-<section class="section{% if loop.index is even %} tint{% endif %}" id="{{ g.key }}" aria-labelledby="{{ g.key }}-title">
-  <h2 id="{{ g.key }}-title">{{ g.name }}</h2>
-  <p class="sub">{{ g.line }}</p>
-  <dl class="glossary">
-  {% for term in p.get('terms', []) if term.group == g.key %}
-    <dt id="{{ term.id }}">{{ term.name }}{% if term.get('other') %}<span class="other" lang="{{ "en" if t.lang == "fr" else "fr" }}">{{ term.other }}</span>{% endif %}</dt>
-    <dd>
-      <p>{{ term.text | links }}</p>
-      <p class="meta">{% if term.get('rules') %}{{ p.rules_label }} {% for r in term.rules %}{% if r in ids %}<a class="idm" href="{{ rule_href(r, t.lang) }}">{{ r }}</a>{% else %}<span class="idm">{{ r }}</span>{% endif %}{% if not loop.last %}, {% endif %}{% endfor %} · {% endif %}{{ p.source_label }} <a href="{{ term.source }}">{{ term.source_name }}</a></p>
-    </dd>
+<section class="section g-section{% if loop.index is odd %} tint{% endif %}" id="{{ g.key }}" aria-labelledby="{{ g.key }}-title">
+  <div class="g-head">{% if g.key in group_pictos %}{{ picto(group_pictos[g.key]) }}{% endif %}<div><h2 id="{{ g.key }}-title">{{ g.name }}</h2><p class="sub">{{ g.line }}</p></div></div>
+  <dl class="glossary two">
+  {% for term in terms if term.group == g.key %}
+    <div>
+      <dt id="{{ term.id }}">{{ term.name }}{% if term.get('other') %}<span class="other" lang="{{ other.lang }}">{{ term.other }}</span>{% endif %}</dt>
+      <dd>
+        <p>{{ term.text | links }}</p>
+        <p class="meta">{% if term.get('rules') %}{{ p.rules_label }} {% for r in term.rules %}{% if r in ids %}<a class="idm" href="{{ rule_href(r, t.lang) }}">{{ r }}</a>{% else %}<span class="idm">{{ r }}</span>{% endif %}{% if not loop.last %}, {% endif %}{% endfor %} · {% endif %}{{ p.source_label }} <a href="{{ term.source }}">{{ term.source_name }}</a></p>
+      </dd>
+    </div>
   {% endfor %}
   </dl>
 </section>

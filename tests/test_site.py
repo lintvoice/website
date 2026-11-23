@@ -201,6 +201,18 @@ def test_about_shows_the_rule_its_text_names(dist, dist_rules, texts):
         assert not any(href.endswith(f"/{rule}/") for _, href in _page(dist, path).refs)
 
 
+def test_glossary_cards_count_each_groups_words(dist, texts):
+    """Each group's card gives its number of words and leads to it; no word sits in a group the page does not show."""
+    for lang, path in build.PAGES["glossary"].items():
+        g, page = texts[lang]["glossary"], _page(dist, path)
+        text = " ".join(page.text)
+        assert {t["group"] for t in g["terms"]} <= {group["key"] for group in g["groups"]}
+        for group in g["groups"]:
+            n = sum(t["group"] == group["key"] for t in g["terms"])
+            assert (g["count_one"] if n == 1 else g["count_many"]).replace("{n}", str(n)) in text
+            assert group["key"] in page.ids and ("link", f"{path}#{group['key']}") in page.refs
+
+
 def test_wording_never_claims_certification(dist, texts):
     for _page_name, lang, path in ALL:
         text = " ".join(_page(dist, path).text).replace(texts[lang]["footer_disclaimer"], "")
