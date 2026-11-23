@@ -37,11 +37,21 @@
 <script>try{var s=localStorage.getItem('lintvoice-theme');if(s)document.documentElement.dataset.theme=s}catch(e){}</script>
 </head>
 <body>
+{# What you run, first in the top bar: a disclosure on a desktop, open in the Menu panel on a phone. Each item names a
+   tool and says what it gives; the third leads to another site, so its mark follows its name. #}
+{% macro tools_list() %}
+<ul class="tools-list">
+  {% if links.check is defined %}<li><a href="{{ links.check }}"{% if path == links.check %} aria-current="page"{% endif %}><span class="t-name">{{ t.tools_check_head }}</span><span class="t-line">{{ t.tools_check_text }}</span></a></li>{% endif %}
+  <li><a href="{{ links.home }}#quick-start"><span class="t-name">{{ t.tools_cli_head }}</span><span class="t-line">{{ t.tools_cli_text }}</span></a></li>
+  <li><a href="https://github.com/lintvoice/lintvoice#from-a-coding-agent"><span class="t-name">{{ t.tools_agent_head }}</span><span class="t-line">{{ t.tools_agent_text }}</span></a></li>
+</ul>
+{% endmacro %}
 <a class="skip" href="{{ path }}#content">{{ t.skip_link }}</a>
 <div class="page">
 <header class="topbar">
   <nav class="site-nav" aria-label="{{ t.nav_label }}">
     <a class="brand" href="{{ links.home }}"><img class="wm-light" src="/static/logo/lintvoice-wordmark-light.svg" alt="lintvoice" width="96" height="22"><img class="wm-dark" src="/static/logo/lintvoice-wordmark-dark.svg" alt="lintvoice" width="96" height="22"></a>
+    <details class="tools wide"><summary>{{ t.nav_tools }}</summary><div class="tools-panel">{{ tools_list() }}</div></details>
     {% if links.rules is defined %}<a class="wide" href="{{ links.rules }}">{{ t.nav_rules }}</a>{% endif %}
     <a class="wide" href="{{ links.resources }}">{{ t.nav_resources }}</a>
     <a class="wide" href="{{ links.pricing }}">{{ t.nav_pricing }}</a>
@@ -52,6 +62,9 @@
     {% block cta %}{% if links.check is defined %}<a class="cta" href="{{ links.check }}">{{ t.cta_check }}</a>{% else %}<a class="cta" href="{{ links.home }}#quick-start">{{ t.cta }}</a>{% endif %}{% endblock %}
     <details class="menu narrow"><summary>{{ t.menu_label }}</summary>
       <div class="menu-panel">
+        <p class="menu-head">{{ t.nav_tools }}</p>
+        {{ tools_list() }}
+        <hr>
         {% if links.rules is defined %}<a href="{{ links.rules }}">{{ t.nav_rules }}</a>{% endif %}
         <a href="{{ links.resources }}">{{ t.nav_resources }}</a>
         <a href="{{ links.pricing }}">{{ t.nav_pricing }}</a>
@@ -76,6 +89,11 @@
 function dark(){return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
 function label(){bs.forEach(function(b){b.textContent=dark()?b.dataset.light:b.dataset.dark})}
 bs.forEach(function(b){b.onclick=function(){r.dataset.theme=dark()?'light':'dark';try{localStorage.setItem('lintvoice-theme',r.dataset.theme)}catch(e){}label()}});label()})();
+/* the Tools and Menu disclosures close on Escape (focus back on their label), on a click elsewhere, or when the focus leaves them */
+(function(){document.querySelectorAll('details.tools,details.menu').forEach(function(d){var s=d.querySelector('summary');
+d.addEventListener('keydown',function(e){if(e.key==='Escape'&&d.open){d.open=false;s.focus()}});
+d.addEventListener('focusout',function(e){if(d.open&&e.relatedTarget&&!d.contains(e.relatedTarget))d.open=false});
+document.addEventListener('click',function(e){if(d.open&&!d.contains(e.target))d.open=false})})})();
 </script>
 {% block scripts %}{% endblock %}
 </body>
