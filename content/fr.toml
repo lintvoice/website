@@ -573,7 +573,7 @@ open = [
 ]
 who_head = "Qui fait lintvoice"
 who = [
-    "[À venir : le nom de la personne qui fait lintvoice, et une phrase sur pourquoi.]",
+    "Nous faisons lintvoice au bord du lac d'Annecy. Il est né d'une frustration : comprendre la facture électronique dans le détail était bien trop difficile, et les outils existants n'y aidaient pas.",
 ]
 legal_line = "lintvoice est édité par AllGood Services SAS, une société française. Ses coordonnées sont dans les"
 legal_link = "mentions légales"

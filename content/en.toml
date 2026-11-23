@@ -573,7 +573,7 @@ open = [
 ]
 who_head = "Who makes lintvoice"
 who = [
-    "[To come: the name of the person who makes lintvoice, and one sentence on why.]",
+    "We make lintvoice on the shores of Lake Annecy, in the French Alps. It grew out of frustration: e-invoicing was far too hard to understand in detail, and the existing tools did not help.",
 ]
 legal_line = "lintvoice is published by AllGood Services SAS, a French company. Its details are in the"
 legal_link = "legal notice"
