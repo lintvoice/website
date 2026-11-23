@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT))
 import build  # noqa: E402 (after the sys.path insert)
 import checkassets  # noqa: E402
 import guides  # noqa: E402
+import rulepages  # noqa: E402
 
 EXTERNAL = (
     "https://github.com/",
@@ -189,6 +190,15 @@ def test_resources_picture_shows_what_the_example_files_hold(dist):
         assert build._amount(valid.findtext(".//ram:GrandTotalAmount", namespaces=build.CII)) in text
     assert build._amount("1230.00") == "1 230,00 €"
     assert build._amount("7.5") == "7,50 €"
+
+
+def test_about_shows_the_rule_its_text_names(dist, dist_rules, texts):
+    """Beside the why, the rule page for the code the text names, linked; without the rule pages, no picture."""
+    rule = build.DESK_EXAMPLE
+    for lang, path in build.PAGES["about"].items():
+        assert any(rule in para for para in texts[lang]["about"]["why"])
+        assert ("link", rulepages.href(rule, lang)) in _page(dist_rules, path).refs
+        assert not any(href.endswith(f"/{rule}/") for _, href in _page(dist, path).refs)
 
 
 def test_wording_never_claims_certification(dist, texts):
