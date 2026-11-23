@@ -130,7 +130,7 @@ privacy = [
 ip_title = "Licences et marque"
 ip = [
     "Le code de ce site est sous [licence MIT](https://github.com/lintvoice/website/blob/main/LICENSE) ; les textes des pages de règles sont sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr) ; ses autres textes et le logo lintvoice sont © AllGood Services SAS, tous droits réservés. L'outil lintvoice est lui aussi sous [licence MIT](https://github.com/lintvoice/lintvoice/blob/main/LICENSE).",
-    "Les factures d'exemple sont dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). Les messages officiels des règles, cités sur les pages, viennent de leurs éditeurs, sous leurs propres licences.",
+    "Les factures d'exemple sont dans le domaine public ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). Les messages officiels des règles, cités sur les pages de règles, viennent de leurs éditeurs, sous leurs propres licences.",
     "Le code source de ce site est public, pour que chacun puisse vérifier ce qu'il fait : [github.com/lintvoice/website](https://github.com/lintvoice/website).",
     "Les polices sont IBM Plex, sous [SIL Open Font License 1.1](https://openfontlicense.org/).",
     "lintvoice est une marque déposée par AllGood Services SAS.",
