@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block rights %}{{ p.rights | links }}{% endblock %}
 {% block body %}
 {# One page, grouped by subject; each term has an anchor shared by both languages (/glossary/#peppol, /fr/glossaire/#peppol),
    so a rule page, a post or an assistant can point at one word. A rule without a page shows as text.

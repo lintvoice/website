@@ -201,10 +201,10 @@ def test_about_shows_the_rule_its_text_names(dist, dist_rules, texts):
         assert not any(href.endswith(f"/{rule}/") for _, href in _page(dist, path).refs)
 
 
-def test_glossary_cards_count_each_groups_words(dist, texts):
+def test_glossary_cards_count_each_groups_words(dist, texts, words):
     """Each group's card gives its number of words and leads to it; no word sits in a group the page does not show."""
     for lang, path in build.PAGES["glossary"].items():
-        g, page = texts[lang]["glossary"], _page(dist, path)
+        g, page = {**texts[lang]["glossary"], **build.glossary(words, lang)}, _page(dist, path)
         text = " ".join(page.text)
         assert {t["group"] for t in g["terms"]} <= {group["key"] for group in g["groups"]}
         for group in g["groups"]:
@@ -336,6 +336,17 @@ def test_text_links_are_escaped_and_only_https_local_or_mailto():
         str(build.links("a <b> [x](https://e.org/) [y](javascript:alert(1)) [z](mailto:a@b.c)"))
         == 'a &lt;b&gt; <a href="https://e.org/">x</a> [y](javascript:alert(1)) <a href="mailto:a@b.c">z</a>'
     )
+
+
+def test_the_glossary_shows_every_word_of_the_rules_repository_with_its_licence(dist, words):
+    """The words come from glossary.yaml (CC BY-SA 4.0): each one is on the page under its anchor, in both languages,
+    and the page's footer says the licence, not the reserved one of the site's other texts."""
+    for lang, path in build.PAGES["glossary"].items():
+        page, g = _page(dist, path), build.glossary(words, lang)
+        assert {t["id"] for t in g["terms"]} <= page.ids
+        assert all(t["name"] in " ".join(page.text) for t in g["terms"])
+        links = {href for kind, href in page.refs if kind == "link"}
+        assert "https://github.com/lintvoice/invoice-rules" in links and any("by-sa/4.0" in h for h in links)
 
 
 def test_no_page_shows_a_link_left_as_text(dist):

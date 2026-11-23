@@ -29,6 +29,7 @@ import checkassets
 import guides
 import rulepages
 from invoice_examples import cli as examples_cli
+import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from markupsafe import Markup, escape
 
@@ -98,6 +99,21 @@ def load():
     site = tomllib.loads((ROOT / "site.toml").read_text(encoding="utf-8"))
     texts = {lang: tomllib.loads((ROOT / "content" / f"{lang}.toml").read_text(encoding="utf-8")) for lang in LANGS}
     return site, texts
+
+
+def glossary(folder, lang):
+    """The glossary, from the rules repository's glossary.yaml (open content, CC BY-SA 4.0, like the rule pages), in one
+    language, as the glossary page shows it: each word's name in the other language next to it when the two differ."""
+    data = yaml.safe_load((Path(folder) / "glossary.yaml").read_text(encoding="utf-8"))
+    other = next(code for code in LANGS if code != lang)
+    terms = []
+    for t in data["terms"]:
+        term = {key: t[key][lang] if isinstance(t[key], dict) else t[key] for key in t}
+        if t["name"][other] != t["name"][lang]:
+            term["other"] = t["name"][other]
+        terms.append(term)
+    groups = [{key: g[key][lang] if isinstance(g[key], dict) else g[key] for key in g} for g in data["groups"]]
+    return {"groups": groups, "terms": terms}
 
 
 def missing_legal(site):
@@ -260,6 +276,11 @@ def _check_assets(out, source, rules):
 def build(out, strict=False, rules_dir=None, check_assets=None):
     site, texts = load()
     rules = rulepages.load(rules_dir) if rules_dir else []
+    # the glossary's words live in the rules repository (the local checkout given, else the pinned commit): every page
+    # reads them where it read them before, in the glossary's texts
+    words = rules_dir or fetch_rules(site["rules_source"])
+    for lang in LANGS:
+        texts[lang]["glossary"].update(glossary(words, lang))
     pages = dict(PAGES, rules=rulepages.PATHS) if rules else dict(PAGES)
     if check_assets:
         pages["check"] = CHECK_PATHS

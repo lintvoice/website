@@ -17,3 +17,9 @@ def dist(tmp_path_factory):
 @pytest.fixture(scope="session")
 def texts():
     return build.load()[1]
+
+
+@pytest.fixture(scope="session")
+def words():
+    """The rules repository at its pinned commit: the glossary's words live there (glossary.yaml)."""
+    return build.fetch_rules(build.load()[0]["rules_source"])
