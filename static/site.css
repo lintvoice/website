@@ -449,9 +449,19 @@ a.rule-card .go{display:block;margin-top:var(--sp-4);font-weight:600;text-decora
 .search-row label{color:var(--muted)}
 .search-row input{font:inherit;flex:1 1 12rem;max-width:20rem;padding:var(--sp-2) var(--sp-3);border:var(--bw-hair) solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text)}
 .search-row input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-/* the pillars' links: text, quieter than the page's one button */
-.pillars h3 .ic{vertical-align:-.15em}
+/* the header on the kraft band as every page opens (a .band.claim), its picture with more room than a paper document
+   and its title at the display size: a tagline, longer than a claim, would take five lines at the claim's size */
+.band.claim.home{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:var(--sp-8)}
+.band.claim.home h1{font-size:var(--fs-display);line-height:1.1;letter-spacing:-.012em;max-width:none}
+/* each pillar under its pictogram (80 px); the pillars' links: text, quieter than the page's one button */
+.pillars .pg{width:80px;height:80px;margin-bottom:var(--sp-4)}
+.pillars h3{font-size:var(--fs-xl)}
 .pillars a.go{font-weight:600}
+/* the developers' block: its pictogram beside its title, a door */
+.door-head{display:flex;align-items:center;gap:var(--sp-6);margin-bottom:var(--sp-4)}
+.door-head .pg{width:80px;height:80px}
+.door-head h2{margin:0}
+@media (max-width:820px){.band.claim.home{grid-template-columns:minmax(0,1fr)}.pillars .pg,.door-head .pg{width:64px;height:64px}}
 /* the open facts: ledger rows on hairlines, a muted ✓ (a trust fact, not a status) */
 .checks{list-style:none;padding:0;margin:var(--sp-6) 0 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--sp-8);border-top:var(--bw-hair) solid var(--text)}
 .checks li{margin:0;padding:var(--sp-3) 0 var(--sp-3) var(--sp-6);border-bottom:var(--bw-hair) solid var(--line);position:relative}

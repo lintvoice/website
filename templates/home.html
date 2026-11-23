@@ -4,11 +4,13 @@
 {% set ix = rules_index if rules_index is defined else none %}
 {% set counts = dict(en16931=site.rule_sets.en16931, facturx=site.rule_sets.facturx, brfr=site.rule_sets.brfr, examples=invalid | length, explained=ix.explained if ix else "", total=ix.total if ix else "") %}
 {% set example = invalid | selectattr("id", "equalto", "BR-CO-15") | first %}
-{% set pillar_icons = {"check": "document--view", "rules": "book", "examples": "edit"} %}
+{# each pillar under its pictogram, by the page it leads to: Vérifiez, Comprenez, Corrigez #}
+{% set pillar_pictos = {"check": "check", "rules": "understand", "examples": "fix"} %}
 {% set try_example = invalid | selectattr("id", "equalto", "BR-FR-05-PMD") | first %}
 {% set proof_rule = rules | selectattr("id", "equalto", "BR-CO-15") | first %}
 
-<div class="band split">
+{# the header on the kraft band, as every page opens; its title keeps the display size (a tagline, longer than a claim) #}
+<div class="band tint claim home">
   <div>
     <h1 class="display">{{ p.h1 }}</h1>
     <span class="total-rule" aria-hidden="true"></span>
@@ -26,12 +28,13 @@
   {% include "_home_layers.html" %}
 </div>
 
-<section class="section tint" aria-labelledby="values-title">
+<section class="section" aria-labelledby="values-title">
   <h2 id="values-title">{{ p.values_title }}</h2>
   <div class="pillars">
   {% for v in p["values"] if links[v.page] is defined %}
     <div>
-      <h3>{{ icon(pillar_icons[v.page]) }}{{ v.head }}</h3>
+      {{ picto(pillar_pictos[v.page]) }}
+      <h3>{{ v.head }}</h3>
       <p class="pain">{{ v.question }}</p>
       <p>{{ v.text }}</p>
       <p><a class="go" href="{{ links[v.page] }}">{{ v.link }} →</a></p>
@@ -42,7 +45,7 @@
 </section>
 
 {% if ix and "BR-CO-15" in ix.ids and example and proof_rule %}
-<section class="section" aria-labelledby="proof-title">
+<section class="section tint" aria-labelledby="proof-title">
   <h2 id="proof-title">{{ p.proof_title }}</h2>
   <p class="sub">{{ p.proof_sub }}</p>
   <div class="split">
@@ -55,7 +58,7 @@
 
 {% if ix %}
 {% set topics = dict(ix.topics) %}
-<section class="section tint" aria-labelledby="subjects-title">
+<section class="section" aria-labelledby="subjects-title">
   <h2 id="subjects-title">{{ p.subjects_title }}</h2>
   <p class="sub">{{ p.subjects_sub }}</p>
   <ul class="ledger">
@@ -69,7 +72,7 @@
 </section>
 {% endif %}
 
-<section class="section" aria-labelledby="europe-title">
+<section class="section tint" aria-labelledby="europe-title">
   <h2 id="europe-title">{{ p.europe_title }}</h2>
   <p>{{ p.europe_text }}</p>
   <dl class="ledger-kv">
@@ -79,7 +82,7 @@
 </section>
 
 <section class="section on-navy" id="quick-start" aria-labelledby="builders-title">
-  <h2 id="builders-title">{{ icon("terminal") }}{{ p.builders_title }}</h2>
+  <div class="door-head">{{ picto("api") }}<h2 id="builders-title">{{ p.builders_title }}</h2></div>
   <div class="split">
     <div>
       <p>{{ p.builders_text }}</p>
@@ -94,7 +97,9 @@
 </section>
 
 <section class="section" aria-labelledby="open-title">
-  <h2 id="open-title">{{ p.open_title }}</h2>
-  <ul class="checks">{% for item in p.open_items %}<li>{{ item | fill(counts) }}</li>{% endfor %}</ul>
+  <div class="open-split">
+    <div>{{ picto("open") }}<h2 id="open-title">{{ p.open_title }}</h2></div>
+    <ul class="checks">{% for item in p.open_items %}<li>{{ item | fill(counts) }}</li>{% endfor %}</ul>
+  </div>
 </section>
 {% endblock %}
