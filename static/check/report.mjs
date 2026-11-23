@@ -70,8 +70,8 @@ export function termsOf(g, pages) {
 }
 
 // An error about an identifier's scheme (BR-FR-CO-10: a scheme missing or repeated; BR-FR-32: an identifier declared
-// with scheme 0002): the identifier is shown with its scheme.
-const aboutScheme = (g) => g.messages.some((m) => /schemeID|\bBT-\d+-1\b/.test(m.message));
+// with scheme 0002; BR-62: "shall have a Scheme identifier"): the identifier is shown with its scheme.
+const aboutScheme = (g) => g.messages.some((m) => /schemeID|scheme identifier|\bBT-\d+-1\b/i.test(m.message));
 
 // The note subject code an error is about (BR-FR-05_BT-22_PMD, or "(code PMD)" in its message), if any.
 const noteCode = (g) => (g.rule.match(/_BT-2[12]_([A-Z0-9]+)$/) || g.messages.map((m) => m.message.match(/\(code ([A-Z0-9]+)\)/)).find(Boolean) || [])[1];
@@ -169,11 +169,13 @@ export function preview(inv, marks) {
   const delivery = marked("BT-72") ? `<br>${esc(T.delivery)} ${field("BT-72", t["BT-72"])}` : "";
   const period = marked("BT-73", "BT-74") ? `<br>${esc(T.period)} ${field("BT-73", t["BT-73"])} – ${field("BT-74", t["BT-74"])}` : "";
   // the supporting documents: an invoiced object (type 130) with its scheme, any other with its description
+  // an attached file (BT-125): its name and MIME code, the type the invoice declares for it
+  const file = (d) => (d["BT-125"] || marked("BT-125") ? ` · ${field("BT-125", d["BT-125"] ? `${d["BT-125"]}${d["BT-125-1"] ? ` (${d["BT-125-1"]})` : ""}` : "")}` : "");
   let refs = "";
-  if (marked("BT-18", "BT-18-1", "BT-122", "BT-123")) {
+  if (marked("BT-18", "BT-18-1", "BT-122", "BT-123", "BT-125")) {
     const docs = (inv.documents || []).map((d) => (d.type === "130"
       ? `<div><dt>${esc(T.invoiced_object)}${d["BT-18-1"] || marked("BT-18-1") ? ` (${field("BT-18-1", d["BT-18-1"])})` : ""}</dt><dd>${field("BT-18", d["BT-122"], "BT-122")}</dd></div>`
-      : `<div><dt>${esc(T.attachment)}</dt><dd>${field("BT-122", d["BT-122"])}${d["BT-123"] || marked("BT-123") ? ` · ${field("BT-123", d["BT-123"])}` : ""}</dd></div>`));
+      : `<div><dt>${esc(T.attachment)}</dt><dd>${field("BT-122", d["BT-122"])}${d["BT-123"] || marked("BT-123") ? ` · ${field("BT-123", d["BT-123"])}` : ""}${file(d)}</dd></div>`));
     refs = `\n    <dl class="inv-others"><p class="who">${esc(T.references)}</p>${docs.join("") || `<div><dt></dt><dd>${field("BT-122", "", "BT-18", "BT-18-1", "BT-123")}</dd></div>`}</dl>`;
   }
   // a group item's other details (base, rate, reason…): each one the invoice gives or an error points at
@@ -183,7 +185,11 @@ export function preview(inv, marks) {
   const here = (l, ...bts) => marked(...bts) && (bts.some((bt) => l[bt]) || !inv.lines.some((x) => bts.some((bt) => x[bt])));
   const subs = (l) => {
     const rows = [];
+    // the line number, on every line when an error is about it (an empty one is the point)
+    if (marked("BT-126")) rows.push(kv("BT-126", l["BT-126"]));
     if (here(l, "BT-134", "BT-135")) rows.push(`${esc(T.period)} ${field("BT-134", l["BT-134"])} – ${field("BT-135", l["BT-135"])}`);
+    // the item's identifiers, with their scheme, and its country of origin
+    for (const bt of ["BT-157", "BT-158", "BT-159"]) if (here(l, bt)) rows.push(`${kv(bt, l[bt])}${l[`${bt}-1`] || marked(`${bt}-1`) ? ` (${field(`${bt}-1`, l[`${bt}-1`])})` : ""}`);
     if (marked("BT-160", "BT-161")) for (const a of l.attributes || []) rows.push(`${field("BT-160", a["BT-160"])} : ${field("BT-161", a["BT-161"])}`);
     for (const bt of ["BT-148", "BT-147", "BT-149"]) if (here(l, bt)) rows.push(kv(bt, l[bt]));
     if (marked("BT-136", "BT-137", "BT-139", "BT-140")) for (const a of l.allowances || []) rows.push(`${kv("BT-136", a["BT-136"])}${details(a, ["BT-137", "BT-139", "BT-140"])}`);
@@ -192,7 +198,7 @@ export function preview(inv, marks) {
   };
   const unit = (l) => (marked("BT-130") ? `<span${cattr("unit", "BT-130")}>${show("BT-130", l["BT-130"])}</span>` : "");
   const category = (l) => (marked("BT-151") ? `<span${cattr("cat", "BT-151")}>${show("BT-151", l["BT-151"])}</span>` : "");
-  const lines = inv.lines.slice(0, 12).map((l) => `<tr><td>${esc(l["BT-153"])}</td><td${attr("BT-129")}>${esc(l["BT-129"])}${unit(l)}</td>
+  const lines = inv.lines.slice(0, 12).map((l) => `<tr><td${attr("BT-153")}>${show("BT-153", l["BT-153"])}</td><td${attr("BT-129")}>${esc(l["BT-129"])}${unit(l)}</td>
       <td${attr("BT-146")}>${show("BT-146", l["BT-146"])}</td><td${attr("BT-152")}>${category(l)}${show("BT-152", l["BT-152"])}</td><td${attr("BT-131")}>${show("BT-131", l["BT-131"])}</td></tr>${subs(l)}`).join("");
   const more = inv.lines.length > 12 ? `<tr><td colspan="5" class="more">${esc(fill(T.more_lines, { n: inv.lines.length - 12 }))}</td></tr>` : "";
   // the document level allowances and charges, above the totals
@@ -203,7 +209,8 @@ export function preview(inv, marks) {
     const items = [[inv.allowances || [], AC[0]], [inv.charges || [], AC[1]]].flatMap(([list, [amount, ...rest]]) =>
       list.map((x) => [amount, ...rest.filter((bt) => x[bt] || marked(bt))].map((bt) => row(x, bt)).join("")));
     for (const bt of AC.flat()) laid.add(bt);
-    ac = `<dl class="inv-others"><p class="who">${esc(T.allowances_charges)}</p>${items.join("")}</dl>`;
+    // nothing to draw when the invoice has none (BR-51's CII message names BT-97 by mistake, for the card number)
+    if (items.length) ac = `<dl class="inv-others"><p class="who">${esc(T.allowances_charges)}</p>${items.join("")}</dl>`;
   }
   const total = (bt, strong) => (shown(bt) ? `<div${strong ? ' class="strong"' : ""}><span>${esc(label(bt))}</span>${field(bt, t[bt])}</div>` : "");
   // the VAT breakdown, rate by rate

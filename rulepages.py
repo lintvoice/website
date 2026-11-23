@@ -136,10 +136,11 @@ def example_diff(examples_dir, chosen, context=2):
 
 
 # What a rule is about on the invoice (meta.yaml's topic, invoice-rules FORMAT.md), in the order the rules index shows.
-TOPICS = ("addresses", "identifiers", "payment", "totals", "vat", "invoice", "lines", "corrections", "attachments")
+TOPICS = ("addresses", "parties", "identifiers", "payment", "totals", "vat", "invoice", "lines", "corrections", "attachments")
 # each subject's icon (static/icons/), the same on the home page, the rules index, the rule pages and the check page
 TOPIC_ICONS = {
     "addresses": "email",
+    "parties": "identification",  # provisional: the subject waits for its own icon
     "identifiers": "identification",
     "payment": "wallet",
     "totals": "calculator",
