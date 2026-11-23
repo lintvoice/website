@@ -93,7 +93,7 @@ async function guardAttachments(bytes) {
 const base = new URL(".", import.meta.url);
 let manifest;
 
-async function xmlFromPdf(bytes) {
+export async function xmlFromPdf(bytes) {
   await guardAttachments(bytes);
   // pdf.js 6 lists attachments as a Map (id -> {filename, ...}) and reads a content only when asked.
   try {

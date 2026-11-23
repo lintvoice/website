@@ -188,6 +188,11 @@ button.link{background:none;border:0;padding:0;font:inherit;color:var(--text);te
 .preview-col{background:var(--band);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5) var(--sp-5)}
 .result .preview-col>h2{font-size:var(--fs-lg);margin:0 0 var(--sp-1)}
 .col-sub{font-size:var(--fs-xs);color:var(--muted);margin:0 0 var(--sp-4)}
+.col-sub:has(+.pdf-xml){margin-bottom:var(--sp-2)}
+.pdf-xml{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-3);margin:0 0 var(--sp-4);font-size:var(--fs-xs);color:var(--muted)}
+.pdf-xml p{margin:0}
+.pdf-xml code{font-size:inherit;color:var(--text)}
+.pdf-xml .btn{font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-3)}
 
 /* the verdict: one line, the details carry the weight */
 .verdict-line{border-left:var(--bw-mark) solid var(--line);padding:var(--sp-2) var(--sp-4);background:var(--surface);border-radius:0 var(--r-md) var(--r-md) 0}

@@ -1,7 +1,7 @@
 // The check page: take a file (dropped, chosen, or one of our example invoices), check it in this page with
 // engine.mjs, then show the analysis next to a preview of the invoice: what was detected, and for each error the
 // values the invoice holds, why they fail, and how to fix them, without leaving the page.
-import { check } from "./engine.mjs";
+import { check, xmlFromPdf } from "./engine.mjs";
 import { errorCard, esc, families, fill, marksOf, note, preview, profile, rulePages, setCurrency, setup } from "./report.mjs";
 
 const T = JSON.parse(document.getElementById("check-texts").textContent);
@@ -17,6 +17,31 @@ function filebar(name, r) {
   const what = r.document ? `${r.document.source.startsWith("PDF") ? "PDF" : "XML"} · ${profile(r.document)}` : "";
   return `<div class="filebar"><p><span class="file">${esc(name)}</span>${what ? `<span class="what">${esc(what)}</span>` : ""}</p>
     <button type="button" class="btn" data-again>${esc(T.again)}</button></div>`;
+}
+
+// A PDF whose invoice XML was found: where that data sits in it, and the file itself to download (its own bytes,
+// read from the PDF again only when asked).
+function pdfXml(r) {
+  const name = ((r.document && r.document.source) || "").match(/^PDF \((.+)\)$/)?.[1];
+  if (!name) return "";
+  const [before, after] = T.pdf_xml_line.split("{name}");
+  return `<div class="pdf-xml"><p>${esc(before)}<code>${esc(name)}</code>${esc(after)}</p>
+    <button type="button" class="btn secondary" data-xml>${esc(T.pdf_xml_download)}</button></div>`;
+}
+
+let checked = null; // the file on screen: its name and bytes, for the XML download
+
+async function downloadXml() {
+  const found = checked && (await xmlFromPdf(checked.bytes));
+  if (!found) return;
+  const url = URL.createObjectURL(new Blob([found.xml], { type: "application/xml" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = /\.pdf$/i.test(checked.name) ? checked.name.replace(/\.pdf$/i, ".xml") : `${checked.name}.xml`;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }
 
 function render(name, r, pages) {
@@ -48,7 +73,7 @@ function render(name, r, pages) {
     : "";
   return `${filebar(name, r)}<div class="analysis">
     <div class="findings-col">${title}${context}${errors.length ? cards(errors, 0) : ""}${warned}</div>
-    <div class="preview-col"><h2>${esc(T.detected_title)}</h2><p class="col-sub">${esc(T.detected_sub)}</p>${preview(inv, marks)}</div>
+    <div class="preview-col"><h2>${esc(T.detected_title)}</h2><p class="col-sub">${esc(T.detected_sub)}</p>${pdfXml(r)}${preview(inv, marks)}</div>
   </div>`;
 }
 
@@ -65,6 +90,7 @@ async function run(name, bytes) {
   page.classList.add("checked", "busy");
   result.innerHTML = `<p class="checking">${esc(T.checking)}</p>`;
   await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 30))); // let "checking" paint first
+  checked = { name, bytes: bytes.slice() }; // a copy: pdf.js takes the bytes it reads (the buffer goes to its worker)
   const [r, pages] = await Promise.all([check(name, bytes), rulePages()]);
   result.innerHTML = render(name, r, pages);
   bars();
@@ -77,6 +103,7 @@ async function fromFile(file) {
 }
 
 function reset() {
+  checked = null;
   page.classList.remove("checked");
   rulesUsed.hidden = true;
   result.innerHTML = "";
@@ -96,6 +123,7 @@ async function example(path, name) {
 document.querySelectorAll("[data-example]").forEach((b) => b.addEventListener("click", () => example(b.dataset.example, b.dataset.name)));
 result.addEventListener("click", (e) => {
   if (e.target.closest("[data-again]")) { reset(); return; }
+  if (e.target.closest("[data-xml]")) { downloadXml(); return; }
   const copy = e.target.closest("[data-copy]");
   if (copy) {
     const said = copy.parentElement.querySelector(".copied");
