@@ -19,9 +19,7 @@ import rulepages  # noqa: E402
 from lintvoice import rulepacks  # noqa: E402
 
 # Business terms that terms.json does not read, and why. A rule page may name them; the check shows no value for them.
-NOT_READ = {
-    "BT-111": "EN 16931 tells it from BT-110 by its currency (BT-6), which a path in terms.json does not express",
-}
+NOT_READ = {}
 
 
 @pytest.fixture(scope="session")
@@ -57,16 +55,7 @@ def previews(dist, rules, texts, tmp_path_factory):
 
 def test_every_failing_example_marks_one_of_its_errors_in_the_preview(previews):
     failing = {name: f for name, f in previews.items() if f["findings"]}
-    # an example whose errors name only data the check does not read (BR-DEC-15: BT-111) cannot mark them
-    unread = {
-        name
-        for name, f in failing.items()
-        if all(g["terms"] and set(g["terms"]) <= set(NOT_READ) for g in f["findings"])
-    }
-    blind = sorted(
-        name for name, f in failing.items() if name not in unread and not any(g["marked"] for g in f["findings"])
-    )
-    assert unread <= {"en16931/BR-DEC-15"}, unread
+    blind = sorted(name for name, f in failing.items() if not any(g["marked"] for g in f["findings"]))
     assert not blind, f"{len(blind)} of {len(failing)} failing examples mark no error in the preview: {blind}"
     # an error goes unmarked only when it names no data (a syntax rule), or only data the check does not read
     unmarked = [

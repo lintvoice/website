@@ -19,9 +19,13 @@ function find(el, path) {
   return nodes;
 }
 
-// What the first path that finds something finds: a term's path, or its list of paths.
-function first(el, paths) {
-  for (const path of typeof paths === "string" ? [paths] : paths) {
+// What the first path that finds something finds: a term's path, or its list of paths. A "{BT-n}" in a path stands
+// for that header term's value, read before (terms): the VAT total in the invoice's currency (BT-110) and in the VAT
+// accounting currency (BT-111) are told apart that way.
+const REFERENCE = /\{(BT-\d+)\}/g;
+function first(el, paths, terms) {
+  for (let path of typeof paths === "string" ? [paths] : paths) {
+    if (terms) path = path.replace(REFERENCE, (_, bt) => terms[bt] ?? "");
     const found = find(el, path);
     if (found.length) return found;
   }
@@ -51,14 +55,17 @@ function split(node, ac, allowanceTerms, chargeTerms, syntax) {
 export function read(xmlText, spec) {
   const root = new DOMParser().parseFromString(xmlText, "application/xml").documentElement;
   const syntax = root.localName === "CrossIndustryInvoice" ? "CII" : "UBL";
-  const terms = {};
+  const read = {};
   const schemes = {};
-  for (const [bt, paths] of Object.entries(spec.header)) {
-    if (!(syntax in paths)) continue;
-    const found = first(root, paths[syntax]);
-    terms[bt] = text(found);
+  const header = Object.entries(spec.header).filter(([, paths]) => syntax in paths);
+  // the terms whose paths refer to another term's value come second, once that value is read
+  const refers = ([, paths]) => /\{BT-\d+\}/.test(JSON.stringify(paths[syntax]));
+  for (const [bt, paths] of [...header.filter((t) => !refers(t)), ...header.filter(refers)]) {
+    const found = first(root, paths[syntax], read);
+    read[bt] = text(found);
     if (typeof found[0] === "object" && found[0].getAttribute("schemeID")) schemes[bt] = found[0].getAttribute("schemeID");
   }
+  const terms = Object.fromEntries(header.map(([bt]) => [bt, read[bt]]));
   const lines = find(root, spec.lines[syntax]).map((line) => {
     const [allowances, charges] = split(line, spec.line_allowances_charges, spec.line_allowance_terms, spec.line_charge_terms, syntax);
     const attributes = find(line, spec.line_attributes[syntax]).map((a) => termsOf(a, spec.line_attribute_terms, syntax));
