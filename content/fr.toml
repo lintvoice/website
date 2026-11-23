@@ -138,6 +138,7 @@ privacy = [
     "Ce site ne dépose aucun cookie et n'utilise ni outil de mesure d'audience ni ressource tierce : polices et images sont servies depuis lintvoice.com.",
     "Le thème clair ou sombre que vous choisissez est enregistré dans votre navigateur seulement (localStorage).",
     "L'hébergeur traite des données techniques de connexion, comme les adresses IP, pour servir les pages et protéger le site ([politique de confidentialité de Cloudflare](https://www.cloudflare.com/privacypolicy/)).",
+    "Si vous nous écrivez à [hello@lintvoice.com](mailto:hello@lintvoice.com), l'éditeur du site lit votre message pour vous répondre, depuis l'adresse indiquée plus haut. Nous le gardons un an après la fin de l'échange, puis nous le supprimons. Une réponse utile à d'autres peut devenir une ligne de FAQ, sans votre nom ni vos données.",
 ]
 ip_title = "Licences et marque"
 ip = [

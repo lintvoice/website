@@ -138,6 +138,7 @@ privacy = [
     "This site sets no cookie and uses no analytics or third-party resource: fonts and images are served from lintvoice.com.",
     "The light or dark theme you pick is stored in your browser only (localStorage).",
     "The host processes technical connection data, such as IP addresses, to deliver the pages and protect the site ([Cloudflare's privacy policy](https://www.cloudflare.com/privacypolicy/)).",
+    "If you write to [hello@lintvoice.com](mailto:hello@lintvoice.com), the site's publisher reads your message to answer it, from the address given above. We keep it for one year after the exchange ends, then delete it. An answer that helps others may become a FAQ line, without your name or details.",
 ]
 ip_title = "Licences and trademark"
 ip = [
