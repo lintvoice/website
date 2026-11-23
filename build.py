@@ -23,6 +23,7 @@ import sys
 import tomllib
 import zipfile
 from pathlib import Path
+from xml.etree import ElementTree
 
 import checkassets
 import guides
@@ -123,6 +124,42 @@ def _examples(out):
             info.compress_type = zipfile.ZIP_DEFLATED
             z.writestr(info, path.read_bytes())
     return json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+
+
+CII = {
+    "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+    "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+}
+SELLER_SIREN = ".//ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID[@schemeID='0002']"
+DESK_EXAMPLE = "BR-FR-10"  # the example the Resources page shows failing: the seller's SIREN (BT-30) is missing
+
+
+def _amount(value):
+    """An amount as the example invoice's PDF prints it, in French: 1 230,00 €, with no-break spaces."""
+    whole, cents = f"{float(value):.2f}".split(".")
+    return f"{int(whole):,}".replace(",", " ") + f",{cents} €"
+
+
+def _desk(folder, manifest):
+    """What the Resources page's picture shows, read from the generated files so that it says what they hold: the
+    valid example invoice's number, seller, SIREN, first two lines and total, and the example that fails because the
+    seller's SIREN is missing. Stops the build if that example no longer fails for that reason."""
+    valid = ElementTree.parse(folder / "valid.xml")  # noqa: S314 (the files this build has just generated)
+    failing = next(e for e in manifest["examples"] if e["id"] == DESK_EXAMPLE)
+    failing_xml = ElementTree.parse(folder / failing["files"]["xml"])  # noqa: S314 (the same)
+    lacks_siren = failing_xml.find(SELLER_SIREN, CII) is None
+    if f"{DESK_EXAMPLE}_BT-30" not in failing["fires"] or not lacks_siren:
+        raise SystemExit(
+            f"build: the Resources page shows {DESK_EXAMPLE} failing for a missing seller SIREN; it no longer does"
+        )
+    return {
+        "number": valid.findtext("rsm:ExchangedDocument/ram:ID", namespaces=CII),
+        "seller": valid.findtext(".//ram:SellerTradeParty/ram:Name", namespaces=CII),
+        "siren": valid.findtext(SELLER_SIREN, namespaces=CII),
+        "lines": [e.text for e in valid.iterfind(".//ram:SpecifiedTradeProduct/ram:Name", CII)][:2],
+        "total": _amount(valid.findtext(".//ram:GrandTotalAmount", namespaces=CII)),
+        "rule": DESK_EXAMPLE,
+    }
 
 
 def _static(out):
@@ -275,6 +312,7 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
         "zip_href": ZIP_HREF,
         "rules": rules,
         "guides": guides.load(),
+        "desk": _desk(out / "examples" / "fr", manifest),
     }
     if rules:
         rs = site["rule_sets"]

@@ -177,6 +177,20 @@ def test_gallery_lists_every_example_with_its_files(dist):
         )  # XML, PDF, the fixed counterparts, the manifest, annotated.pdf
 
 
+def test_resources_picture_shows_what_the_example_files_hold(dist):
+    """The Resources page's picture is drawn from the generated example invoice: its number, seller, SIREN and total,
+    and the example that fails because the seller's SIREN is missing."""
+    valid = ElementTree.parse(dist / "examples/fr/valid.xml")  # noqa: S314 (a file the build generated)
+    number = valid.findtext("rsm:ExchangedDocument/ram:ID", namespaces=build.CII)
+    siren = valid.findtext(build.SELLER_SIREN, namespaces=build.CII)
+    for path in ("/resources/", "/fr/ressources/"):
+        text = " ".join(_page(dist, path).text)
+        assert number in text and siren in text and build.DESK_EXAMPLE in text
+        assert build._amount(valid.findtext(".//ram:GrandTotalAmount", namespaces=build.CII)) in text
+    assert build._amount("1230.00") == "1 230,00 €"
+    assert build._amount("7.5") == "7,50 €"
+
+
 def test_wording_never_claims_certification(dist, texts):
     for _page_name, lang, path in ALL:
         text = " ".join(_page(dist, path).text).replace(texts[lang]["footer_disclaimer"], "")

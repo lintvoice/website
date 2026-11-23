@@ -1,20 +1,60 @@
 {% extends "base.html" %}
 {% block body %}
-{# What the site offers beyond the check, as the rules index's subject cards: each card says the visitor's gain, then
-   the place as its proof. #}
-<div class="band">
-  <h1>{{ p.h1 }}</h1>
-  <span class="total-rule" aria-hidden="true"></span>
-  <p class="brief">{{ p.brief }}</p>
+{# What the site offers beyond the check. The title is a claim; beside it, the page's picture: three of its own
+   documents on a desk, telling one story, drawn from the example files (build.py, _desk): the example invoice that
+   fails because the seller's SIREN is missing, the same invoice annotated with each piece of data's number in the
+   European standard, and the glossary's entry for the word. The invoice is French and printed in French, as its PDF
+   is, whatever the page's language; the caption under it says the story, so screen readers get the caption only.
+   Then each resource as a card with its pictogram, the two documents first and larger, one action each; the
+   developers' door on the blue-black. #}
+{% set d = desk %}
+{% set term = t.glossary.terms | selectattr("id", "equalto", "siren") | first %}
+{% set small = 1 + guides | length %}
+{% set size = "third" if small % 3 == 0 or small % 2 else "half" %}
+<div class="band tint claim">
+  <div>
+    <h1>{{ p.h1 }}</h1>
+    <span class="total-rule" aria-hidden="true"></span>
+    <p class="brief">{{ p.brief }}</p>
+  </div>
+  <figure class="doc desk">
+    <div class="desk-stack" aria-hidden="true" translate="no">
+      <div class="sheet s-fail" lang="fr">
+        <p class="inv-h"><span>Facture</span><span>{{ d.number }}</span></p>
+        <p><strong>{{ d.seller }}</strong></p>
+        <p>SIREN <span class="slot"></span></p>
+        <p><span class="code">{{ d.rule }}</span></p>
+      </div>
+      <div class="sheet s-annot" lang="fr">
+        <p class="inv-h"><span>Facture</span><span>{{ d.number }}<b class="code bt">BT-1</b></span></p>
+        <p><strong>{{ d.seller }}</strong></p>
+        <p>SIREN {{ d.siren }}<b class="code bt">BT-30</b></p>
+        <p class="muted">{{ d.lines | join("<br>" | safe) }}</p>
+        <p class="inv-t"><span>Total TTC</span><span>{{ d.total }}<b class="code bt">BT-112</b></span></p>
+      </div>
+      <div class="sheet s-term">
+        <p class="ic-head"><strong>{{ term.name }}</strong><span lang="{{ other.lang }}">{{ term.other }}</span></p>
+        <p>{{ term.text.split(". ")[0] }}.</p>
+      </div>
+    </div>
+    <figcaption>{{ p.desk_caption }}</figcaption>
+  </figure>
 </div>
 <section class="section" aria-label="{{ p.cards_label }}">
-  <ul class="subject-grid res-grid">
-    <li><a href="{{ links.examples }}">{{ icon("edit") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="n">{{ p.examples_link }} →</span></a></li>
-    {% for g in guides %}<li><a href="{{ g.meta.paths[t.lang] }}">{{ icon("book") }}<span class="name">{{ g.pages[t.lang].title }}</span><span class="line">{{ g.meta.description[t.lang] }}</span><span class="n">{{ p.guide_link }} →</span></a></li>
+  <ul class="res-cards">
+    <li class="big"><a href="{{ links.examples }}">{{ picto("example") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="go">{{ p.examples_link }} →</span></a></li>
+    {% if manifest.get('annotated') %}<li class="big"><a href="{{ files_href }}{{ manifest.annotated.pdf }}" download="{{ t.file_prefix }}-{{ t.file_annotated }}.pdf">{{ picto("annotated") }}<span class="name">{{ p.annotated_head }}</span><span class="line">{{ p.annotated_text }}</span><span class="go">{{ p.annotated_link }} ↓</span></a></li>{% endif %}
+    <li class="{{ size }}"><a href="{{ links.glossary }}">{{ picto("glossary") }}<span class="name">{{ p.glossary_head }}</span><span class="line">{{ p.glossary_text }}</span><span class="go">{{ p.glossary_link }} →</span></a></li>
+    {% for g in guides %}<li class="{{ size }}"><a href="{{ g.meta.paths[t.lang] }}">{{ picto("guide") }}<span class="name">{{ g.pages[t.lang].title }}</span><span class="line">{{ g.meta.description[t.lang] }}</span><span class="go">{{ p.guide_link }} →</span></a></li>
     {% endfor %}
-    {% if manifest.get('annotated') %}<li><a href="{{ files_href }}{{ manifest.annotated.pdf }}" download="{{ t.file_prefix }}-{{ t.file_annotated }}.pdf">{{ icon("data--structured") }}<span class="name">{{ p.annotated_head }}</span><span class="line">{{ p.annotated_text }}</span><span class="n">{{ p.annotated_link }} ↓</span></a></li>{% endif %}
-    <li><a href="{{ links.glossary }}">{{ icon("list--bulleted") }}<span class="name">{{ p.glossary_head }}</span><span class="line">{{ p.glossary_text }}</span><span class="n">{{ p.glossary_link }} →</span></a></li>
-    <li><a href="{{ links.home }}#quick-start">{{ icon("terminal") }}<span class="name">{{ p.dev_head }}</span><span class="line">{{ p.dev_text }}</span><span class="n">{{ p.dev_link }} →</span></a></li>
   </ul>
+</section>
+<section class="section on-navy dev-door" aria-labelledby="dev-title">
+  {{ picto("api") }}
+  <div>
+    <h2 id="dev-title">{{ p.dev_head }}</h2>
+    <p>{{ p.dev_text }}</p>
+    <p><a class="go" href="{{ links.home }}#quick-start">{{ p.dev_link }} →</a></p>
+  </div>
 </section>
 {% endblock %}
