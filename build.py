@@ -50,13 +50,14 @@ PUBLISHER_KEYS = ("publisher", "legal_form", "address", "registration", "vat", "
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)  # zip entries: the same bytes on every build
 
 
-LINK = re.compile(r"\[([^\]]+)\]\(((?:https://|/)[^)\s]+)\)")
+LINK = re.compile(r"\[([^\]]+)\]\(((?:https://|/|mailto:)[^)\s]+)\)")
 
 
 def links(text):
-    """Texts may carry Markdown-style links, [label](https://… or /…): escape everything, then turn those into <a>."""
+    """Texts may carry Markdown-style links, [label](https://…, /… or mailto:…): escape everything, then turn those
+    into <a>."""
     escaped = str(escape(text))
-    # The text is escaped first; only https:// and / links are built from it.
+    # The text is escaped first; only https://, / and mailto: links are built from it.
     return Markup(LINK.sub(lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', escaped))  # noqa: S704
 
 

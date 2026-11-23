@@ -331,11 +331,17 @@ def test_every_licence_named_on_a_page_links_to_its_text(dist):
         assert "https://creativecommons.org/publicdomain/zero/1.0/" in {h for k, h in _page(dist, path).refs}, path
 
 
-def test_text_links_are_escaped_and_only_https_or_local():
+def test_text_links_are_escaped_and_only_https_local_or_mailto():
     assert (
-        str(build.links("a <b> [x](https://e.org/) [y](javascript:alert(1))"))
-        == 'a &lt;b&gt; <a href="https://e.org/">x</a> [y](javascript:alert(1))'
+        str(build.links("a <b> [x](https://e.org/) [y](javascript:alert(1)) [z](mailto:a@b.c)"))
+        == 'a &lt;b&gt; <a href="https://e.org/">x</a> [y](javascript:alert(1)) <a href="mailto:a@b.c">z</a>'
     )
+
+
+def test_no_page_shows_a_link_left_as_text(dist):
+    """A [label](address) the builder did not turn into a link would show as is: a scheme it does not take."""
+    left = [p for p in dist.rglob("*.html") if re.search(r"\]\((?:https?://|/|mailto:)", p.read_text(encoding="utf-8"))]
+    assert not left, [str(p.relative_to(dist)) for p in left]
 
 
 def test_strict_mode_spots_any_todo_left_in_the_legal_notice():
