@@ -5,8 +5,8 @@
    fails because the seller's SIREN is missing, the same invoice annotated with each piece of data's number in the
    European standard, and the glossary's entry for the word. The invoice is French and printed in French, as its PDF
    is, whatever the page's language; the caption under it says the story, so screen readers get the caption only.
-   Then each resource as a card with its pictogram, the two documents first and larger, one action each; the
-   developers' door on the blue-black. #}
+   Then each resource as a card with its pictogram and one action, all at one size: the two documents first, side by
+   side, then the glossary and the guides; the developers' door on the blue-black. #}
 {% set d = desk %}
 {% set term = t.glossary.terms | selectattr("id", "equalto", "siren") | first %}
 {% set small = 1 + guides | length %}
@@ -42,8 +42,8 @@
 </div>
 <section class="section" aria-label="{{ p.cards_label }}">
   <ul class="res-cards">
-    <li class="big"><a href="{{ links.examples }}">{{ picto("example") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="go">{{ p.examples_link }} →</span></a></li>
-    {% if manifest.get('annotated') %}<li class="big"><a href="{{ files_href }}{{ manifest.annotated.pdf }}" download="{{ t.file_prefix }}-{{ t.file_annotated }}.pdf">{{ picto("annotated") }}<span class="name">{{ p.annotated_head }}</span><span class="line">{{ p.annotated_text }}</span><span class="go">{{ p.annotated_link }} ↓</span></a></li>{% endif %}
+    <li class="half"><a href="{{ links.examples }}">{{ picto("example") }}<span class="name">{{ p.examples_head }}</span><span class="line">{{ p.examples_text | replace("{n}", invalid | length | string) }}</span><span class="go">{{ p.examples_link }} →</span></a></li>
+    {% if manifest.get('annotated') %}<li class="half"><a href="{{ files_href }}{{ manifest.annotated.pdf }}" download="{{ t.file_prefix }}-{{ t.file_annotated }}.pdf">{{ picto("annotated") }}<span class="name">{{ p.annotated_head }}</span><span class="line">{{ p.annotated_text }}</span><span class="go">{{ p.annotated_link }} ↓</span></a></li>{% endif %}
     <li class="{{ size }}"><a href="{{ links.glossary }}">{{ picto("glossary") }}<span class="name">{{ p.glossary_head }}</span><span class="line">{{ p.glossary_text }}</span><span class="go">{{ p.glossary_link }} →</span></a></li>
     {% for g in guides %}<li class="{{ size }}"><a href="{{ g.meta.paths[t.lang] }}">{{ picto("guide") }}<span class="name">{{ g.pages[t.lang].title }}</span><span class="line">{{ g.meta.description[t.lang] }}</span><span class="go">{{ p.guide_link }} →</span></a></li>
     {% endfor %}
