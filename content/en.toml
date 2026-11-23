@@ -138,11 +138,11 @@ privacy = [
     "This site sets no cookie and uses no analytics or third-party resource: fonts and images are served from lintvoice.com.",
     "The light or dark theme you pick is stored in your browser only (localStorage).",
     "The host processes technical connection data, such as IP addresses, to deliver the pages and protect the site ([Cloudflare's privacy policy](https://www.cloudflare.com/privacypolicy/)).",
-    "If you write to [hello@lintvoice.com](mailto:hello@lintvoice.com), the site's publisher reads your message to answer it, from the address given above. We keep it for one year after the exchange ends, then delete it. An answer that helps others may become a FAQ line, without your name or details.",
+    "If you write to [hello@lintvoice.com](mailto:hello@lintvoice.com), the site's publisher reads your message to answer it, from the address given above. Cloudflare, which forwards your message to us, logs its sender, recipient and subject. We keep messages for one year after the exchange ends, then delete them. An answer that helps others may become a FAQ line, without your name or details.",
 ]
 ip_title = "Licences and trademark"
 ip = [
-    "The code of this site is under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE); the texts of the rule pages and of the glossary are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); its other texts and the lintvoice logo are © AllGood Services SAS, all rights reserved. The lintvoice tool is under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) too.",
+    "The code of this site is under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE); the texts of the rule pages and of the glossary are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and published in [lintvoice/invoice-rules](https://github.com/lintvoice/invoice-rules); its other texts and the lintvoice logo are © AllGood Services SAS, all rights reserved. The lintvoice tool is under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) too.",
     "The example invoices are in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). The official rule messages, quoted on the rule pages, come from their publishers, under their own licences.",
     "The source code of this site is public, so you can check what it does: [github.com/lintvoice/website](https://github.com/lintvoice/website).",
     "The fonts are IBM Plex, under the [SIL Open Font License 1.1](https://openfontlicense.org/).",
