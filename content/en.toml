@@ -142,7 +142,7 @@ privacy = [
 ]
 ip_title = "Licences and trademark"
 ip = [
-    "The code of this site is under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE); the texts of the rule pages are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); its other texts and the lintvoice logo are © AllGood Services SAS, all rights reserved. The lintvoice tool is under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) too.",
+    "The code of this site is under the [MIT licence](https://github.com/lintvoice/website/blob/main/LICENSE); the texts of the rule pages and of the glossary are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); its other texts and the lintvoice logo are © AllGood Services SAS, all rights reserved. The lintvoice tool is under the [MIT licence](https://github.com/lintvoice/lintvoice/blob/main/LICENSE) too.",
     "The example invoices are in the public domain ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)). The official rule messages, quoted on the rule pages, come from their publishers, under their own licences.",
     "The source code of this site is public, so you can check what it does: [github.com/lintvoice/website](https://github.com/lintvoice/website).",
     "The fonts are IBM Plex, under the [SIL Open Font License 1.1](https://openfontlicense.org/).",
