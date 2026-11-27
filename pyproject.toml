@@ -6,7 +6,7 @@ requires-python = ">=3.13"
 dependencies = [
     "jinja2>=3.1.6",
     "invoice-examples==0.9.0",  # the gallery is generated at this exact version
-    "markdown-it-py>=4.2,<4.3",
+    "markdown-it-py>=4.2,<4.4",
     "pyyaml>=6.0.3",
     "lintvoice==0.7.0",  # the check page runs the rule files of this exact version
 ]
