@@ -13,7 +13,8 @@ from markupsafe import Markup
 
 FOLDER = Path(__file__).parent / "guides"
 
-_md = MarkdownIt("commonmark").enable("table")
+# Markdown only: raw HTML in a guide would show as text.
+_md = MarkdownIt("commonmark", {"html": False}).enable("table")
 _LOCAL = re.compile(r'<a href="(/[^"#]*)(#[^"]*)?">(.*?)</a>')
 
 

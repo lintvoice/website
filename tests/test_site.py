@@ -349,6 +349,17 @@ def test_the_glossary_shows_every_word_of_the_rules_repository_with_its_licence(
         assert "https://github.com/lintvoice/invoice-rules" in links and any("by-sa/4.0" in h for h in links)
 
 
+def test_raw_html_in_a_rule_page_or_a_guide_is_shown_as_text():
+    script = "Text.\n\n<script>alert(1)</script>\n\nAn <img src=x onerror=alert(1)> inline."
+    for html in (
+        str(rulepages._html(script, "en", set())),
+        str(guides.html(script, set())),
+        str(guides.inline(script)),
+    ):
+        assert "<script" not in html and "<img" not in html
+        assert "&lt;script&gt;" in html
+
+
 def test_no_page_shows_a_link_left_as_text(dist):
     """A [label](address) the builder did not turn into a link would show as is: a scheme it does not take."""
     left = [p for p in dist.rglob("*.html") if re.search(r"\]\((?:https?://|/|mailto:)", p.read_text(encoding="utf-8"))]

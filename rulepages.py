@@ -19,7 +19,8 @@ from markupsafe import Markup
 PATHS = {"en": "/rules/", "fr": "/fr/regles/"}
 SECTIONS = ("checks", "why", "fix", "causes", "technical", "official", "related")  # FORMAT.md order
 
-_md = MarkdownIt("commonmark")
+# Markdown only: a page that held raw HTML (a script, say) would show it as text, never run it on the site.
+_md = MarkdownIt("commonmark", {"html": False})
 _RELATED = re.compile(r'<a href="\.\./([A-Z0-9-]+)/">([^<]*)</a>')
 
 
