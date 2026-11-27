@@ -26,6 +26,8 @@ jobs:
         run: |
           uv export --frozen --no-emit-project --no-hashes --all-groups -o "$RUNNER_TEMP/locked.txt"
           uvx pip-audit@2.10.1 --no-deps --disable-pip -r "$RUNNER_TEMP/locked.txt"
+      - name: Known vulnerabilities in the locked npm packages (the in-browser check's tools)
+        run: npm audit --package-lock-only
 
   build:
     runs-on: ubuntu-latest

@@ -10,3 +10,9 @@ updates:
     directory: /
     schedule: { interval: weekly }
     cooldown: { default-days: 7 }
+  # pdf.js, xmllint-wasm and xslt3: the in-browser check's tools. Their versions are also written in checkassets.py's
+  # notices: update them with the package.
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    cooldown: { default-days: 7 }
