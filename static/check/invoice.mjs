@@ -13,7 +13,7 @@ function find(el, path) {
     if (step.startsWith("@")) return nodes.filter((n) => n.hasAttribute(step.slice(1))).map((n) => n.getAttribute(step.slice(1)));
     const [names, condition = ""] = step.split("[@");
     const wanted = names.split("|");
-    const [attr, value] = condition.replace("]", "").split("=");
+    const [attr, value] = condition.replace(/\]$/, "").split("=");
     nodes = nodes.flatMap((n) => [...n.children].filter((c) => wanted.includes(c.localName) && (!attr || c.getAttribute(attr) === value)));
   }
   return nodes;
