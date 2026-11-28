@@ -158,7 +158,16 @@ def cli(files, pages):
 
 @contextlib.contextmanager
 def server():
+    # With the site's own response headers (dist/_headers, one block for every address): each browser checks each
+    # example under the content security policy the live site sends.
+    sent = [line.strip().split(": ", 1) for line in (DIST / "_headers").read_text(encoding="utf-8").splitlines()[1:]]
+
     class Quiet(http.server.SimpleHTTPRequestHandler):
+        def end_headers(self):
+            for name, value in sent:
+                self.send_header(name, value)
+            super().end_headers()
+
         def log_message(self, *args):
             pass
 
@@ -176,16 +185,21 @@ def server():
 
 
 # The page's engine, as the page itself loads it; evaluate() has no timeout of its own, so the check is started
-# without waiting and its result awaited with one.
+# without waiting and its result awaited with one. The page says it is done with a mark on its root element: waiting
+# for an element needs no code evaluated inside the page, which the site's content security policy refuses
+# (wait_for_function does that; evaluate() goes through the browser's own channel).
+DONE = 'html[data-parity="done"]'
 START = """([n, b, pages]) => {
   window.__r = undefined;
+  delete document.documentElement.dataset.parity;
+  const done = (r) => { window.__r = r; document.documentElement.dataset.parity = "done"; };
   const bytes = Uint8Array.from(atob(b), (c) => c.charCodeAt(0));
   Promise.all([import("/static/check/engine.mjs"), import("/static/check/rule-answer.mjs")])
     .then(([m, a]) => m.check(n, bytes).then((r) => {
       if (r.findings && pages.length) r.rules = pages.map((page) => a.answer(r, page));  // each rule page's answer
       return r;
     }))
-    .then((r) => (window.__r = r), (e) => (window.__r = { path: n, status: "page-error", error: String(e) }));
+    .then(done, (e) => done({ path: n, status: "page-error", error: String(e) }));
 }"""
 
 
@@ -200,7 +214,11 @@ def browser_run(p, kind, url, files, pages):
         state["browser"] = getattr(p, kind).launch()
         page = state["browser"].new_page()
         page.goto(f"{url}/check/")
-        page.wait_for_function("window.lintvoiceReady === true", timeout=60_000)
+        deadline = time.monotonic() + 60
+        while not page.evaluate("window.lintvoiceReady === true"):
+            if time.monotonic() > deadline:
+                raise TimeoutError("the check page did not get ready")
+            page.wait_for_timeout(100)
         return page
 
     page, results = fresh(), {}
@@ -211,7 +229,7 @@ def browser_run(p, kind, url, files, pages):
         start = time.perf_counter()
         try:
             page.evaluate(START, [f.name, base64.b64encode(f.read_bytes()).decode(), pages])
-            page.wait_for_function("window.__r !== undefined", timeout=TIMEOUT_MS, polling=200)
+            page.wait_for_selector(DONE, state="attached", timeout=TIMEOUT_MS)
             r = page.evaluate("window.__r")
         except Exception as e:  # a crash or a hang of the page itself: a difference to report
             status = "timeout" if "Timeout" in type(e).__name__ else "page-error"

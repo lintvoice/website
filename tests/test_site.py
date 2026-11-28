@@ -1,6 +1,7 @@
 """The built site: every page in both languages, links that resolve, no third-party resource, the gallery
 complete, our wording rules, a legal notice that cannot go live with gaps, and the same bytes on every build."""
 
+import base64
 import hashlib
 import json
 import re
@@ -238,6 +239,32 @@ def test_wording_never_claims_certification(dist, texts):
 def test_footer_says_we_do_not_certify(dist, texts):
     for _page_name, lang, path in ALL:
         assert texts[lang]["footer_disclaimer"] in " ".join(_page(dist, path).text)
+
+
+def test_response_headers_name_every_inline_script_and_loosen_nothing_else(dist):
+    lines = (dist / "_headers").read_text(encoding="utf-8").splitlines()
+    assert lines[0] == "/*" and all(
+        line.startswith("  ") and len(line) <= 2000 for line in lines[1:]
+    )  # Cloudflare's limit
+    sent = dict(line.strip().split(": ", 1) for line in lines[1:])
+    policy = dict(d.split(" ", 1) for d in sent["Content-Security-Policy"].split("; "))
+    assert policy["default-src"] == "'self'" and policy["frame-ancestors"] == "'none'"
+    allowed = policy["script-src"].split()
+    assert [a for a in allowed if not a.startswith("'sha256-")] == ["'self'", "'wasm-unsafe-eval'"]
+    inline = set()
+    for page in dist.rglob("*.html"):
+        html = page.read_text(encoding="utf-8")
+        # found here without the build's own pattern: every script element that has no src and is not data
+        for attrs, text in re.findall(r"<script([^>]*)>(.*?)</script>", html, re.S):
+            if "src=" not in attrs and "application/" not in attrs:
+                inline.add(text)
+        # style-src 'self' would block a style element or attribute
+        assert "<style" not in html and not re.search(r'<[a-zA-Z][^>]*\sstyle="', html), page
+    assert inline, "the pages hold inline scripts: the theme switch"
+    digests = {f"'sha256-{base64.b64encode(hashlib.sha256(t.encode()).digest()).decode()}'" for t in inline}
+    assert digests == {a for a in allowed if a.startswith("'sha256-")}
+    assert sent["X-Content-Type-Options"] == "nosniff" and sent["X-Frame-Options"] == "DENY"
+    assert sent["Strict-Transport-Security"].startswith("max-age=")
 
 
 def test_sitemap_and_robots(dist):

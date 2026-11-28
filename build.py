@@ -14,6 +14,8 @@ The guides come from guides/, one folder each (guides.py).
 """
 
 import argparse
+import base64
+import hashlib
 import json
 import os
 import re
@@ -449,7 +451,46 @@ def build(out, strict=False, rules_dir=None, check_assets=None):
     )
     _write(out, "/sitemap.xml", _sitemap(site["base_url"], all_paths))
     _write(out, "/robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {site['base_url']}/sitemap.xml\n")
+    _write(out, "/_headers", headers(out))
     return out
+
+
+# A script written in the page itself (not a file, not a block of data).
+INLINE_SCRIPT = re.compile(r"<script(?![^>]*\bsrc=)(?![^>]*\btype=\"application/)[^>]*>(.*?)</script>", re.S)
+
+
+def headers(out):
+    """The response headers of every page and file, in the format Cloudflare reads from the site's folder (it does not
+    serve this file): https://developers.cloudflare.com/workers/static-assets/headers/
+
+    The content security policy lets a page load only this site's own files. The few scripts written in the pages
+    themselves are named one by one, by the digest of their text, computed here from the built pages: a script that
+    someone managed to inject into a page would not run. 'wasm-unsafe-eval' is for the schema check, which runs
+    libxml2 compiled to WebAssembly; nothing else is loosened (no 'unsafe-inline', no 'unsafe-eval'). data: images
+    are the icons the style sheets carry."""
+    scripts = {s for page in out.rglob("*.html") for s in INLINE_SCRIPT.findall(page.read_text(encoding="utf-8"))}
+    digests = sorted(base64.b64encode(hashlib.sha256(s.encode("utf-8")).digest()).decode("ascii") for s in scripts)
+    policy = "; ".join(
+        [
+            "default-src 'self'",
+            " ".join(["script-src 'self' 'wasm-unsafe-eval'", *(f"'sha256-{d}'" for d in digests)]),
+            "style-src 'self'",
+            "img-src 'self' data:",
+            "object-src 'none'",
+            "base-uri 'none'",
+            "frame-ancestors 'none'",
+            "form-action 'self'",
+        ]
+    )
+    lines = {
+        "Content-Security-Policy": policy,
+        "X-Content-Type-Options": "nosniff",  # a file is what its type says, never guessed
+        "X-Frame-Options": "DENY",  # no other site shows these pages in a frame (as frame-ancestors, for older browsers)
+        "Referrer-Policy": "strict-origin-when-cross-origin",  # another site learns the site's name, not the page
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()",  # the site uses none of them
+        "Strict-Transport-Security": "max-age=31536000",  # a browser that came once comes back over HTTPS, for a year
+    }
+    return "/*\n" + "".join(f"  {name}: {value}\n" for name, value in lines.items())
 
 
 def _sitemap(base, all_paths):
